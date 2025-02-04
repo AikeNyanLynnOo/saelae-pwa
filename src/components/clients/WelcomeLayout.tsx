@@ -1,3 +1,4 @@
+import { ImagePlaceholder } from "../atoms/ImagePlaceholder";
 import { CommonLayout } from "../layouts/CommonLayout";
 import { SLTypo } from "../SLTypo";
 import { Button } from "../ui/button";
@@ -7,9 +8,7 @@ export const WelcomeLayout = () => {
     <CommonLayout isLoading={false}>
       <div>
         {/* Image placeholder */}
-        <div className="flex justify-center mb-4">
-          <div className="w-24 h-24 bg-gray-200 rounded-lg" />
-        </div>
+        <ImagePlaceholder />
 
         <div className="mb-12">
           {/* Title */}
@@ -27,7 +26,7 @@ export const WelcomeLayout = () => {
           <SLTypo
             as="p"
             variant="fontBody3Normal"
-            className="text-center text-[color:--semantic-color-text-subtle] !leading-5"
+            className="text-center text-[var(semantic-color-text-subtle)] !leading-5"
           >
             ကလေးလေးတွေဟာ အိမ်တိုင်းအတွက် ဆည်းလည်းသံလေးတွေပါပဲ။
             <br />
@@ -38,11 +37,9 @@ export const WelcomeLayout = () => {
         </div>
 
         {/* Button */}
-        <div className="flex justify-center">
-          <Button className="bg-[#735EFA] rounded-sm w-full px-4 py-2">
-            စတင်အသုံးပြုမယ်
-          </Button>
-        </div>
+        <Button className="bg-[var(--component-mode-1-color-button-bg-primary-enabled)] rounded-[var(--core-border-radius-xs)] w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-sm)]">
+          စတင်အသုံးပြုမယ်
+        </Button>
       </div>
     </CommonLayout>
   );

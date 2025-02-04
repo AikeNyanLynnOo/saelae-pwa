@@ -19,7 +19,7 @@ export const CommonLayout = ({
       "flex min-h-screen items-center justify-center",
       customClasses
     );
-  }, []);
+  }, [customClasses]);
 
   return (
     <div className={commonLayoutClasses}>

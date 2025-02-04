@@ -1,0 +1,9 @@
+$flag-width: var(--react-international-phone-flag-width, 22px);
+$flag-height: var(--react-international-phone-flag-height, 18px);
+
+.react-international-phone-flag-emoji {
+  width: $flag-width;
+  height: $flag-height;
+  box-sizing: border-box;
+  border-radius: 0%;
+}

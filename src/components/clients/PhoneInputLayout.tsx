@@ -1,60 +1,53 @@
 "use client";
 import { useState } from "react";
 import { CommonLayout } from "../layouts/CommonLayout";
+import { ImagePlaceholder } from "../atoms/ImagePlaceholder";
+import { InputGroup } from "../atoms/forms/InputGroup";
+import { Button } from "../ui/button";
+import { SLPhoneInput } from "../atoms/forms/SLPhoneInput";
+import { ParsedCountry } from "../atoms/forms/PhoneInput/types";
+import { splitInputValue } from "../atoms/forms/PhoneInput/utils/splitInputValue";
 
 export const PhoneInputLayout = () => {
   const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [showBottomMm, setShowBottomMm] = useState(false);
+
+  const onChange = (
+    phone: string,
+    meta: { country: ParsedCountry; inputValue: string }
+  ) => {
+    setPhone(phone || "");
+    setCountryCode((meta && meta.country && meta.country.dialCode) || "");
+    setInputValue(
+      (meta && meta.country && splitInputValue(inputValue).value) || ""
+    );
+  };
 
   return (
-    <CommonLayout>
-      <div className="bg-white shadow-lg rounded-2xl w-full max-w-md p-6">
+    <CommonLayout customClasses="items-start relative">
+      <div className="absolute top-1/3 -translate-y-1/2">
         {/* Image Placeholder */}
-        <div className="flex justify-center mb-6">
-          <div className="w-24 h-24 bg-gray-200 rounded-lg" />
-        </div>
+        <ImagePlaceholder />
 
         {/* Label */}
-        <label className="block text-gray-700 font-medium mb-2">
-          ဖုန်းနံပါတ်
-        </label>
-
-        {/* Phone Input */}
-        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-          {/* Country Code Dropdown */}
-          <div className="flex items-center bg-gray-100 px-3 border-r border-gray-300">
-            <img
-              src="https://flagcdn.com/w40/mm.png"
-              alt="Myanmar Flag"
-              className="w-5 h-5 mr-1"
-            />
-            <select className="bg-transparent text-gray-700 focus:outline-none">
-              <option value="+95">+95</option>
-              <option value="+66">+66</option>
-              <option value="+1">+1</option>
-            </select>
-          </div>
-
-          {/* Phone Number Input */}
-          <input
-            type="tel"
-            className="w-full p-3 outline-none text-gray-700"
-            placeholder="9 xxx xxx xxx"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
-
-        {/* Description */}
-        <p className="text-xs text-gray-500 mt-2">
-          ၁၀ မှ ၁၁ လုံး နံပါတ်က ဖုန်းနံပါတ်ကို ထည့်ပေးပါ။
-        </p>
+        <InputGroup
+          labelText="ဖုန်းနံပါတ်"
+          bottomText={
+            (showBottomMm && "၀၉ မပါဘဲ နောက်က ဖုန်းနံပါတ်ကိုပဲထည့်ပေးနော်။") ||
+            ""
+          }
+          className="mb-4"
+        >
+          {/* Phone Input */}
+          <SLPhoneInput onChange={onChange} setShowBottomMm={setShowBottomMm} />
+        </InputGroup>
 
         {/* Submit Button */}
-        <div className="flex justify-center mt-6">
-          <button className="bg-purple-500 text-white text-sm font-medium py-3 px-6 rounded-lg shadow-md hover:bg-purple-600 transition duration-200 w-full">
-            အတည်ပြုမယ်
-          </button>
-        </div>
+        <Button className="bg-[var(--component-mode-1-color-button-bg-primary-enabled)] rounded-[var(--core-border-radius-xs)] w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-sm)]">
+          အတည်ပြုမယ်
+        </Button>
       </div>
     </CommonLayout>
   );
