@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 export const WelcomeLayout = () => {
   return (
     <CommonLayout isLoading={false}>
-      <div>
+      <div className="w-full sm:w-fit">
         {/* Image placeholder */}
         <ImagePlaceholder />
 
