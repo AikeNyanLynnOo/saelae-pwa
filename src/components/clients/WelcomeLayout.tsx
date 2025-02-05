@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ImagePlaceholder } from "../atoms/ImagePlaceholder";
 import { CommonLayout } from "../layouts/CommonLayout";
 import { SLTypo } from "../SLTypo";
@@ -37,8 +38,8 @@ export const WelcomeLayout = () => {
         </div>
 
         {/* Button */}
-        <Button className="bg-[var(--component-mode-1-color-button-bg-primary-enabled)] rounded-[var(--core-border-radius-xs)] w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-sm)]">
-          စတင်အသုံးပြုမယ်
+        <Button asChild>
+          <Link href="/auth">စတင်အသုံးပြုမယ်</Link>
         </Button>
       </div>
     </CommonLayout>

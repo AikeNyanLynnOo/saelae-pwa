@@ -45,7 +45,7 @@ export const PhoneInputLayout = () => {
         </InputGroup>
 
         {/* Submit Button */}
-        <Button className="bg-[var(--component-mode-1-color-button-bg-primary-enabled)] rounded-[var(--core-border-radius-xs)] w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-sm)]">
+        <Button>
           အတည်ပြုမယ်
         </Button>
       </div>
