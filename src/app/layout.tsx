@@ -14,10 +14,11 @@ const notoMyanmar = Noto_Sans_Myanmar({
 
 export const metadata: Metadata = {
   title: "SaeLae - Song to your Happy Home",
-  description: "It's a simple progressive web application made with NextJS",
+  description:
+    "SaeLae is a family-friendly web app designed to help parents and caregivers share knowledge and medical insights about baby care. Whether you're a first-time parent or an experienced caregiver, this platform provides a trusted space to access expert-backed information and share real-life experiences.",
   generator: "Next.js",
-  manifest: "/web.manifest",
-  keywords: ["nextjs", "next14", "pwa", "next-pwa"],
+  manifest: "/manifest.json",
+  keywords: ["saelae", "baby care", "family", "next-pwa"],
   authors: [
     {
       name: "aikenyanlynnoo",
@@ -27,8 +28,8 @@ export const metadata: Metadata = {
   viewport:
     "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   icons: [
-    { rel: "apple-touch-icon", url: "images/icons/icon.png" },
-    { rel: "icon", url: "images/icons/icon.png" },
+    { rel: "apple-touch-icon", url: "icon512_rounded.png" },
+    { rel: "icon", url: "icon512_rounded.png" },
   ],
 };
 
@@ -40,7 +41,23 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="manifest" href="/web.manifest" />
+        <meta charSet="utf-8" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+
+        <link
+          href="/icon512_rounded.png"
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+        />
+        <link
+          href="/icon512_rounded.png"
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+        />
+        <link rel="apple-touch-icon" href="/icon512_rounded.png" />
+        <meta name="theme-color" content="#735EFA" />
       </head>
       <body className={notoMyanmar.className}>
         <RootLayoutClient>{children}</RootLayoutClient>
