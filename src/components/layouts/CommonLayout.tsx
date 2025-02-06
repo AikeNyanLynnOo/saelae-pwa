@@ -16,10 +16,10 @@ export const CommonLayout = ({
 }: CommonLayoutProps) => {
   const commonLayoutClasses = useMemo(() => {
     return twMerge(
-      "flex min-h-screen items-center justify-center",
+      "flex min-h-[100dvh] items-center justify-center",
       customClasses
     );
-  }, []);
+  }, [customClasses]);
 
   return (
     <div className={commonLayoutClasses}>

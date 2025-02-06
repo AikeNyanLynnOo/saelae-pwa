@@ -26,7 +26,9 @@ export default function RootLayoutClient({
 
   return (
     <div className="flex flex-col">
-      <div className="min-h-screen container mx-auto px-4 md:px-5 lg:px-12 xl:px-20 max-w-screen-lg">{children}</div>
+      <div className="min-h-[100dvh] container mx-auto px-0 md:px-5 lg:px-12 xl:px-20 max-w-screen-lg">
+        {children}
+      </div>
     </div>
   );
 }
