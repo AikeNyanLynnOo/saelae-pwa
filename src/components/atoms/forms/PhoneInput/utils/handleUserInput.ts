@@ -42,7 +42,7 @@ export const handleUserInput = (
   country: ParsedCountry;
 } => {
   // Didn't find out how to properly type it
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  
   const nativeEvent: any = e.nativeEvent;
 
   // Possible input types:

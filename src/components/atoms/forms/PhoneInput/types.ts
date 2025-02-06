@@ -1,5 +1,5 @@
 export type CountryIso2 =
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  
   | (string & {}) // allow any string but add autocompletion for values below
   | "af"
   | "al"

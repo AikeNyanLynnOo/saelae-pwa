@@ -38,7 +38,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/web.manifest" />
+      </head>
       <body className={notoMyanmar.className}>
         <RootLayoutClient>{children}</RootLayoutClient>
       </body>
