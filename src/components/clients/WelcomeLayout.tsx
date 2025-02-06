@@ -16,7 +16,7 @@ export const WelcomeLayout = () => {
           <SLTypo
             as="h1"
             variant="fontH4Semibold"
-            className="text-center text-gray-800 mb-2"
+            className="text-center text-[var(--semantic-color-text-bold)] mb-2"
           >
             ပျော်ရွှင်စရာအိမ်လေးတိုင်းအတွက်
             <br />
