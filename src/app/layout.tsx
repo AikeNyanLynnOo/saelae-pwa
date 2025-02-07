@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description:
     "SaeLae is a family-friendly web app designed to help parents and caregivers share knowledge and medical insights about baby care. Whether you're a first-time parent or an experienced caregiver, this platform provides a trusted space to access expert-backed information and share real-life experiences.",
   generator: "Next.js",
-  manifest: "/manifest.json",
+  manifest: "/web.manifest",
   keywords: ["saelae", "baby care", "family", "next-pwa"],
   authors: [
     {
@@ -43,21 +43,6 @@ export default function RootLayout({
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-
-        <link
-          href="/icon512_rounded.png"
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-        />
-        <link
-          href="/icon512_rounded.png"
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-        />
-        <link rel="apple-touch-icon" href="/icon512_rounded.png" />
-        <meta name="theme-color" content="#735EFA" />
       </head>
       <body className={notoMyanmar.className}>
         <RootLayoutClient>{children}</RootLayoutClient>
