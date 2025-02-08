@@ -27,7 +27,7 @@ export const PhoneInputLayout = () => {
 
   return (
     <CommonLayout customClasses="items-start relative">
-      <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit">
+      <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit px-4 sm:px-0">
         {/* Image Placeholder */}
         <ImagePlaceholder />
 
