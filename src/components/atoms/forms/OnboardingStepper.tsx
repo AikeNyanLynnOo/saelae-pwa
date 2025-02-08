@@ -140,7 +140,7 @@ export const OnboardingStepper = () => {
             as="h1"
             text="ဆည်းလည်း မှကြိုဆိုပါတယ်"
             variant="fontH4Semibold"
-            className="text-center text-[var(--semantic-color-text-bold)] mb-2"
+            className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-6 lg:px-0"
           />
 
           {/* Description */}
@@ -151,7 +151,7 @@ export const OnboardingStepper = () => {
               "ဆည်းလည်းလေးအကြောင်း ပြောပြပေးပါဦး"
             }
             variant="fontBody1Normal"
-            className="text-center text-[var(--semantic-color-text-subtle)] !leading-5"
+            className="text-center text-[var(--semantic-color-text-subtle)] !leading-5 px-6 lg:px-0"
           />
         </div>
 
@@ -225,46 +225,55 @@ export const OnboardingStepper = () => {
                 className="w-full"
               />
             </InputGroup>
-            {/* <InputGroup
+            <InputGroup
               labelText="သင့်မွေးနေ့ကိုပြောပြပါဦး"
               className="mb-4"
               htmlFor="birthdate"
-            > */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-[280px] justify-start text-left font-normal",
-                    !formData.dob &&
-                      "text-[var(--semantic-color-text-disabled)]"
-                  )}
+            >
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start items-center text-left font-normal text-sm",
+                      !formData.dob &&
+                        "text-[var(--semantic-color-text-disabled)]"
+                    )}
+                  >
+                    <CalendarIcon className="mr-1 h-4 w-4" />
+
+                    {formData.dob ? (
+                      <SLTypo
+                        as="span"
+                        variant="fontBody2Normal"
+                        fontFamily="var(--font-figtree)"
+                        text={format(formData.dob, "PPP")}
+                      />
+                    ) : (
+                      <span>ရက်စွဲကို ရွေးခြယ်ပါ</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+
+                <PopoverContent
+                  className="w-[var(--radix-popover-trigger-width)] sm:w-auto p-0"
+                  align="start"
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-
-                  {formData.dob ? (
-                    format(formData.dob, "PPP")
-                  ) : (
-                    <span>ရက်စွဲကို ရွေးခြယ်ပါ</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  // selected={formData.dob || undefined}
-                  // onSelect={(date: any) => {
-                  //   if (date) {
-                  //     console.log(date);
-                  //     // setFormData({ ...formData, dob: date })
-                  //   }
-                  // }}
-                  // initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-            {/* </InputGroup> */}
+                  <Calendar
+                    mode="single"
+                    className="rounded-md overflow-x-scroll"
+                    selected={formData.dob || undefined}
+                    onSelect={(date: any) => {
+                      if (date) {
+                        console.log(date, typeof date, Object.keys(date));
+                        setFormData({ ...formData, dob: date });
+                      }
+                    }}
+                    // initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </InputGroup>
           </div>
         )}
 

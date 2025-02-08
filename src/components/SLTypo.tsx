@@ -21,7 +21,9 @@ export interface SLTypoProps {
   text?: string;
   variant?: (typeof TypoVariants)[number];
   className?: string;
+  fontFamily?: string;
   [otherProp: string]: any;
+
 }
 
 export const SLTypo = ({
@@ -29,6 +31,7 @@ export const SLTypo = ({
   text,
   variant = "fontBody1Normal",
   className,
+  fontFamily,
   ...props
 }: SLTypoProps) => {
   const typoClasses = useMemo(
@@ -47,8 +50,12 @@ export const SLTypo = ({
     as,
     {
       className: typoClasses,
-      style: typoStyle,
+      style: {
+        ...typoStyle,
+        fontFamily: fontFamily || typoStyle.fontFamily,
+      },
     },
     text || props.children
+
   );
 };
