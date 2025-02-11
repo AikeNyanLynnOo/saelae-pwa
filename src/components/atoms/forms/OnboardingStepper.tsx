@@ -77,7 +77,7 @@ export const OnboardingStepper = () => {
 
     // step 3
     saelaeName: "",
-    saelabDob: "",
+    saelabDob: null,
     gender: "",
     relationship: "",
   });
@@ -112,9 +112,9 @@ export const OnboardingStepper = () => {
   };
 
   return (
-    <div className="w-full min-h-[100dvh] relative">
+    <div className="w-full min-h-[100dvh] max-h-[100dvh] overflow-y-scroll">
       {/* Progress Indicators */}
-      <div className="flex gap-2 mb-8 pt-10 px-6 lg:px-0">
+      <div className="flex gap-2 mb-12 pt-10 px-6 lg:px-0">
         {[...Array(totalSteps)].map((_, index) => (
           <StepIndicator
             key={index}
@@ -131,39 +131,39 @@ export const OnboardingStepper = () => {
           />
         ))}
       </div>
+      <div className="mb-12">
+        {/* Title */}
+        <SLTypo
+          as="h1"
+          text="ဆည်းလည်း မှကြိုဆိုပါတယ်"
+          variant="fontH4Semibold"
+          className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-6 lg:px-0"
+        />
+
+        {/* Description */}
+        <SLTypo
+          as="p"
+          text={
+            (step === 1 && "အရင်ဆုံး မိမိကိုယ်ကို မိတ်ဆက်ပေးပါဦး") ||
+            "ဆည်းလည်းလေးအကြောင်း ပြောပြပေးပါဦး"
+          }
+          variant="fontBody1Normal"
+          className="text-center text-[var(--semantic-color-text-subtle)] px-6 lg:px-0"
+        />
+      </div>
 
       {/* Form Content */}
-      <div className="space-y-6">
-        <div className="mb-12">
-          {/* Title */}
-          <SLTypo
-            as="h1"
-            text="ဆည်းလည်း မှကြိုဆိုပါတယ်"
-            variant="fontH4Semibold"
-            className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-6 lg:px-0"
-          />
-
-          {/* Description */}
-          <SLTypo
-            as="p"
-            text={
-              (step === 1 && "အရင်ဆုံး မိမိကိုယ်ကို မိတ်ဆက်ပေးပါဦး") ||
-              "ဆည်းလည်းလေးအကြောင်း ပြောပြပေးပါဦး"
-            }
-            variant="fontBody1Normal"
-            className="text-center text-[var(--semantic-color-text-subtle)] !leading-5 px-6 lg:px-0"
-          />
-        </div>
-
+      <div
+        className={`space-y-6 pb-28 flex flex-col items-center min-h-[calc(100dvh-20rem)] ${step === 2 ? "justify-center" : ""}`}
+      >
         {step === 1 && (
-          <div className="space-y-4 px-6 lg:px-0">
-            {/* Label */}
+          <div className="space-y-4 px-6 lg:px-0 w-full">
+            {/* User Name Input */}
             <InputGroup
               labelText="သင့်နာမည် ဘယ်လိုခေါ်လဲ"
               className="mb-4"
               htmlFor="name"
             >
-              {/* User Name Input */}
               <Input
                 id="name"
                 placeholder="နာမည်အပြည့်အစုံကိုရေးထည့်ပါ"
@@ -175,6 +175,8 @@ export const OnboardingStepper = () => {
                 className="w-full flex items-center"
               />
             </InputGroup>
+
+            {/* User City Input */}
             <InputGroup
               labelText="ဘယ်မြို့မှာနေထိုင်ပါသလဲ"
               className="mb-4"
@@ -225,6 +227,8 @@ export const OnboardingStepper = () => {
                 className="w-full"
               />
             </InputGroup>
+
+            {/* User Birthdate Input */}
             <InputGroup
               labelText="သင့်မွေးနေ့ကိုပြောပြပါဦး"
               className="mb-4"
@@ -278,23 +282,202 @@ export const OnboardingStepper = () => {
         )}
 
         {step === 2 && (
-          <div className="space-y-4 px-6 lg:px-0">
+          <div className="space-y-4 px-6 lg:px-0 w-full">
+            <SLTypo
+              as="h1"
+              text="ဆည်းလည်းလေးကို မွေးဖွားပြီးပြီလား"
+              variant="fontH4Semibold"
+              className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-6 lg:px-0"
+            />
             <Button
               variant="outline"
-              className="w-full bg-[#FCD34D] hover:bg-[#F59E0B] text-black border-none h-12"
+              className={`w-full ${formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
+              onClick={() => setFormData({ ...formData, isBorn: true })}
             >
-              မေးမှားပြီးပြီ
+              <SLTypo
+                as="span"
+                text="မွေးဖွားပြီးပါပြီ"
+                variant="fontButtonMdNormal"
+                className="text-[var(--semantic-color-text-bold)]"
+              />
             </Button>
             <Button
               variant="outline"
-              className="w-full bg-[#EEF2FF] hover:bg-[#E0E7FF] text-black border-none h-12"
+              className={`w-full ${!formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
+              onClick={() => setFormData({ ...formData, isBorn: false })}
             >
-              မေးမှားရန်ကျန်သေး
+              <SLTypo
+                as="span"
+                text="မမွေးဖွားရသေးပါဘူး"
+                variant="fontButtonMdNormal"
+                className="text-[var(--semantic-color-text-bold)]"
+              />
             </Button>
           </div>
         )}
 
-        {step === 3 && <div className="space-y-4 px-6 lg:px-0">Form 3</div>}
+        {step === 3 && (
+          <div className="space-y-4 px-6 lg:px-0 w-full">
+            {/* Sae Lae Name Input */}
+            <InputGroup
+              labelText="ဆည်းလည်းလေးရဲ့နာမည် ဘယ်လိုခေါ်လဲ"
+              className="mb-4"
+              htmlFor="name"
+            >
+              <Input
+                id="name"
+                placeholder="ကလေးလေးကိုခေါ်စေချင်တဲ့ နာမည်ကိုရေးထည့်ပါ"
+                color="primary"
+                value={formData.saelaeName}
+                onChange={(e) =>
+                  setFormData({ ...formData, saelaeName: e.target.value })
+                }
+                className="w-full flex items-center"
+              />
+            </InputGroup>
+
+            {/* Sae Lae Birthdate Input */}
+            <InputGroup
+              labelText={
+                formData.isBorn
+                  ? "ဆည်းလည်းလေးရဲ့ မွေးနေ့ ကိုပြောပြပါဦး"
+                  : "မွေးဖွားမည့်ရက်(Due Date) ကိုပြောပြပါဦး"
+              }
+              className="mb-4"
+              htmlFor="birthdate"
+            >
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start items-center text-left font-normal text-sm",
+                      !formData.dob &&
+                        "text-[var(--semantic-color-text-disabled)]"
+                    )}
+                  >
+                    <CalendarIcon className="mr-1 h-4 w-4" />
+
+                    {formData.dob ? (
+                      <SLTypo
+                        as="span"
+                        variant="fontBody2Normal"
+                        fontFamily="var(--font-figtree)"
+                        text={format(formData.dob, "PPP")}
+                      />
+                    ) : (
+                      <span>ရက်စွဲကို ရွေးခြယ်ပါ</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+
+                <PopoverContent
+                  className="w-[var(--radix-popover-trigger-width)] sm:w-auto p-0"
+                  align="start"
+                >
+                  <Calendar
+                    mode="single"
+                    className="rounded-md overflow-x-scroll"
+                    selected={formData.saelabDob || undefined}
+                    onSelect={(date: any) => {
+                      if (date) {
+                        console.log(date, typeof date, Object.keys(date));
+                        setFormData({ ...formData, saelabDob: date });
+                      }
+                    }}
+                    // initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </InputGroup>
+
+            {/* Sae Lae Gender Input */}
+            <InputGroup
+              labelText="ဆည်းလည်းလေးရဲ့ လိင် ကိုပြောပြပေးပါဦး"
+              className="mb-4"
+              htmlFor="gender"
+            >
+              <div className="flex items-center gap-2">
+                <Button
+                  className={cn(
+                    "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-info-subtlest)] hover:text-[var(--semantic-color-text-default)]",
+                    formData.gender === "ကျား"
+                      ? "bg-[var(--semantic-color-bg-info-primary)] text-[var(--semantic-color-text-inverse)]"
+                      : "bg-white text-[var(--semantic-color-text-default)]",
+                    formData.gender === "" && "bg-transparent"
+                  )}
+                  onClick={() => setFormData({ ...formData, gender: "ကျား" })}
+                >
+                  <SLTypo
+                    as="span"
+                    variant="fontLabelNormal"
+                    text="ကျား"
+                    className="-mt-1"
+                  />
+                </Button>
+
+                <Button
+                  className={cn(
+                    "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-info-subtlest)] hover:text-[var(--semantic-color-text-default)]",
+                    formData.gender === "မ"
+                      ? "bg-[var(--semantic-color-bg-info-primary)] text-[var(--semantic-color-text-inverse)]"
+                      : "bg-white text-[var(--semantic-color-text-default)]",
+                    formData.gender === "" && "bg-transparent"
+                  )}
+                  onClick={() => setFormData({ ...formData, gender: "မ" })}
+                >
+                  <SLTypo
+                    as="span"
+                    variant="fontLabelNormal"
+                    text="မ"
+                    className="-mt-1"
+                  />
+                </Button>
+              </div>
+            </InputGroup>
+
+            {/* Sae Lae Relationship Input */}
+            <InputGroup
+              labelText="ဆည်းလည်းလေးနဲ့ ဘယ်လိုတော်စပ်ပါသလဲ"
+              className="mb-4"
+              htmlFor="relationship"
+            >
+              <Select
+                value={formData.relationship}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, relationship: value })
+                }
+              >
+                <SelectTrigger
+                  id="city"
+                  className={cn(
+                    "w-full",
+                    formData.relationship
+                      ? "text-black"
+                      : "text-[var(--semantic-color-text-disabled)]"
+                  )}
+                >
+                  <SelectValue placeholder="အောက်ပါထဲမှ တစ်ခုခုကိုရွေးခြယ်ပါ" />
+                </SelectTrigger>
+                <SelectContent className="text-black">
+                  <SelectGroup>
+                    <SelectItem value="မေမေ">မေမေ</SelectItem>
+                    <SelectItem value="ဖေဖေ">ဖေဖေ</SelectItem>
+                    <SelectItem value="ဖိုးဖိုး">ဖိုးဖိုး</SelectItem>
+                    <SelectItem value="ဖွားဖွား">ဖွားဖွား</SelectItem>
+                    <SelectItem value="ဦးဦး">ဦးဦး</SelectItem>
+                    <SelectItem value="ဒေါ်ဒေါ်">ဒေါ်ဒေါ်</SelectItem>
+                    <SelectItem value="ကိုကို">ကိုကို</SelectItem>
+                    <SelectItem value="မမ">မမ</SelectItem>
+                    <SelectItem value="စောင့်ရှောက်သူ">
+                      စောင့်ရှောက်သူ
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </InputGroup>
+          </div>
+        )}
       </div>
 
       <div className="absolute bottom-0 w-full bg-[var(--semantic-color-bg-layoutsecondary)] lg:bg-transparent p-[var(--core-spacing-xl)] lg:px-0 rounded-t-[var(--core-border-radius-md)]">
