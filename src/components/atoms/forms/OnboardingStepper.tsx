@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
+import { useRouter } from "next/navigation";
 
 interface StepProps {
   isActive: boolean;
@@ -64,6 +65,7 @@ function StepIndicator({
 }
 
 export const OnboardingStepper = () => {
+  const router = useRouter();
   const [step, setStep] = React.useState(1);
   const [formData, setFormData] = React.useState({
     // step 1
@@ -105,7 +107,9 @@ export const OnboardingStepper = () => {
   };
 
   const handleNext = () => {
-    // if (step < totalSteps && canProceed()) {
+    if (step === totalSteps) {
+      router.push("/onboarding/personalization");
+    }
     if (step < totalSteps) {
       setStep(step + 1);
     }
