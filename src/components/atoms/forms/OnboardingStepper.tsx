@@ -112,7 +112,7 @@ export const OnboardingStepper = () => {
   };
 
   return (
-    <div className="w-full min-h-[100dvh] max-h-[100dvh] overflow-y-scroll">
+    <div className="w-full min-h-[100dvh] max-h-[100vh] overflow-y-scroll relative hide-scrollbar">
       {/* Progress Indicators */}
       <div className="flex gap-2 mb-12 pt-10 px-6 lg:px-0">
         {[...Array(totalSteps)].map((_, index) => (

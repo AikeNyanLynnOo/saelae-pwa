@@ -30,3 +30,18 @@
     --radius: 0.5rem;
   }
 }
+
+@layer utilities {
+  .hide-scrollbar {
+    /* For Chrome, Safari, and newer browsers */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* For Firefox */
+    scrollbar-width: none;
+    
+    /* For IE/Edge */
+    -ms-overflow-style: none;
+  }
+}
