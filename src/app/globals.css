@@ -37,11 +37,33 @@
     &::-webkit-scrollbar {
       display: none;
     }
-    
+
     /* For Firefox */
     scrollbar-width: none;
-    
+
     /* For IE/Edge */
     -ms-overflow-style: none;
   }
 }
+
+.react-datepicker__header {
+  background-color: transparent !important;
+  border: none !important;
+}
+.react-datepicker__month-container {
+  padding: 6px !important;
+}
+
+.hide-scrollbar {
+  /* For Chrome, Safari, and newer browsers */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* For Firefox */
+  scrollbar-width: none;
+
+  /* For IE/Edge */
+  -ms-overflow-style: none;
+}
+

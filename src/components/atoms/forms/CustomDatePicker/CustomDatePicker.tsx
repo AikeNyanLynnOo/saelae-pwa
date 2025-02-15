@@ -5,8 +5,16 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./customDatePicker.css"; // Import your custom styles
 import { getMonth, getYear } from "date-fns";
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const CustomDatePicker = () => {
+const CustomDatePicker = ({
+  customInput,
+  ...props
+}: {
+  customInput: any;
+  onSelect: (date: Date | null) => void;
+}) => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const years = Array.from(
     { length: getYear(new Date()) - 1990 + 1 },
@@ -28,9 +36,9 @@ const CustomDatePicker = () => {
   ];
 
   const calendarContainerClasses = {
-    base: "[&.react-datepicker]:shadow-lg [&.react-datepicker]:border-gray-100 [&.react-datepicker]:rounded-md ",
+    base: "[&.react-datepicker]:shadow-lg [&.react-datepicker]:border-gray-100 [&.react-datepicker]:rounded-md [&.react-datepicker]:font-[var(--font-figtree)]",
     monthContainer: {
-      padding: "[&.react-datepicker>div]:pt-5 [&.react-datepicker>div]:pb-3",
+      padding: "[&.react-datepicker>div]:pt-0 [&.react-datepicker>div]:pb-0",
     },
   };
 
@@ -54,7 +62,10 @@ const CustomDatePicker = () => {
   return (
     <DatePicker
       selected={startDate}
-      onChange={(date: Date | null) => setStartDate(date ?? new Date())}
+      onChange={(date: Date | null) => {
+        setStartDate(date ?? new Date());
+        props.onSelect?.(date);
+      }}
       dateFormat="MMMM d, yyyy"
       calendarClassName={cn(
         calendarContainerClasses.base,
@@ -64,70 +75,12 @@ const CustomDatePicker = () => {
         prevNextButtonClasses.size,
         prevNextButtonClasses.children.position,
         prevNextButtonClasses.children.border,
-        prevNextButtonClasses.children.size,
+        prevNextButtonClasses.children.size
       )}
+      showPopperArrow={false}
       popperClassName={cn(popperClasses.base, "")}
-      // renderCustomHeader={({
-      //   date,
-      //   changeYear,
-      //   changeMonth,
-      //   decreaseMonth,
-      //   increaseMonth,
-
-      //   prevMonthButtonDisabled,
-      //   nextMonthButtonDisabled,
-      // }: {
-      //   date: Date;
-      //   changeYear: (year: string) => void;
-      //   changeMonth: (month: number) => void;
-      //   decreaseMonth: () => void;
-      //   increaseMonth: () => void;
-      //   prevMonthButtonDisabled: boolean;
-      //   nextMonthButtonDisabled: boolean;
-      // }) => (
-      //   <div className="custom-header">
-      //     <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
-      //       {'<'}
-      //     </button>
-      //     <select
-      //       value={date.getFullYear()}
-      //       onChange={({ target: { value } }) => changeYear(value)}
-      //     >
-      //       {[...Array(10)].map((_, i) => (
-      //         <option key={i} value={2020 + i}>
-      //           {2020 + i}
-      //         </option>
-      //       ))}
-      //     </select>
-      //     <select
-      //       value={date.getMonth()}
-      //       onChange={({ target: { value } }) => changeMonth(Number(value))}
-
-      //     >
-      //       {[
-      //         'January',
-      //         'February',
-      //         'March',
-      //         'April',
-      //         'May',
-      //         'June',
-      //         'July',
-      //         'August',
-      //         'September',
-      //         'October',
-      //         'November',
-      //         'December',
-      //       ].map((month, index) => (
-      //         <option key={index} value={index}>
-      //           {month}
-      //         </option>
-      //       ))}
-      //     </select>
-      //     <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-      //       {'>'}
-      //     </button>
-      //   </div>
-      // )}
+      popperPlacement="bottom-start"
+      customInput={customInput}
       renderCustomHeader={({
         date,
         changeYear,
@@ -139,41 +92,78 @@ const CustomDatePicker = () => {
       }) => (
         <div
           style={{
-            margin: 10,
+            margin: "0 8px",
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-between",
+            alignItems: "center",
+            maxHeight: "20px",
+            overflowY: "visible",
+            position: "relative",
           }}
         >
-          <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
-            {"<"}
-          </button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={decreaseMonth}
+            disabled={prevMonthButtonDisabled}
+            className="h-7 w-7"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </Button>
           <select
+            onFocus={(e) => {
+              e.target.size = 8;
+            }}
+            onBlur={(e) => {
+              e.target.size = 1;
+            }}
             value={getYear(date)}
-            onChange={({ target: { value } }) => changeYear(Number(value))}
+            onChange={(e: any) => {
+              e.target.size = 8;
+              changeYear(Number(e.target.value));
+              const select = e.target as HTMLSelectElement;
+              select.blur();
+            }}
+            className={`focus:outline-none absolute top-0 -translate-y-1 left-9 hide-scrollbar focus:shadow-lg focus:border rounded-sm min-h-7 min-w-12`}
           >
             {years.map((option) => (
-              <option key={option} value={option}>
+              <option key={option} value={option} className="text-xs py-1 px-3">
                 {option}
               </option>
             ))}
           </select>
-
           <select
+            onFocus={(e) => {
+              e.target.size = 8;
+            }}
+            onBlur={(e) => {
+              e.target.size = 1;
+            }}
             value={months[getMonth(date)]}
-            onChange={({ target: { value } }) =>
-              changeMonth(months.indexOf(value))
-            }
+            onChange={(e) => {
+              e.target.size = 8;
+              changeMonth(months.indexOf(e.target.value));
+              const select = e.target as HTMLSelectElement;
+              select.blur();
+            }}
+            className={`focus:outline-none absolute top-0 -translate-y-[5px] right-9 hide-scrollbar focus:shadow-lg focus:border rounded-sm min-h-7 min-w-12`}
           >
             {months.map((option) => (
-              <option key={option} value={option}>
+              <option key={option} value={option} className="text-xs py-1 px-3">
                 {option}
               </option>
             ))}
           </select>
 
-          <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-            {">"}
-          </button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={increaseMonth}
+            disabled={nextMonthButtonDisabled}
+            className="h-7 w-7"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </Button>
         </div>
       )}
       dayClassName={(date: Date) =>

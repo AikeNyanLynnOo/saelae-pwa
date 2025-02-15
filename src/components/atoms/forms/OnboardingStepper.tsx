@@ -25,6 +25,7 @@ import {
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { useRouter } from "next/navigation";
+import { forwardRef } from "react";
 
 interface StepProps {
   isActive: boolean;
@@ -63,6 +64,49 @@ function StepIndicator({
     </button>
   );
 }
+
+const CustomInput = forwardRef(
+  (
+    {
+      value,
+      onClick,
+      className,
+      placeholder,
+    }: {
+      value: any;
+      onClick?: () => void;
+      className?: string;
+      placeholder?: string;
+    },
+    ref: any
+  ) => (
+    <Button
+      variant={"outline"}
+      className={cn(
+        "w-full justify-start items-center text-left font-normal text-sm",
+        !value && "text-[var(--semantic-color-text-disabled)]",
+        className
+      )}
+      onClick={onClick}
+      ref={ref}
+    >
+      <CalendarIcon className="mr-1 h-4 w-4" />
+
+      {value ? (
+        <SLTypo
+          as="span"
+          variant="fontBody2Normal"
+          fontFamily="var(--font-figtree)"
+          text={format(value, "PPP")}
+        />
+      ) : (
+        <span className="text-[var(--semantic-color-text-disabled)]">
+          {placeholder || "ရက်စွဲကို ရွေးခြယ်ပါ"}
+        </span>
+      )}
+    </Button>
+  )
+);
 
 export const OnboardingStepper = () => {
   const router = useRouter();
@@ -238,49 +282,23 @@ export const OnboardingStepper = () => {
               className="mb-4"
               htmlFor="birthdate"
             >
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start items-center text-left font-normal text-sm",
-                      !formData.dob &&
-                        "text-[var(--semantic-color-text-disabled)]"
-                    )}
-                  >
-                    <CalendarIcon className="mr-1 h-4 w-4" />
-
-                    {formData.dob ? (
-                      <SLTypo
-                        as="span"
-                        variant="fontBody2Normal"
-                        fontFamily="var(--font-figtree)"
-                        text={format(formData.dob, "PPP")}
-                      />
-                    ) : (
-                      <span>ရက်စွဲကို ရွေးခြယ်ပါ</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-
-                <PopoverContent
-                  className="w-[var(--radix-popover-trigger-width)] sm:w-auto p-0"
-                  align="start"
-                >
-                  <Calendar
-                    mode="single"
-                    className="rounded-md overflow-x-scroll"
-                    selected={formData.dob || undefined}
-                    onSelect={(date: any) => {
-                      if (date) {
-                        console.log(date, typeof date, Object.keys(date));
-                        setFormData({ ...formData, dob: date });
-                      }
-                    }}
-                    // initialFocus
+              <Calendar
+                mode="single"
+                className="rounded-md overflow-x-scroll"
+                selected={formData.dob || undefined}
+                onSelect={(date: any) => {
+                  if (date) {
+                    console.log(date, typeof date, Object.keys(date));
+                    setFormData({ ...formData, dob: date });
+                  }
+                }}
+                customInput={
+                  <CustomInput
+                    value={formData.dob}
+                    placeholder="ရက်စွဲကို ရွေးခြယ်ပါ"
                   />
-                </PopoverContent>
-              </Popover>
+                }
+              />
             </InputGroup>
           </div>
         )}
@@ -350,49 +368,23 @@ export const OnboardingStepper = () => {
               className="mb-4"
               htmlFor="birthdate"
             >
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full justify-start items-center text-left font-normal text-sm",
-                      !formData.dob &&
-                        "text-[var(--semantic-color-text-disabled)]"
-                    )}
-                  >
-                    <CalendarIcon className="mr-1 h-4 w-4" />
-
-                    {formData.dob ? (
-                      <SLTypo
-                        as="span"
-                        variant="fontBody2Normal"
-                        fontFamily="var(--font-figtree)"
-                        text={format(formData.dob, "PPP")}
-                      />
-                    ) : (
-                      <span>ရက်စွဲကို ရွေးခြယ်ပါ</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-
-                <PopoverContent
-                  className="w-[var(--radix-popover-trigger-width)] sm:w-auto p-0"
-                  align="start"
-                >
-                  <Calendar
-                    mode="single"
-                    className="rounded-md overflow-x-scroll"
-                    selected={formData.saelabDob || undefined}
-                    onSelect={(date: any) => {
-                      if (date) {
-                        console.log(date, typeof date, Object.keys(date));
-                        setFormData({ ...formData, saelabDob: date });
-                      }
-                    }}
-                    // initialFocus
+              <Calendar
+                mode="single"
+                className="rounded-md overflow-x-scroll"
+                selected={formData.saelabDob || undefined}
+                onSelect={(date: any) => {
+                  if (date) {
+                    console.log(date, typeof date, Object.keys(date));
+                    setFormData({ ...formData, saelabDob: date });
+                  }
+                }}
+                customInput={
+                  <CustomInput
+                    value={formData.saelabDob}
+                    placeholder="ရက်စွဲကို ရွေးခြယ်ပါ"
                   />
-                </PopoverContent>
-              </Popover>
+                }
+              />
             </InputGroup>
 
             {/* Sae Lae Gender Input */}
