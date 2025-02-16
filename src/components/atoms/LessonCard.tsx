@@ -1,16 +1,17 @@
 "use client";
 
-import { CalendarDays, CheckCircle } from "lucide-react";
+import { CalendarDays, CheckCircle, CircleCheck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { SLTypo } from "../SLTypo";
+import { ImagePlaceholder } from "./ImagePlaceholder";
 
 interface LessonCardProps {
   title: string;
   description: string;
   imageUrl?: string;
-  state: "default" | "verified" | "progress";
+  state: "default" | "completed" | "progress";
   progressValue?: number;
   onButtonClick?: () => void;
   buttonText?: string;
@@ -21,7 +22,7 @@ interface LessonCardProps {
 export function LessonCard({
   title,
   description,
-  imageUrl = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-N7sQEba2yjJKbWeg3zF6ZsBjZXV69v.png",
+  imageUrl = "",
   state = "default",
   progressValue = 0,
   onButtonClick,
@@ -30,24 +31,38 @@ export function LessonCard({
   completedLessons,
 }: LessonCardProps) {
   return (
-    <Card className="w-full max-w-md">
-      <CardContent className="flex gap-4 p-4">
-        <div className="flex-shrink-0">
-          <img
-            src={imageUrl || "/placeholder.svg"}
-            alt=""
-            className="h-12 w-12 rounded-sm object-cover"
-          />
+    <Card className="w-full max-w-md shadow-sm">
+      {state === "progress" && (
+        <div className="px-4 mt-4 flex flex-wrap gap-2">
+          <SLTypo
+            as="span"
+            variant="fontLabelMedium"
+            className="text-[var(--semantic-color-text-brand-default)] bg-[var(--semantic-color-bg-brand-subtlest)] px-[var(--core-spacing-sm)] py-0.5 rounded-full"
+          >
+            သင်ယူနေဆဲ
+          </SLTypo>
+        </div>
+      )}
+      <CardContent className="flex gap-4 p-4 relative">
+        <div
+          className={`flex flex-col ${state === "completed" ? "justify-center" : "justify-start"}`}
+        >
+          {(imageUrl && (
+            <img
+              src={imageUrl || "/placeholder.svg"}
+              alt=""
+              className="h-12 w-12 rounded-sm object-cover"
+            />
+          )) || (
+            <ImagePlaceholder
+              className="h-10 w-10 rounded-none"
+              containerClassName="mb-0"
+            />
+          )}
         </div>
 
         <div className="flex-1">
           <div className="space-y-1">
-            {state === "progress" && (
-              <span className="inline-block rounded-full bg-purple-100 px-2 py-0.5 text-sm text-purple-600 mb-2">
-                သင်ယူနေဆဲ
-              </span>
-            )}
-
             <SLTypo
               variant="fontH6Semibold"
               className="text-[var(--semantic-color-text-default)] mb-2"
@@ -73,14 +88,11 @@ export function LessonCard({
               </SLTypo>
             )}
           </div>
-
-          {state === "verified" && (
-            <div className="mt-2 flex items-center gap-2 text-green-600">
-              <CheckCircle className="h-5 w-5" />
-              <span className="text-sm">
-                မှတ်တမ်းတင်ပြီးအောင်မြင်စွာသိမ်းဆည်းပြီး
-              </span>
-            </div>
+          {state === "completed" && (
+            <CircleCheck
+              className="h-6 w-6 text-white absolute top-1/2 -translate-y-1/2 right-3"
+              fill="#28A745"
+            />
           )}
 
           {/* Progress State */}

@@ -152,7 +152,7 @@ export const OnboardingStepper = () => {
 
   const handleNext = () => {
     if (step === totalSteps) {
-      router.push("/onboarding/personalization");
+      router.push("/onboard/personalize");
     }
     if (step < totalSteps) {
       setStep(step + 1);
@@ -162,7 +162,7 @@ export const OnboardingStepper = () => {
   return (
     <div className="w-full min-h-[100dvh] max-h-[100vh] overflow-y-scroll relative hide-scrollbar">
       {/* Progress Indicators */}
-      <div className="flex gap-2 mb-12 pt-10 px-6 lg:px-0">
+      <div className="flex gap-2 mb-12 pt-10 px-4 lg:px-0">
         {[...Array(totalSteps)].map((_, index) => (
           <StepIndicator
             key={index}
@@ -185,7 +185,7 @@ export const OnboardingStepper = () => {
           as="h1"
           text="ဆည်းလည်း မှကြိုဆိုပါတယ်"
           variant="fontH4Semibold"
-          className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-6 lg:px-0"
+          className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-4 lg:px-0"
         />
 
         {/* Description */}
@@ -196,7 +196,7 @@ export const OnboardingStepper = () => {
             "ဆည်းလည်းလေးအကြောင်း ပြောပြပေးပါဦး"
           }
           variant="fontBody1Normal"
-          className="text-center text-[var(--semantic-color-text-subtle)] px-6 lg:px-0"
+          className="text-center text-[var(--semantic-color-text-subtle)] px-4 lg:px-0"
         />
       </div>
 
@@ -205,7 +205,7 @@ export const OnboardingStepper = () => {
         className={`space-y-6 pb-28 flex flex-col items-center min-h-[calc(100dvh-20rem)] ${step === 2 ? "justify-center" : ""}`}
       >
         {step === 1 && (
-          <div className="space-y-4 px-6 lg:px-0 w-full">
+          <div className="space-y-4 px-4 lg:px-0 w-full">
             {/* User Name Input */}
             <InputGroup
               labelText="သင့်နာမည် ဘယ်လိုခေါ်လဲ"
@@ -304,12 +304,12 @@ export const OnboardingStepper = () => {
         )}
 
         {step === 2 && (
-          <div className="space-y-4 px-6 lg:px-0 w-full">
+          <div className="space-y-4 px-4 lg:px-0 w-full">
             <SLTypo
               as="h1"
               text="ဆည်းလည်းလေးကို မွေးဖွားပြီးပြီလား"
               variant="fontH4Semibold"
-              className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-6 lg:px-0"
+              className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-4 lg:px-0"
             />
             <Button
               variant="outline"
@@ -339,7 +339,7 @@ export const OnboardingStepper = () => {
         )}
 
         {step === 3 && (
-          <div className="space-y-4 px-6 lg:px-0 w-full">
+          <div className="space-y-4 px-4 lg:px-0 w-full">
             {/* Sae Lae Name Input */}
             <InputGroup
               labelText="ဆည်းလည်းလေးရဲ့နာမည် ဘယ်လိုခေါ်လဲ"

@@ -12,40 +12,36 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
+import { LessonCard } from "@/components/atoms/LessonCard";
 
 export default function TestingPage() {
   const [dob, setDob] = useState<Date | null>(null);
   return (
     <section>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"outline"}
-            className={cn(
-              "w-[280px] justify-start text-left font-normal",
-              !dob && "text-[var(--semantic-color-text-disabled)]"
-            )}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+      <div className="space-y-4">
+        {/* Default State */}
+        <LessonCard
+          title="ကိုယ်ဝန်ဆောင်ကျန်းမာရေး"
+          description="ဆည်းလည်းလေးကို ကျန်းကျန်းမာမာနဲ့ ဖွားမြင်နိုင်ဖို့ဆို ဆည်းလည်းလေးရဲ့ မေမေကျန်းမာရေးနဲ့ ပတ်သက်တာတွေကို သင်ယူကြရအောင်နော်။"
+          totalLessons="၆"
+          state="default"
+        />
 
-            {dob ? format(dob, "PPP") : <span>ရက်စွဲကို ရွေးခြယ်ပါ</span>}
-          </Button>
-        </PopoverTrigger>
-
-        <PopoverContent className="w-auto p-0">
-          <Calendar
-            mode="single"
-            // selected={dob || undefined}
-            // onSelect={(date: any) => {
-            //   if (date) {
-            //     console.log(date);
-            //     // setFormData({ ...formData, dob: date })
-            //   }
-            // }}
-            // initialFocus
-          />
-        </PopoverContent>
-      </Popover>
+        {/* Verified State */}
+        <LessonCard
+          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
+          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
+          state="completed"
+        />
+        <LessonCard
+          title="ကိုယ်ဝန်ဆောင်ကျန်းမာရေး"
+          description="ဆည်းလည်းလေးကို ကျန်းကျန်းမာမာနဲ့ ဖွားမြင်နိုင်ဖို့ဆို ဆည်းလည်းလေးရဲ့ မေမေကျန်းမာရေးနဲ့ ပတ်သက်တာတွေကို သင်ယူကြရအောင်နော်။"
+          totalLessons="၆"
+          state="progress"
+          completedLessons="၂"
+          progressValue={40}
+        />
+      </div>
     </section>
   );
 }
