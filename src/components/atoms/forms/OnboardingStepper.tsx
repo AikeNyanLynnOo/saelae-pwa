@@ -108,6 +108,8 @@ const CustomInput = forwardRef(
   )
 );
 
+CustomInput.displayName = 'CustomInput';
+
 export const OnboardingStepper = () => {
   const router = useRouter();
   const [step, setStep] = React.useState(1);
