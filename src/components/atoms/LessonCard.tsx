@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { SLTypo } from "../SLTypo";
 import { ImagePlaceholder } from "./ImagePlaceholder";
+import Image from "next/image";
 
 interface LessonCardProps {
   title: string;
@@ -48,9 +49,11 @@ export function LessonCard({
           className={`flex flex-col ${state === "completed" ? "justify-center" : "justify-start"}`}
         >
           {(imageUrl && (
-            <img
+            <Image
               src={imageUrl || "/placeholder.svg"}
               alt=""
+              width={48}
+              height={48}
               className="h-12 w-12 rounded-sm object-cover"
             />
           )) || (
