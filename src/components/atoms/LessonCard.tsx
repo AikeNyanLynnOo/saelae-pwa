@@ -1,0 +1,127 @@
+"use client";
+
+import { CalendarDays, CheckCircle, CircleCheck } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { SLTypo } from "../SLTypo";
+import { ImagePlaceholder } from "./ImagePlaceholder";
+
+interface LessonCardProps {
+  title: string;
+  description: string;
+  imageUrl?: string;
+  state: "default" | "completed" | "progress";
+  progressValue?: number;
+  onButtonClick?: () => void;
+  buttonText?: string;
+  totalLessons?: string;
+  completedLessons?: string;
+}
+
+export function LessonCard({
+  title,
+  description,
+  imageUrl = "",
+  state = "default",
+  progressValue = 0,
+  onButtonClick,
+  buttonText = "စတင်သင်ယူမယ်",
+  totalLessons,
+  completedLessons,
+}: LessonCardProps) {
+  return (
+    <Card className="w-full max-w-md shadow-sm">
+      {state === "progress" && (
+        <div className="px-4 mt-4 flex flex-wrap gap-2">
+          <SLTypo
+            as="span"
+            variant="fontLabelMedium"
+            className="text-[var(--semantic-color-text-brand-default)] bg-[var(--semantic-color-bg-brand-subtlest)] px-[var(--core-spacing-sm)] py-0.5 rounded-full"
+          >
+            သင်ယူနေဆဲ
+          </SLTypo>
+        </div>
+      )}
+      <CardContent className="flex gap-4 p-4 relative">
+        <div
+          className={`flex flex-col ${state === "completed" ? "justify-center" : "justify-start"}`}
+        >
+          {(imageUrl && (
+            <img
+              src={imageUrl || "/placeholder.svg"}
+              alt=""
+              className="h-12 w-12 rounded-sm object-cover"
+            />
+          )) || (
+            <ImagePlaceholder
+              className="h-10 w-10 rounded-none"
+              containerClassName="mb-0"
+            />
+          )}
+        </div>
+
+        <div className="flex-1">
+          <div className="space-y-1">
+            <SLTypo
+              variant="fontH6Semibold"
+              className="text-[var(--semantic-color-text-default)] mb-2"
+            >
+              {title}
+            </SLTypo>
+            <SLTypo
+              as="p"
+              variant="fontBody3Normal"
+              className="text-[var(--semantic-color-text-subtle)] !leading-6 mb-2"
+            >
+              {description}
+            </SLTypo>
+
+            {totalLessons && (
+              <SLTypo
+                as="p"
+                variant="fontBody3Normal"
+                className="text-[var(--semantic-color-text-subtle)] !leading-6 mb-2 flex items-center gap-1"
+              >
+                <CalendarDays className="w-3 h-3" />
+                {`သင်ခန်းစာ ${totalLessons} ခု`}
+              </SLTypo>
+            )}
+          </div>
+          {state === "completed" && (
+            <CircleCheck
+              className="h-6 w-6 text-white absolute top-1/2 -translate-y-1/2 right-3"
+              fill="#28A745"
+            />
+          )}
+
+          {/* Progress State */}
+          {state === "progress" && (
+            <div className="mt-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <Progress value={progressValue} />
+                <SLTypo
+                  as="span"
+                  variant="fontBody3Normal"
+                  className="text-[var(--semantic-color-text-subtle)] !leading-6 whitespace-nowrap"
+                >
+                  {`${completedLessons} ပိုင်း သင်ယူပြီး`}
+                </SLTypo>
+              </div>
+              <Button onClick={onButtonClick} className="w-fit">
+                စတင်သင်ယူမယ်
+              </Button>
+            </div>
+          )}
+
+          {/* Default State */}
+          {state === "default" && (
+            <Button onClick={onButtonClick} className="w-fit mt-3">
+              စတင်သင်ယူမယ်
+            </Button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

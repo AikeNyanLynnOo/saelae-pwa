@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_Myanmar } from "next/font/google";
+import { Noto_Sans_Myanmar, Figtree, Manrope } from "next/font/google";
 import "./globals.css";
 import "../lib/tokens.css";
 import RootLayoutClient from "./RootLayoutClient";
@@ -7,9 +7,23 @@ import RootLayoutClient from "./RootLayoutClient";
 const notoMyanmar = Noto_Sans_Myanmar({
   subsets: ["myanmar"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-selel",
+  variable: "--font-saelae",
   display: "swap",
   fallback: ["sans-serif"],
+});
+
+const figtree = Figtree({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-figtree",
+  display: "swap",
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-manrope",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -44,7 +58,7 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       </head>
-      <body className={notoMyanmar.className}>
+      <body className={`${notoMyanmar.variable} ${figtree.variable} ${manrope.variable}`}>
         <RootLayoutClient>{children}</RootLayoutClient>
       </body>
     </html>

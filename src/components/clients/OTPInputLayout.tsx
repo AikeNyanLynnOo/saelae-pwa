@@ -43,7 +43,7 @@ export const OTPInputLayout = () => {
 
   return (
     <CommonLayout customClasses="items-start relative">
-      <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit text-center flex flex-col">
+      <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit text-center flex flex-col px-4 sm:px-0">
         {/* Image Placeholder */}
         <ImagePlaceholder />
 
