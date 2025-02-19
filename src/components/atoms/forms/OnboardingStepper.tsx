@@ -109,6 +109,8 @@ const CustomInput = forwardRef(
   )
 );
 
+CustomInput.displayName = 'CustomInput';
+
 export const OnboardingStepper = () => {
   const { setLoadingText } = useCommonStore();
   const router = useRouter();
