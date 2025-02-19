@@ -26,6 +26,7 @@ import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import { useRouter } from "next/navigation";
 import { forwardRef } from "react";
+import { useCommonStore } from "@/store/common-store";
 
 interface StepProps {
   isActive: boolean;
@@ -109,6 +110,7 @@ const CustomInput = forwardRef(
 );
 
 export const OnboardingStepper = () => {
+  const { setLoadingText } = useCommonStore();
   const router = useRouter();
   const [step, setStep] = React.useState(1);
   const [formData, setFormData] = React.useState({
@@ -130,7 +132,7 @@ export const OnboardingStepper = () => {
 
   const totalSteps = 3;
 
-  const canProceed = () => {
+  const canProceed = React.useMemo(() => {
     switch (step) {
       case 1:
         return (
@@ -148,11 +150,14 @@ export const OnboardingStepper = () => {
       default:
         return false;
     }
-  };
+  }, [step, formData]);
 
   const handleNext = () => {
     if (step === totalSteps) {
       router.push("/onboard/personalize");
+      setLoadingText(
+        `${formData.relationship} အတွက် အဆင်ပြေဆုံးဖြစ်မယ့် ဘာသာရပ်များကို ရွေးခြယ်ပေးနေပါတယ်...`
+      );
     }
     if (step < totalSteps) {
       setStep(step + 1);
@@ -477,7 +482,7 @@ export const OnboardingStepper = () => {
       </div>
 
       <div className="absolute bottom-0 w-full bg-[var(--semantic-color-bg-layoutsecondary)] lg:bg-transparent p-[var(--core-spacing-xl)] lg:px-0 rounded-t-[var(--core-border-radius-md)]">
-        <Button disabled={!canProceed()} onClick={handleNext}>
+        <Button disabled={!canProceed} onClick={handleNext}>
           ဆက်သွားမယ် <MoveRight className="!h-4 ml-1" />
         </Button>
       </div>

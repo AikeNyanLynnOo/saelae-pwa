@@ -29,12 +29,14 @@
     "react-datepicker": "^8.0.0",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
+    "react-hot-toast": "^2.5.2",
     "react-international-phone": "^4.5.0",
     "sass": "^1.83.4",
     "sonner": "^1.5.0",
     "style-dictionary": "^4.3.2",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@types/node": "^20",

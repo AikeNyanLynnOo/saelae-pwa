@@ -15,7 +15,7 @@ const CustomDatePicker = ({
   customInput: any;
   onSelect: (date: Date | null) => void;
 }) => {
-  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(null);
   const years = Array.from(
     { length: getYear(new Date()) - 1990 + 1 },
     (_, i) => 1990 + i
