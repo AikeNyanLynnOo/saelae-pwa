@@ -10,7 +10,7 @@ export const PersonalizationLayout = () => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 30000);
+    }, 6000);
   }, []);
 
   return (
