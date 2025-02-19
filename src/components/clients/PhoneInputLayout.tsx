@@ -7,8 +7,10 @@ import { Button } from "../ui/button";
 import { SLPhoneInput } from "../atoms/forms/SLPhoneInput";
 import { ParsedCountry } from "../atoms/forms/PhoneInput/types";
 import { splitInputValue } from "../atoms/forms/PhoneInput/utils/splitInputValue";
+import { useRouter } from "next/navigation";
 
 export const PhoneInputLayout = () => {
+  const router = useRouter();
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("");
   const [inputValue, setInputValue] = useState("");
@@ -45,9 +47,7 @@ export const PhoneInputLayout = () => {
         </InputGroup>
 
         {/* Submit Button */}
-        <Button>
-          အတည်ပြုမယ်
-        </Button>
+        <Button onClick={() => router.push("/auth/otp")}>အတည်ပြုမယ်</Button>
       </div>
     </CommonLayout>
   );

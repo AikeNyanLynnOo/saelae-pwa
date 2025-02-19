@@ -1,10 +1,20 @@
+import { useEffect } from "react";
+import { useState } from "react";
 import { LessonCard } from "../atoms/LessonCard";
 import { CommonLayout } from "../layouts/CommonLayout";
 import { SLTypo } from "../SLTypo";
 
 export const PersonalizationLayout = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 30000);
+  }, []);
+
   return (
-    <CommonLayout isLoading={false}>
+    <CommonLayout isLoading={isLoading}>
       <div className="space-y-[var(--core-spacing-xl)] pb-12 w-full md:w-4/6 lg:w-3/6 mx-auto min-h-[100dvh] max-h-[100vh] overflow-y-scroll relative hide-scrollbar">
         <div className="pt-10 px-4 lg:px-0">
           {/* Title */}

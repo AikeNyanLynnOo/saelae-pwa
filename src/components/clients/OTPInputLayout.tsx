@@ -1,5 +1,5 @@
 "use client";
-import { RotateCw } from "lucide-react";
+import { RotateCw, Router } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ImagePlaceholder } from "../atoms/ImagePlaceholder";
 import { InputGroup } from "../atoms/forms/InputGroup";
@@ -12,12 +12,26 @@ import {
   InputOTPSlot,
 } from "../ui/input-otp";
 import { SLTypo } from "../SLTypo";
+import { useRouter } from "next/navigation";
+
+import toast, { Toaster } from "react-hot-toast";
 
 export const OTPInputLayout = () => {
+  const router = useRouter();
+
   const [otp, setOtp] = useState("");
 
   const [timeLeft, setTimeLeft] = useState(60); // 60 seconds timer
   const [isResendDisabled, setIsResendDisabled] = useState(false);
+
+  useEffect(() => {
+    if (otp.length === 6) {
+      toast.success("Successfully verified!");
+      setTimeout(() => {
+        router.push("/onboard");
+      }, 1000);
+    }
+  }, [otp]);
 
   useEffect(() => {
     if (timeLeft === 0) {
@@ -102,7 +116,7 @@ export const OTPInputLayout = () => {
           ပြန်ပို့မယ်
         </Button>
       </div>
+      <Toaster position="bottom-center" reverseOrder={false} />
     </CommonLayout>
   );
 };
-
