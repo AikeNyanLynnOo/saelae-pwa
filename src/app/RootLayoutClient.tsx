@@ -2,6 +2,7 @@
 
 import React from "react";
 import "./globals.css";
+import { FloatingBanner } from "@/components/atoms/FloatingBanner";
 
 export default function RootLayoutClient({
   children,
@@ -12,7 +13,15 @@ export default function RootLayoutClient({
   const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null);
   const [isInstallable, setIsInstallable] = React.useState(false);
 
+  // Add detection for iOS
+  const [isIOS, setIsIOS] = React.useState(false);
+
   React.useEffect(() => {
+    // Check if device is iOS
+    const isIOSDevice =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    setIsIOS(isIOSDevice);
+
     // Service Worker registration
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
@@ -59,15 +68,14 @@ export default function RootLayoutClient({
   return (
     <div className="flex flex-col">
       <div className="min-h-[100dvh] container mx-auto px-0 md:px-5 lg:px-12 xl:px-20 max-w-screen-lg">
-        {(isInstallable && (
-          <button
-            onClick={handleInstallClick}
-            className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg"
-          >
-            Install App
-          </button>
-        )) ||
-          "not installable"}
+        {isIOS ? (
+          <FloatingBanner
+            handleInstallClick={handleInstallClick}
+            isIOS={isIOS}
+          />
+        ) : isInstallable ? (
+          <FloatingBanner handleInstallClick={handleInstallClick}/>
+        ) : null}
         {children}
       </div>
     </div>
