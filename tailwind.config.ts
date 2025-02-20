@@ -9,6 +9,31 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        slideInFromTop: {
+          "0%": {
+            left: "50%",
+            transform: "translate(-50%,-100%)",
+            opacity: "0",
+          },
+          "100%": { left: "50%", transform: "translate(-50%,0)", opacity: "1" },
+        },
+        slideOutToTop: {
+          "0%": {
+            left: "50%",
+            transform: "translate(-50%,0)",
+            opacity: "1",
+          },
+          "100%": {
+            left: "50%",
+            transform: "translate(-50%,-100%)",
+          },
+        },
+      },
+      animation: {
+        slideInFromTop: "slideInFromTop 0.3s ease-out",
+        slideOutToTop: "slideOutToTop 0.2s ease-out",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
