@@ -116,7 +116,7 @@ export const OTPInputLayout = () => {
           ပြန်ပို့မယ်
         </Button>
       </div>
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
     </CommonLayout>
   );
 };
