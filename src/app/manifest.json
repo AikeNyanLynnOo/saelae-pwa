@@ -4,6 +4,7 @@
   "theme_color": "#735EFA",
   "background_color": "#333333",
   "start_url": "/",
+  "id": "/",
   "display": "standalone",
   "description": "SaeLae is a family-friendly web app designed to help parents and caregivers share knowledge and medical insights about baby care. Whether you're a first-time parent or an experienced caregiver, this platform provides a trusted space to access expert-backed information and share real-life experiences.",
   "icons": [
@@ -29,19 +30,19 @@
     {
       "src": "screenshot1.png",
       "type": "image/jpg",
-      "sizes": "1080x1920",
+      "sizes": "459x653",
       "form_factor": "narrow"
     },
     {
       "src": "screenshot2.png",
       "type": "image/jpg",
-      "sizes": "1080x1920",
+      "sizes": "459x653",
       "form_factor": "narrow"
     },
     {
       "src": "screenshot3.png",
       "type": "image/jpg",
-      "sizes": "1080x1920",
+      "sizes": "459x653",
       "form_factor": "wide"
     }
   ]
