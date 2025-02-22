@@ -1,23 +1,25 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
 // Twemoji is used for emoji rendering
 // https://twemoji.twitter.com
 
-import '../styles/FlagImage.style.scss';
+import "@/components/atoms/forms/PhoneInput/styles/FlagImage.style.scss";
 
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties } from "react";
 
-import { buildClassNames } from '../buildClassNames';
-import { ParsedCountry } from '../types';
+import { buildClassNames } from "@/components/atoms/forms/PhoneInput/buildClassNames";
+import { ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
 
 const incrementCodepoint = (codePoint: string, incrementBy: number): string => {
   const decimal = parseInt(codePoint, 16);
   return Number(decimal + incrementBy).toString(16);
 };
 
-const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-const A_LETTER_CODEPOINT = '1f1e6';
+const A_LETTER_CODEPOINT = "1f1e6";
 const codepoints: Record<string, string> = alphabet
-  .split('')
+  .split("")
   .reduce((obj, currentLetter, index) => {
     return {
       ...obj,
@@ -31,8 +33,8 @@ const codepoints: Record<string, string> = alphabet
  * For example: '🇺🇦' -> U+1F1FA (U letter), U+1F1E6 (A letter)
  * For Twemoji we need to pass codepoints in format `1f1fa-1f1e6`
  */
-const getFlagCodepointByIso2 = (iso2: ParsedCountry['iso2']) => {
-  return [codepoints[iso2[0]], codepoints[iso2[1]]].join('-');
+const getFlagCodepointByIso2 = (iso2: ParsedCountry["iso2"]) => {
+  return [codepoints[iso2[0]], codepoints[iso2[1]]].join("-");
 };
 
 export interface FlagImageProps
@@ -41,12 +43,12 @@ export interface FlagImageProps
    * @description iso2 code of country flag
    * @required
    */
-  iso2?: ParsedCountry['iso2'];
+  iso2?: ParsedCountry["iso2"];
   /**
    * @description Size of flag
    * @default undefined
    */
-  size?: CSSProperties['width'];
+  size?: CSSProperties["width"];
   /**
    * @description Custom src of flag
    * @default undefined
@@ -56,7 +58,7 @@ export interface FlagImageProps
    * @description Protocol to use with twemoji cnd
    * @default "https"
    */
-  protocol?: 'http' | 'https';
+  protocol?: "http" | "https";
   /**
    * @description Disable lazy loading of flags (loading="lazy" attribute will not be set)
    * @default undefined
@@ -68,7 +70,7 @@ export const FlagImage: React.FC<FlagImageProps> = ({
   iso2,
   size,
   src,
-  protocol = 'https',
+  protocol = "https",
   disableLazyLoading,
   className,
   style,
@@ -79,7 +81,7 @@ export const FlagImage: React.FC<FlagImageProps> = ({
     return (
       <img
         className={buildClassNames({
-          addPrefix: ['flag-emoji'],
+          addPrefix: ["flag-emoji"],
           rawClassNames: [className],
         })}
         width={size}
@@ -99,7 +101,7 @@ export const FlagImage: React.FC<FlagImageProps> = ({
   return (
     <img
       className={buildClassNames({
-        addPrefix: ['flag-emoji'],
+        addPrefix: ["flag-emoji"],
         rawClassNames: [className],
       })}
       src={getSrc()}
@@ -107,7 +109,7 @@ export const FlagImage: React.FC<FlagImageProps> = ({
       height={size}
       draggable={false}
       data-country={iso2}
-      loading={disableLazyLoading ? undefined : 'lazy'}
+      loading={disableLazyLoading ? undefined : "lazy"}
       style={{
         width: size,
         height: size,

@@ -1,5 +1,5 @@
-import { OnboardingStepper } from "../atoms/forms/OnboardingStepper";
-import { CommonLayout } from "../layouts/CommonLayout";
+import { OnboardingStepper } from "@/components/atoms/forms/OnboardingStepper";
+import { CommonLayout } from "@/components/layouts/CommonLayout";
 
 export const OnboardingLayout = () => {
   return (

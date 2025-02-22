@@ -1,18 +1,21 @@
-import '../styles/CountrySelector.style.scss';
+import "@/components/atoms/forms/PhoneInput/styles/CountrySelector.style.scss";
 
 import React, { useMemo, useRef, useState } from "react";
 
-import { defaultCountries } from "../data";
-import { buildClassNames } from "../buildClassNames";
-import { CountryData, CountryIso2 } from "../types";
+import { defaultCountries } from "@/components/atoms/forms/PhoneInput/data";
+import { buildClassNames } from "@/components/atoms/forms/PhoneInput/buildClassNames";
+import {
+  CountryData,
+  CountryIso2,
+} from "@/components/atoms/forms/PhoneInput/types";
 
-import { getCountry } from "../utils/getCountry";
-import { FlagImage } from "../FlagImage/FlagImage";
+import { getCountry } from "@/components/atoms/forms/PhoneInput/utils/getCountry";
+import { FlagImage } from "@/components/atoms/forms/PhoneInput/FlagImage/FlagImage";
 import {
   CountrySelectorDropdown,
   CountrySelectorDropdownProps,
   CountrySelectorDropdownStyleProps,
-} from "./CountrySelectorDropdown";
+} from "@/components/atoms/forms/PhoneInput/CountrySelector/CountrySelectorDropdown";
 
 export interface CountrySelectorStyleProps {
   style?: React.CSSProperties;

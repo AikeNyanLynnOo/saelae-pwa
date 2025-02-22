@@ -1,12 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker } from "react-day-picker";
 
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
-import CustomDatePicker from "../atoms/forms/CustomDatePicker/CustomDatePicker";
+import CustomDatePicker from "@/components/atoms/forms/CustomDatePicker/CustomDatePicker";
 
 export type CalendarProps = React.ComponentProps<any>;
 

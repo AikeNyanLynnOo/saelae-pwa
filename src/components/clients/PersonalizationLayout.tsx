@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { LessonCard } from "../atoms/LessonCard";
-import { CommonLayout } from "../layouts/CommonLayout";
-import { SLTypo } from "../SLTypo";
+import { LessonCard } from "@/components/atoms/LessonCard";
+import { CommonLayout } from "@/components/layouts/CommonLayout";
+import { SLTypo } from "@/components/SLTypo";
 
 export const PersonalizationLayout = () => {
   const [isLoading, setIsLoading] = useState(true);

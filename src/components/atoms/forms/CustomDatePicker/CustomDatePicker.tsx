@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./customDatePicker.css"; // Import your custom styles
+import "@/components/atoms/forms/CustomDatePicker/customDatePicker.css";
 import { getMonth, getYear } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";

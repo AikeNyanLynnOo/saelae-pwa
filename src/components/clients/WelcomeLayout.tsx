@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ImagePlaceholder } from "../atoms/ImagePlaceholder";
-import { CommonLayout } from "../layouts/CommonLayout";
-import { SLTypo } from "../SLTypo";
-import { Button } from "../ui/button";
+import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
+import { CommonLayout } from "@/components/layouts/CommonLayout";
+import { SLTypo } from "@/components/SLTypo";
+import { Button } from "@/components/ui/button";
 
 export const WelcomeLayout = () => {
   return (

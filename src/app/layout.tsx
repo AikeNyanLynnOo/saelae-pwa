@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Noto_Sans_Myanmar, Figtree, Manrope } from "next/font/google";
 import "@/app/globals.css";
 import "@/lib/tokens.css";
-import RootLayoutClient from "./RootLayoutClient";
+import RootLayoutClient from "@/app/RootLayoutClient";
 
 const notoMyanmar = Noto_Sans_Myanmar({
   subsets: ["myanmar"],
@@ -39,12 +39,18 @@ export const metadata: Metadata = {
       url: "https://www.linkedin.com/in/aikeoo/",
     },
   ],
-  viewport:
-    "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   icons: [
     { rel: "apple-touch-icon", url: "icon512_rounded.png" },
     { rel: "icon", url: "icon512_rounded.png" },
   ],
+};
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  minimumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

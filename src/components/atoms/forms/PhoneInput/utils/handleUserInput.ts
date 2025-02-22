@@ -1,8 +1,8 @@
-import { ParsedCountry } from '../types';
-import { isNumeric } from './isNumeric';
-import { handlePhoneChange, PhoneFormattingConfig } from './handlePhoneChange';
-import { getCursorPosition } from './getCursorPosition';
-import { toE164 } from './toE164';
+import { ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
+import { isNumeric } from "@/components/atoms/forms/PhoneInput/utils/isNumeric";
+import { handlePhoneChange, PhoneFormattingConfig } from "@/components/atoms/forms/PhoneInput/utils/handlePhoneChange";
+import { getCursorPosition } from "@/components/atoms/forms/PhoneInput/utils/getCursorPosition";
+import { toE164 } from "@/components/atoms/forms/PhoneInput/utils/toE164";
 
 const getDeletionType = (inputType?: string) => {
   const isDeletion = inputType?.toLocaleLowerCase().includes('delete') ?? false;

@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
-import { CommonLayout } from "../layouts/CommonLayout";
-import { ImagePlaceholder } from "../atoms/ImagePlaceholder";
-import { InputGroup } from "../atoms/forms/InputGroup";
-import { Button } from "../ui/button";
-import { SLPhoneInput } from "../atoms/forms/SLPhoneInput";
-import { ParsedCountry } from "../atoms/forms/PhoneInput/types";
-import { splitInputValue } from "../atoms/forms/PhoneInput/utils/splitInputValue";
+import { CommonLayout } from "@/components/layouts/CommonLayout";
+import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
+import { InputGroup } from "@/components/atoms/forms/InputGroup";
+import { Button } from "@/components/ui/button";
+import { SLPhoneInput } from "@/components/atoms/forms/SLPhoneInput";
+import { ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
+import { splitInputValue } from "@/components/atoms/forms/PhoneInput/utils/splitInputValue";
 import { useRouter } from "next/navigation";
 
 export const PhoneInputLayout = () => {

@@ -1,17 +1,17 @@
 "use client";
 import { RotateCw, Router } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ImagePlaceholder } from "../atoms/ImagePlaceholder";
-import { InputGroup } from "../atoms/forms/InputGroup";
-import { CommonLayout } from "../layouts/CommonLayout";
-import { Button } from "../ui/button";
+import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
+import { InputGroup } from "@/components/atoms/forms/InputGroup";
+import { CommonLayout } from "@/components/layouts/CommonLayout";
+import { Button } from "@/components/ui/button";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "../ui/input-otp";
-import { SLTypo } from "../SLTypo";
+} from "@/components/ui/input-otp";
+import { SLTypo } from "@/components/SLTypo";
 import { useRouter } from "next/navigation";
 
 import toast, { Toaster } from "react-hot-toast";
@@ -31,7 +31,7 @@ export const OTPInputLayout = () => {
         router.push("/onboard");
       }, 1000);
     }
-  }, [otp]);
+  }, [otp, router]);
 
   useEffect(() => {
     if (timeLeft === 0) {

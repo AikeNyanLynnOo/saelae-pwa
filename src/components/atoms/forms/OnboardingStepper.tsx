@@ -1,32 +1,26 @@
 "use client";
 
-import * as React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { InputGroup } from "@/components/atoms/forms/InputGroup";
 import { SLTypo } from "@/components/SLTypo";
-import { CalendarIcon, MoveRight } from "lucide-react";
-import { InputGroup } from "./InputGroup";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 import {
   Select,
+  SelectContent,
   SelectGroup,
   SelectItem,
-  SelectContent,
-  SelectLabel,
-  SelectValue,
   SelectTrigger,
+  SelectValue
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
-import { useRouter } from "next/navigation";
-import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 import { useCommonStore } from "@/store/common-store";
+import { format } from "date-fns";
+import { CalendarIcon, MoveRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import * as React from "react";
+import { forwardRef } from "react";
 
 interface StepProps {
   isActive: boolean;
