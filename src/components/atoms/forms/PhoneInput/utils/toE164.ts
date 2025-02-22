@@ -1,4 +1,4 @@
-import { removeNonDigits } from "./removeNonDigits";
+import { removeNonDigits } from "@/components/atoms/forms/PhoneInput/utils/removeNonDigits";
 
 export const toE164 = ({
   phone,

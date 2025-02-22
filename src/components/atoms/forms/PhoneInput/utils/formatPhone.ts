@@ -1,5 +1,5 @@
-import { applyMask } from "./applyMask";
-import { removeNonDigits } from "./removeNonDigits";
+import { applyMask } from "@/components/atoms/forms/PhoneInput/utils/applyMask";
+import { removeNonDigits } from "@/components/atoms/forms/PhoneInput/utils/removeNonDigits";
 
 export interface FormatPhoneConfig {
   prefix: string;

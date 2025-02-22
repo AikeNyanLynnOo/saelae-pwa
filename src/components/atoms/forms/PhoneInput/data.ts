@@ -1,7 +1,7 @@
 // The data was originally taken from the form react-phone-input-2
 // https://github.com/bl00mber/react-phone-input-2/blob/master/src/rawCountries.js
 
-import { CountryData } from "./types";
+import { CountryData } from "@/components/atoms/forms/PhoneInput/types";
 
 // Country model:
 // [

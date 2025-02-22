@@ -1,6 +1,6 @@
 "use client";
 import { useMemo } from "react";
-import { SLLabel } from "./Label";
+import { SLLabel } from "@/components/atoms/forms/Label";
 import { twMerge } from "tailwind-merge";
 import { SLTypo } from "@/components/SLTypo";
 

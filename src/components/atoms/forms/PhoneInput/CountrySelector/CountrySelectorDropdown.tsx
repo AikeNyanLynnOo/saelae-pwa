@@ -1,4 +1,4 @@
-import "../styles/CountrySelectorDropdown.style.scss";
+import "@/components/atoms/forms/PhoneInput/styles/CountrySelectorDropdown.style.scss";
 
 import React, {
   useCallback,
@@ -8,18 +8,18 @@ import React, {
   useState,
 } from "react";
 
-import { defaultCountries } from "../data";
-import { buildClassNames } from "../buildClassNames";
+import { defaultCountries } from "@/components/atoms/forms/PhoneInput/data";
+import { buildClassNames } from "@/components/atoms/forms/PhoneInput/buildClassNames";
 
 import {
   CountryData,
   CountryIso2,
   CustomFlagImage,
   ParsedCountry,
-} from "../types";
-import { scrollToChild } from "../utils/scrollToChild";
-import { parseCountry } from "../utils/parseCountry";
-import { FlagImage } from "../FlagImage/FlagImage";
+} from "@/components/atoms/forms/PhoneInput/types";
+import { scrollToChild } from "@/components/atoms/forms/PhoneInput/utils/scrollToChild";
+import { parseCountry } from "@/components/atoms/forms/PhoneInput/utils/parseCountry";
+import { FlagImage } from "@/components/atoms/forms/PhoneInput/FlagImage/FlagImage";
 
 const SEARCH_DEBOUNCE_MS = 1000;
 

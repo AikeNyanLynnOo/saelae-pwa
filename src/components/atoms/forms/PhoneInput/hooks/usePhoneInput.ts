@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { defaultCountries } from "../data";
-import { CountryData, CountryIso2, ParsedCountry } from "../types";
-import { getCountry } from "../utils/getCountry";
-import { isMacOS } from "../utils/isMacOS";
+import { defaultCountries } from "@/components/atoms/forms/PhoneInput/data";
+import { CountryData, CountryIso2, ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
+import { getCountry } from "@/components/atoms/forms/PhoneInput/utils/getCountry";
+import { isMacOS } from "@/components/atoms/forms/PhoneInput/utils/isMacOS";
 import {
   handlePhoneChange,
   PhoneFormattingConfig,
-} from "../utils/handlePhoneChange";
+} from "@/components/atoms/forms/PhoneInput/utils/handlePhoneChange";
 
-import { handleUserInput } from "../utils/handleUserInput";
-import { useHistoryState } from "./useHistoryState";
+import { handleUserInput } from "@/components/atoms/forms/PhoneInput/utils/handleUserInput";
+import { useHistoryState } from "@/components/atoms/forms/PhoneInput/hooks/useHistoryState";
 
 export const MASK_CHAR = ".";
 

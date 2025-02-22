@@ -1,11 +1,11 @@
-import { MASK_CHAR } from '../hooks/usePhoneInput';
-import { CountryData, ParsedCountry } from '../types';
+import { MASK_CHAR } from "@/components/atoms/forms/PhoneInput/hooks/usePhoneInput";
+import { CountryData, ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
 
-import { getActiveFormattingMask } from './getActiveFormattingMask';
+import { getActiveFormattingMask } from "@/components/atoms/forms/PhoneInput/utils/getActiveFormattingMask";
 
-import { formatPhone } from './formatPhone';
-import { toE164 } from './toE164';
-import { guessCountryByPartialNumber } from './guessCountryByPartialNumber';
+import { formatPhone } from "@/components/atoms/forms/PhoneInput/utils/formatPhone";
+import { toE164 } from "@/components/atoms/forms/PhoneInput/utils/toE164";
+import { guessCountryByPartialNumber } from "@/components/atoms/forms/PhoneInput/utils/guessCountryByPartialNumber";
 
 export interface PhoneFormattingConfig {
   countries: CountryData[];

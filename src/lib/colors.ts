@@ -9,7 +9,7 @@ import {
   corePaletteRed800,
   corePaletteRed900,
   corePaletteRed1000,
-} from "./tokens";
+} from "@/lib/tokens";
 
 export const COLORS = {
   saelaered: {

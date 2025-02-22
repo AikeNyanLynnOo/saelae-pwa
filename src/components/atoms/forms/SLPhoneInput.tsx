@@ -1,12 +1,12 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import { useMemo } from "react";
 
-import { usePhoneInput } from "./PhoneInput/hooks/usePhoneInput";
-import { CountrySelector } from "./PhoneInput/CountrySelector/CountrySelector";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ParsedCountry } from "./PhoneInput/types";
-import { splitInputValue } from "./PhoneInput/utils/splitInputValue";
+import { Input } from "@/components/ui/input";
+import { CountrySelector } from "@/components/atoms/forms/PhoneInput/CountrySelector/CountrySelector";
+import { usePhoneInput } from "@/components/atoms/forms/PhoneInput/hooks/usePhoneInput";
+import { ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
+import { splitInputValue } from "@/components/atoms/forms/PhoneInput/utils/splitInputValue";
 
 interface SLPhoneInputProps {
   value?: string;
@@ -53,7 +53,7 @@ export const SLPhoneInput = ({
       return phoneInput.inputValue;
     }
     return "";
-  }, [phoneInput.inputValue]);
+  }, [phoneInput.inputValue, setShowBottomMm]);
 
   return (
     <div className="flex items-center gap-x-2">

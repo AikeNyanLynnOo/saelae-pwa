@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
-import { CommonLayout } from "../layouts/CommonLayout";
+import { CommonLayout } from "@/components/layouts/CommonLayout";
 import spinner from "../../../public/lotties/spinner.json";
 
 export const LoadingSpinner = () => {

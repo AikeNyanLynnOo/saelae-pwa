@@ -1,8 +1,8 @@
 "use client";
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
-import { LoadingSpinner } from "../atoms/Loading";
-import { SLTypo } from "../SLTypo";
+import { LoadingSpinner } from "@/components/atoms/Loading";
+import { SLTypo } from "@/components/SLTypo";
 import { useCommonStore } from "@/store/common-store";
 
 interface CommonLayoutProps {

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import "./globals.css";
+import "@/app/globals.css";
 import { FloatingBanner } from "@/components/atoms/FloatingBanner";
 
 export default function RootLayoutClient({
@@ -74,7 +74,7 @@ export default function RootLayoutClient({
             isIOS={isIOS}
           />
         ) : isInstallable ? (
-          <FloatingBanner handleInstallClick={handleInstallClick}/>
+          <FloatingBanner handleInstallClick={handleInstallClick} />
         ) : null}
         {children}
       </div>

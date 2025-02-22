@@ -1,6 +1,6 @@
-import { defaultCountries } from "../data";
-import { CountryData, ParsedCountry } from "../types";
-import { parseCountry } from "./parseCountry";
+import { defaultCountries } from "@/components/atoms/forms/PhoneInput/data";
+import { CountryData, ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
+import { parseCountry } from "@/components/atoms/forms/PhoneInput/utils/parseCountry";
 
 const constructFieldNotSupportedErrorMessage = (field: keyof ParsedCountry) => {
   return `Field "${field}" is not supported`;

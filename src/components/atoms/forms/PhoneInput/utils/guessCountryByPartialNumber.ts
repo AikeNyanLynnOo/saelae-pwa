@@ -1,14 +1,14 @@
-import { defaultCountries } from "../data";
+import { defaultCountries } from "@/components/atoms/forms/PhoneInput/data";
 import {
   CountryData,
   CountryGuessResult,
   CountryIso2,
   ParsedCountry,
-} from "../types";
+} from "@/components/atoms/forms/PhoneInput/types";
 
-import { removeNonDigits } from "./removeNonDigits";
-import { getCountry } from "./getCountry";
-import { parseCountry } from "./parseCountry";
+import { removeNonDigits } from "@/components/atoms/forms/PhoneInput/utils/removeNonDigits";
+import { getCountry } from "@/components/atoms/forms/PhoneInput/utils/getCountry";
+import { parseCountry } from "@/components/atoms/forms/PhoneInput/utils/parseCountry";
 
 export const guessCountryByPartialNumber = ({
   phone: partialPhone,

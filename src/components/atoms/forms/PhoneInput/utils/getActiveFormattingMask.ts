@@ -1,6 +1,6 @@
-import { MASK_CHAR } from "../hooks/usePhoneInput";
-import { ParsedCountry } from "../types";
-import { removeNonDigits } from "./removeNonDigits";
+import { MASK_CHAR } from "@/components/atoms/forms/PhoneInput/hooks/usePhoneInput";
+import { ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
+import { removeNonDigits } from "@/components/atoms/forms/PhoneInput/utils/removeNonDigits";
 /**
  * Get the country mask format based on the phone value.
  * Since country can have multiple mask formats this function select proper mask based on regex

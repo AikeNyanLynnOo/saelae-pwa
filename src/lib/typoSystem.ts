@@ -19,7 +19,7 @@ import {
   fontH5,
   fontH6,
   fontLabel,
-} from "./tokens";
+} from "@/lib/tokens";
 
 export const notoMyanmar = "'Noto-Sans-Myanmar', 'Inter', sans-serif";
 

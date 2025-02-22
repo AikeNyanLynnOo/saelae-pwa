@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { isShallowEqualObjects } from '../utils/isShallowEqualObjects';
-import { useTimer } from './useTimer';
+import { isShallowEqualObjects } from "@/components/atoms/forms/PhoneInput/utils/isShallowEqualObjects";
+import { useTimer } from "@/components/atoms/forms/PhoneInput/hooks/useTimer";
 
 interface UseHistoryStateConfig<T> {
   size?: number;

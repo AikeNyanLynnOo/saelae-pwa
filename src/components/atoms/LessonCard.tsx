@@ -1,12 +1,12 @@
 "use client";
 
-import { CalendarDays, CheckCircle, CircleCheck } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { SLTypo } from "../SLTypo";
-import { ImagePlaceholder } from "./ImagePlaceholder";
+import { CalendarDays, CircleCheck } from "lucide-react";
 import Image from "next/image";
+import { SLTypo } from "@/components/SLTypo";
+import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
 
 interface LessonCardProps {
   title: string;

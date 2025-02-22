@@ -1,4 +1,4 @@
-import { isNumeric } from "./isNumeric";
+import { isNumeric } from "@/components/atoms/forms/PhoneInput/utils/isNumeric";
 
 interface GetCursorPositionProps {
   phoneBeforeInput: string;

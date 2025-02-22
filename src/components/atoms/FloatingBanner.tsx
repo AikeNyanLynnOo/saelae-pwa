@@ -1,7 +1,7 @@
 "use client";
 
+import { ArrowDownToLine } from "lucide-react";
 import * as React from "react";
-import { ArrowDownToLine, Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
