@@ -71,6 +71,7 @@ export const OTPInputLayout = () => {
           <InputOTP
             maxLength={6}
             value={otp}
+            pattern="^[0-9]+$"
             onChange={(value) => setOtp(value)}
           >
             <InputOTPGroup>

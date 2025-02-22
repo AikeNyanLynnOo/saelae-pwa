@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_Myanmar, Figtree, Manrope } from "next/font/google";
-import "./globals.css";
-import "../lib/tokens.css";
+import "@/app/globals.css";
+import "@/lib/tokens.css";
 import RootLayoutClient from "./RootLayoutClient";
 
 const notoMyanmar = Noto_Sans_Myanmar({

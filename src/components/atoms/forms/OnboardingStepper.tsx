@@ -109,7 +109,7 @@ const CustomInput = forwardRef(
   )
 );
 
-CustomInput.displayName = 'CustomInput';
+CustomInput.displayName = "CustomInput";
 
 export const OnboardingStepper = () => {
   const { setLoadingText } = useCommonStore();
@@ -123,7 +123,7 @@ export const OnboardingStepper = () => {
     dob: null,
 
     // step 2
-    isBorn: true,
+    isBorn: null as boolean | null,
 
     // step 3
     saelaeName: "",
@@ -141,7 +141,7 @@ export const OnboardingStepper = () => {
           formData.name && formData.city && formData.address && formData.dob
         );
       case 2:
-        return true; // No required fields in step 2
+        return typeof formData.isBorn === "boolean";
       case 3:
         return (
           formData.saelaeName &&
@@ -320,7 +320,7 @@ export const OnboardingStepper = () => {
             />
             <Button
               variant="outline"
-              className={`w-full ${formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
+              className={`w-full ${typeof formData.isBorn === "boolean" && formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
               onClick={() => setFormData({ ...formData, isBorn: true })}
             >
               <SLTypo
@@ -332,7 +332,7 @@ export const OnboardingStepper = () => {
             </Button>
             <Button
               variant="outline"
-              className={`w-full ${!formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
+              className={`w-full ${typeof formData.isBorn === "boolean" && !formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
               onClick={() => setFormData({ ...formData, isBorn: false })}
             >
               <SLTypo
