@@ -477,7 +477,7 @@ export const OnboardingStepper = () => {
         )}
       </div>
 
-      <div className="absolute bottom-0 w-full bg-[var(--semantic-color-bg-layoutsecondary)] lg:bg-transparent p-[var(--core-spacing-xl)] lg:px-0 rounded-t-[var(--core-border-radius-md)]">
+      <div className="absolute bottom-0 w-full bg-[var(--semantic-color-bg-layoutsecondary)] md:bg-transparent p-[var(--core-spacing-xl)] md:px-0 rounded-t-[var(--core-border-radius-md)]">
         <Button disabled={!canProceed} onClick={handleNext}>
           ဆက်သွားမယ် <MoveRight className="!h-4 ml-1" />
         </Button>
