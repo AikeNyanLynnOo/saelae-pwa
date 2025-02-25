@@ -4,7 +4,7 @@ import { CommonLayout } from "@/components/layouts/CommonLayout";
 export const OnboardingLayout = () => {
   return (
     <CommonLayout isLoading={false}>
-      <div className="w-full lg:w-3/6 min-h-[100dvh]">
+      <div className="w-full md:w-1/2 min-h-[100dvh]">
         <OnboardingStepper />
       </div>
     </CommonLayout>

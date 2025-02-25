@@ -32,7 +32,7 @@ export function LessonCard({
   completedLessons,
 }: LessonCardProps) {
   return (
-    <Card className="w-full max-w-md shadow-sm">
+    <Card className="w-full shadow-none rounded-[var(--core-border-radius-sm)]">
       {state === "progress" && (
         <div className="px-4 mt-4 flex flex-wrap gap-2">
           <SLTypo
