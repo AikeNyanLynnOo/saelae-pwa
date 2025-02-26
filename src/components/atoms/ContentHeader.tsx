@@ -23,6 +23,7 @@ interface ContentHeaderProps {
   onPrimaryButtonClick?: () => void;
   onHeartButtonClick?: () => void;
   isHeartActive?: boolean;
+  hideCta?: boolean;
 }
 
 export const ContentHeader = ({
@@ -31,7 +32,7 @@ export const ContentHeader = ({
   showBackButton = false,
   showPrimaryButton = false,
   showHeartButton = false,
-  primaryButtonText = "ဆက်လက်မယ်",
+  primaryButtonText = "ဉာဏ်စမ်းဖြေမယ်",
   customBackUrl,
   className,
   titleClassName,
@@ -41,6 +42,7 @@ export const ContentHeader = ({
   onPrimaryButtonClick,
   onHeartButtonClick,
   isHeartActive = false,
+  hideCta = false,
 }: ContentHeaderProps) => {
   const router = useRouter();
 
@@ -54,22 +56,19 @@ export const ContentHeader = ({
 
   return (
     <div className={cn("w-full px-6 py-4", className)}>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-[var(--core-spacing-md)]">
         {showBackButton && (
-          <button
-            onClick={handleBack}
-            className="hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
+          <Button variant="link" onClick={handleBack} className="w-fit p-0">
+            <ArrowLeft className="w-5 h-5 text-[var(--semantic-color-icon-default)]" />
+          </Button>
         )}
-        <div className="space-y-1">
+        <div className="space-y-[var(--core-spacing-base)]">
           <SLTypo
             as="h1"
             text={title}
-            variant={titleVariant || "fontH6Semibold"}
+            variant={titleVariant || "fontH4Semibold"}
             className={cn(
-              "text-[var(--semantic-color-text-bold)]",
+              "text-[var(--semantic-color-text-default)]",
               titleClassName
             )}
           />
@@ -77,7 +76,7 @@ export const ContentHeader = ({
             <SLTypo
               as="p"
               text={description}
-              variant={descriptionVariant || "fontBody2Normal"}
+              variant={descriptionVariant || "fontBody3Normal"}
               className={cn(
                 "text-[var(--semantic-color-text-subtle)]",
                 descriptionClassName
@@ -85,34 +84,36 @@ export const ContentHeader = ({
             />
           )}
         </div>
-        <div className="flex gap-1 items-center">
-          {showPrimaryButton && (
-            <div className="px-4">
+        {!hideCta && (
+          <div className="flex gap-[var(--core-spacing-md)] items-center">
+            {showPrimaryButton && (
               <Button
+                variant="outline"
+                className={`w-full rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)] border-none py-[var(--core-spacing-sm)]`}
                 onClick={onPrimaryButtonClick}
-                className="w-full bg-[var(--semantic-color-bg-brand-default)] hover:bg-[var(--semantic-color-bg-brand-hovered)]"
               >
-                {primaryButtonText}
+                <SLTypo
+                  as="span"
+                  text={primaryButtonText}
+                  variant="fontButtonMdSemibold"
+                  className="text-[var(--semantic-color-text-bold)]"
+                />
               </Button>
-            </div>
-          )}
-          {showHeartButton && (
-            <button
-              onClick={onHeartButtonClick}
-              className={cn(
-                "p-2 rounded-full transition-colors",
-                isHeartActive
-                  ? "text-red-500 hover:bg-red-50"
-                  : "text-gray-500 hover:bg-gray-100"
-              )}
-            >
-              <Heart
-                className="w-5 h-5"
-                fill={isHeartActive ? "currentColor" : "none"}
-              />
-            </button>
-          )}
-        </div>
+            )}
+            {showHeartButton && (
+              <Button
+                variant="outline"
+                className={`w-fit rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-new-subtlest)] hover:bg-[var(--semantic-color-bg-new-subtle)] border-none py-[var(--core-spacing-sm)] px-[var(--core-spacing-md)]`}
+                onClick={onHeartButtonClick}
+              >
+                <Heart
+                  className="w-5 h-5 text-[var(--semantic-color-icon-new-default)]"
+                  fill={isHeartActive ? "currentColor" : "none"}
+                />
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

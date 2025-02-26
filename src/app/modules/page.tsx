@@ -14,7 +14,7 @@ const items = [
   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
 ];
 
-export default function LessonsPage() {
+export default function ModulesPage() {
   return (
     <section>
       <TabLayout>
@@ -24,7 +24,6 @@ export default function LessonsPage() {
             label="ဘာသာရပ်များ"
             items={items}
             onChipClick={(value) => console.log("Clicked:", value)}
-            // className="sticky top-[72px] bg-white z-10"
           />
         </div>
         <div className="px-6 space-y-[var(--core-spacing-md)] pb-4">
@@ -38,7 +37,7 @@ export default function LessonsPage() {
           />
           <Divider className="my-0" />
         </div>
-        <div className="px-6 space-y-[var(--core-spacing-md)] pb-4">
+        <div className="px-6 space-y-[var(--core-spacing-md)] pb-20">
           <LessonCard
             title="ကိုယ်ဝန်ဆောင်ကျန်းမာရေး"
             description="ဆည်းလည်းလေးကို ကျန်းကျန်းမာမာနဲ့ ဖွားမြင်နိုင်ဖို့ဆို ဆည်းလည်းလေးရဲ့ မေမေကျန်းမာရေးနဲ့ ပတ်သက်တာတွေကို သင်ယူကြရအောင်နော်။"

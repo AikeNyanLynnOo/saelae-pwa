@@ -21,8 +21,8 @@ const tabs = [
   },
   {
     icon: <BookMarked />,
-    label: "Lessons",
-    path: "/lessons",
+    label: "Modules",
+    path: "/modules",
   },
   {
     icon: <Baby />,
