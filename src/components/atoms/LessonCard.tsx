@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CalendarDays, CircleCheck } from "lucide-react";
+import { CalendarDays, CircleCheck, LockKeyhole } from "lucide-react";
 import Image from "next/image";
 import { SLTypo } from "@/components/SLTypo";
 import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
@@ -12,7 +12,7 @@ interface LessonCardProps {
   title: string;
   description: string;
   imageUrl?: string;
-  state: "default" | "completed" | "progress";
+  state: "default" | "completed" | "half-completed" | "locked" | "progress";
   progressValue?: number;
   onButtonClick?: () => void;
   buttonText?: string;
@@ -96,6 +96,15 @@ export function LessonCard({
               className="h-6 w-6 text-white absolute top-1/2 -translate-y-1/2 right-3"
               fill="#28A745"
             />
+          )}
+          {state === "half-completed" && (
+            <CircleCheck
+              className="h-6 w-6 text-white absolute top-1/2 -translate-y-1/2 right-3 opacity-30"
+              fill="#28A745"
+            />
+          )}
+          {state === "locked" && (
+            <LockKeyhole className="h-5 w-5 absolute top-1/2 -translate-y-1/2 right-4 text-[var(--semantic-color-icon-default)] opacity-70" />
           )}
 
           {/* Progress State */}

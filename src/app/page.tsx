@@ -53,12 +53,12 @@ export default function Home() {
           <LessonCard
             title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
             description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-            state="completed"
+            state="half-completed"
           />
           <LessonCard
             title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
             description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-            state="completed"
+            state="locked"
           />
         </div>
       </TabLayout>
