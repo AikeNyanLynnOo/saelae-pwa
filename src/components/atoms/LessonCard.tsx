@@ -7,6 +7,7 @@ import { CalendarDays, CircleCheck, LockKeyhole } from "lucide-react";
 import Image from "next/image";
 import { SLTypo } from "@/components/SLTypo";
 import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
+import { useRouter } from "next/navigation";
 
 interface LessonCardProps {
   title: string;
@@ -18,6 +19,7 @@ interface LessonCardProps {
   buttonText?: string;
   totalLessons?: string;
   completedLessons?: string;
+  ctaRoute?: string;
 }
 
 export function LessonCard({
@@ -30,9 +32,22 @@ export function LessonCard({
   buttonText = "စတင်သင်ယူမယ်",
   totalLessons,
   completedLessons,
+  ctaRoute = "lessons",
 }: LessonCardProps) {
+  const router = useRouter();
   return (
-    <Card className="w-full shadow-none rounded-[var(--core-border-radius-sm)]">
+    <Card
+      className={`w-full shadow-none rounded-[var(--core-border-radius-sm)] ${
+        state !== "locked" && state !== "progress" && state !== "default"
+          ? "cursor-pointer"
+          : ""
+      }`}
+      onClick={() => {
+        if (state !== "locked" && state !== "progress" && state !== "default") {
+          router.push(`/${ctaRoute}/${title.toLowerCase().replace(/ /g, "-")}`);
+        }
+      }}
+    >
       {state === "progress" && (
         <div className="px-4 mt-4 flex flex-wrap gap-2">
           <SLTypo

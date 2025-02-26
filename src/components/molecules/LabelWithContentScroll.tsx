@@ -62,7 +62,7 @@ export const LabelWithContentScroll = ({
     <div className={cn("w-full space-y-[var(--core-spacing-lg)]", className)}>
       <SLTypo
         text={label}
-        variant="fontH5Normal"
+        variant="fontH5Medium"
         className={cn(
           "text-[var(--semantic-color-text-default)]",
           labelClassName
