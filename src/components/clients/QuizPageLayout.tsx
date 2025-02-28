@@ -1,31 +1,29 @@
 import { CommonLayout } from "@/components/layouts/CommonLayout";
 import { Button } from "../ui/button";
 import { SLTypo } from "../SLTypo";
-import { Heart } from "lucide-react";
+import { Heart, MoveRight } from "lucide-react";
 
-interface LessonPageLayoutProps {
+interface QuizPageLayoutProps {
   children: React.ReactNode;
   customClasses?: string;
   hideBottomCta?: boolean;
-  showHeartButton?: boolean;
   showPrimaryButton?: boolean;
   primaryButtonText?: string;
   onPrimaryButtonClick?: () => void;
-  isHeartActive?: boolean;
-  onHeartButtonClick?: () => void;
+  canProceed?: boolean;
+  handleNext?: () => void;
 }
 
-export const LessonPageLayout = ({
+export const QuizPageLayout = ({
   children,
   customClasses,
   hideBottomCta = false,
-  showHeartButton,
   showPrimaryButton = true,
-  primaryButtonText = "ဉာဏ်စမ်းဖြေမယ်",
+  primaryButtonText = "နောက်တစ်ခု",
   onPrimaryButtonClick,
-  isHeartActive,
-  onHeartButtonClick,
-}: LessonPageLayoutProps) => {
+  canProceed,
+  handleNext,
+}: QuizPageLayoutProps) => {
   return (
     <CommonLayout
       isLoading={false}
@@ -39,6 +37,7 @@ export const LessonPageLayout = ({
             {showPrimaryButton && (
               <Button
                 variant="outline"
+                disabled={!canProceed}
                 className={`w-full rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)] border-none py-[var(--core-spacing-sm)]`}
                 onClick={onPrimaryButtonClick}
               >
@@ -48,18 +47,7 @@ export const LessonPageLayout = ({
                   variant="fontButtonMdSemibold"
                   className="text-[var(--semantic-color-text-bold)]"
                 />
-              </Button>
-            )}
-            {showHeartButton && (
-              <Button
-                variant="outline"
-                className={`w-fit rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-new-subtlest)] hover:bg-[var(--semantic-color-bg-new-subtle)] border-none py-[var(--core-spacing-sm)] px-[var(--core-spacing-md)]`}
-                onClick={onHeartButtonClick}
-              >
-                <Heart
-                  className="w-5 h-5 text-[var(--semantic-color-icon-new-default)]"
-                  fill={isHeartActive ? "currentColor" : "none"}
-                />
+                <MoveRight className="!h-4 ml-1" />
               </Button>
             )}
           </div>
