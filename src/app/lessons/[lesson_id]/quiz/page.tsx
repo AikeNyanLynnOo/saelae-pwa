@@ -3,13 +3,17 @@ import { QuizStepper } from "@/components/atoms/forms/QuizStepper";
 import { PageHeader } from "@/components/atoms/PageHeader";
 import { QuizPageLayout } from "@/components/clients/QuizPageLayout";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
+
+type QuizState = "question" | "incorrect" | "correct" | "complete" | "timeout";
 
 export default function LessonPage() {
   const router = useRouter();
-  const totalSteps = 3;
+  const totalSteps = 1;
+  const [quizState, setQuizState] = useState<QuizState>("question");
   const [step, setStep] = React.useState(1);
   const [formData, setFormData] = React.useState([]);
+  const [isFinalExam, setIsFinalExam] = useState(true);
 
   const updateFormData = (data: any) => {
     // setFormData(data);
@@ -17,12 +21,22 @@ export default function LessonPage() {
 
   const canProceed = React.useMemo(() => {
     // check based on step & formData
-    return false;
+    return true;
   }, [step, formData]);
 
+  const showSecondaryButton = React.useMemo(
+    () => !isFinalExam && quizState === "complete",
+    [isFinalExam, quizState]
+  );
+
   const handleNext = () => {
+    console.log("handleNext", step, totalSteps);
+    if (quizState === "complete") {
+      router.push("/");
+      return;
+    }
     if (step === totalSteps) {
-      router.push("/onboard/personalize");
+      setQuizState("complete");
       return;
     }
     if (step < totalSteps) {
@@ -30,20 +44,24 @@ export default function LessonPage() {
     }
   };
 
-
-
-  
-
   return (
     <section>
-      <QuizPageLayout canProceed={canProceed} handleNext={handleNext}>
+      <QuizPageLayout
+        canProceed={canProceed}
+        onPrimaryButtonClick={handleNext}
+        showSecondaryButton={showSecondaryButton}
+        isCompleted={quizState === "complete"}
+      >
         <PageHeader className="sticky top-0 bg-white z-20" />
 
-        <div className="px-6 space-y-[var(--core-spacing-lg)] pb-20">
+        <div className="space-y-[var(--core-spacing-lg)] pb-20">
           <QuizStepper
             step={step}
             totalSteps={totalSteps}
+            quizState={quizState}
+            setQuizState={setQuizState}
             updateFormData={updateFormData}
+            isFinalExam={isFinalExam}
           />
         </div>
       </QuizPageLayout>

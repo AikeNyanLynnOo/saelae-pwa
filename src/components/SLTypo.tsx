@@ -22,8 +22,8 @@ export interface SLTypoProps {
   variant?: (typeof TypoVariants)[number];
   className?: string;
   fontFamily?: string;
+  isDangerously?: boolean;
   [otherProp: string]: any;
-
 }
 
 export const SLTypo = ({
@@ -32,6 +32,7 @@ export const SLTypo = ({
   variant = "fontBody1Normal",
   className,
   fontFamily,
+  isDangerously = false,
   ...props
 }: SLTypoProps) => {
   const typoClasses = useMemo(
@@ -54,8 +55,10 @@ export const SLTypo = ({
         ...typoStyle,
         fontFamily: fontFamily || typoStyle.fontFamily,
       },
+      ...(isDangerously && {
+        dangerouslySetInnerHTML: { __html: text || props.children || "" },
+      }),
     },
-    text || props.children
-
+    !isDangerously ? text || props.children : null
   );
 };

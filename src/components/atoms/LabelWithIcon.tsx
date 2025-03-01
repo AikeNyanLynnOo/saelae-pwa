@@ -13,6 +13,7 @@ interface LabelWithIconProps {
   className?: string;
   iconClassName?: string;
   labelClassName?: string;
+  labelFontFamily?: string;
   onClick?: () => void;
 }
 
@@ -24,6 +25,7 @@ export const LabelWithIcon = ({
   className,
   iconClassName,
   labelClassName,
+  labelFontFamily,
   onClick,
 }: LabelWithIconProps) => {
   return (
@@ -43,6 +45,7 @@ export const LabelWithIcon = ({
         text={label}
         variant={variant}
         className={cn("text-[var(--semantic-color-text-subtlest)]", labelClassName)}
+        fontFamily={labelFontFamily}
       />
     </div>
   );

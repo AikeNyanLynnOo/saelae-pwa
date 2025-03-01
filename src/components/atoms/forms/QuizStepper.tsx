@@ -1,8 +1,11 @@
 "use client";
 
+import { SLTypo } from "@/components/SLTypo";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, X, XCircle } from "lucide-react";
+import { CheckCircle2, CircleCheck, Timer, X, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { LabelWithIcon } from "../LabelWithIcon";
 
 interface StepProps {
   isActive: boolean;
@@ -42,18 +45,21 @@ function StepIndicator({
   );
 }
 
-type QuizState = "question" | "incorrect" | "correct" | "complete" | "timeout";
-
 export const QuizStepper = ({
   step,
   totalSteps,
   updateFormData,
+  quizState,
+  setQuizState,
+  isFinalExam = false,
 }: {
   step: number;
   totalSteps: number;
   updateFormData: (data: any) => void;
+  quizState: string | null;
+  setQuizState: any;
+  isFinalExam?: boolean;
 }) => {
-  const [quizState, setQuizState] = useState<QuizState>("question");
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [score, setScore] = useState({ correct: 0, total: 1 });
   const [timeLeft, setTimeLeft] = useState(20);
@@ -62,11 +68,16 @@ export const QuizStepper = ({
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
-    if (timerActive && timeLeft > 0 && quizState === "question") {
+    if (
+      isFinalExam &&
+      timerActive &&
+      timeLeft > 0 &&
+      quizState === "question"
+    ) {
       timer = setTimeout(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
-    } else if (timeLeft === 0 && quizState === "question") {
+    } else if (isFinalExam && timeLeft === 0 && quizState === "question") {
       setQuizState("timeout");
       setTimerActive(false);
     }
@@ -74,7 +85,7 @@ export const QuizStepper = ({
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [timeLeft, timerActive, quizState]);
+  }, [timeLeft, timerActive, quizState, isFinalExam]);
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
@@ -103,164 +114,199 @@ export const QuizStepper = ({
         {quizState !== "complete" ? (
           <>
             {/* Header with progress and close button */}
-            <div className="flex w-full items-center py-4">
-              <button onClick={handleClose} className="mr-2">
-                <X size={20} />
-              </button>
-              <div className="h-2 flex-1 bg-gray-200 rounded-full">
+            <div className="flex w-full items-center py-4 px-6 gap-x-[var(--core-spacing-sm)]">
+              <Button
+                variant="link"
+                onClick={handleClose}
+                className="w-fit p-0"
+              >
+                <X className="w-5 h-5 text-[var(--semantic-color-icon-default)]" />
+              </Button>
+              <div className="h-2 flex-1 bg-[var(--semantic-color-bg-primary)] rounded-full">
                 <div
                   className="h-2 bg-yellow-400 rounded-full transition-all duration-300 ease-linear"
-                  style={{ width: `${(timeLeft / 20) * 100}%` }}
-                ></div>
+                  style={{ width: `${(step / totalSteps) * 100}%` }}
+                />
               </div>
-              <span className="ml-2 text-sm font-medium">{timeLeft}s</span>
+              {isFinalExam && (
+                <LabelWithIcon
+                  label={`${timeLeft} s`}
+                  icon={Timer}
+                  variant="fontBody2Normal"
+                  iconClassName="w-4 h-4 text-[var(--semantic-color-icon-default)]"
+                  labelClassName="text-[var(--semantic-color-text-default)] mt-0.5"
+                  labelFontFamily="var(--font-figtree)"
+                />
+              )}
             </div>
 
-            {/* Question */}
-            <div>
-              <p className="text-lg mb-6 leading-relaxed">
-                ကလေးငယ်တစ်ရောက်ဆီသို့ဝမ်းနည်းခြင်းသည်ဘာလဲ။ ဆိုတာကိုသိဖို့ဆရာ
-                ဒါပေမဲ့ကြီးကျယ်ခမ်းနားရိုက်ရမယ် ဆိုတာ မှန်ပါသလား။
-              </p>
+            <div className="space-y-[var(--core-spacing-lg)]">
+              {/* Question */}
+              <SLTypo
+                as="h1"
+                text="ကလေးမွေးလာရင်မွေးဆံပင်နဲ့မထားနဲ့။ ဆံပင်မသန်ဘူး။ ဒါကြောင့်ကတုံးရိတ်ရမယ် ဆိုတာ မှန်ပါသလား။"
+                variant="fontH4Semibold"
+                className={cn(
+                  "text-[var(--semantic-color-text-default)]",
+                  "px-6"
+                )}
+              />
 
               {/* Options */}
-              <div className="space-y-3">
+              <div className="space-y-[var(--core-spacing-lg)] px-6">
                 <button
                   onClick={() => handleOptionSelect("option1")}
-                  className={`w-full p-4 rounded-full border text-left ${
+                  className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
                     selectedOption === "option1" && quizState === "incorrect"
-                      ? "bg-red-100 border-red-500 text-red-700"
+                      ? "bg-[var(--semantic-color-bg-negative-subtlest)] border-[var(--semantic-color-outline-negative-default)]"
                       : selectedOption === "option1"
-                        ? "bg-gray-100 border-gray-300"
-                        : "border-gray-300"
+                        ? "bg-white border-[var(--semantic-color-outline-subtle)]"
+                        : "border-[var(--semantic-color-outline-subtle)]"
                   }`}
                 >
                   <div className="flex items-center">
                     <div
-                      className={`w-5 h-5 rounded-full border flex items-center justify-center mr-2 ${
+                      className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
                         selectedOption === "option1" &&
                         quizState === "incorrect"
-                          ? "border-red-500"
-                          : "border-gray-300"
+                          ? "border-[var(--semantic-color-icon-negative-default)]"
+                          : "border-[var(--semantic-color-icon-default)]"
                       }`}
                     >
                       {selectedOption === "option1" && (
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-negative-default)]" />
                       )}
                     </div>
-                    <span>မှန်ပါတယ်၊ ကတ်နိုင်တဲ့အထိပိုတယ်။</span>
+                    <SLTypo
+                      as="span"
+                      text="မှန်ပါတယ်၊ ကတုံးရိတ်သင့်ပါတယ်။"
+                      variant="fontBody2IntenseNormal"
+                      className={cn("text-[var(--semantic-color-text-bold)]")}
+                    />
                   </div>
                 </button>
 
                 <button
                   onClick={() => handleOptionSelect("option2")}
-                  className={`w-full p-4 rounded-full border text-left ${
+                  className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
                     selectedOption === "option2" && quizState === "correct"
-                      ? "bg-green-100 border-green-500 text-green-700"
+                      ? "bg-[var(--semantic-color-bg-positive-subtlest)] border-[var(--semantic-color-outline-positive-default)]"
                       : selectedOption === "option2"
-                        ? "bg-gray-100 border-gray-300"
-                        : "border-gray-300"
+                        ? "bg-white border-[var(--semantic-color-outline-subtle)]"
+                        : "border-[var(--semantic-color-outline-subtle)]"
                   }`}
                 >
                   <div className="flex items-center">
                     <div
-                      className={`w-5 h-5 rounded-full border flex items-center justify-center mr-2 ${
+                      className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
                         selectedOption === "option2" && quizState === "correct"
-                          ? "border-green-500"
-                          : "border-gray-300"
+                          ? "border-[var(--semantic-color-outline-positive-default)]"
+                          : "border-[var(--semantic-color-icon-default)]"
                       }`}
                     >
                       {selectedOption === "option2" && (
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                        <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-positive-default)]" />
                       )}
                     </div>
-                    <span>မှားပါတယ်၊ ကတ်မျိုးမဟုတ်သေးဘူး။</span>
+                    <SLTypo
+                      as="span"
+                      text="မှားပါတယ်၊ ကတုံးမရိတ်သင့်ပါဘူး။"
+                      variant="fontBody2IntenseNormal"
+                      className={cn("text-[var(--semantic-color-text-bold)]")}
+                    />
                   </div>
                 </button>
               </div>
 
               {/* Feedback for incorrect answer */}
               {quizState === "incorrect" && (
-                <div className="mt-4 p-4 bg-red-100 rounded-md text-red-700">
+                <div className="mt-4 mx-0 md:mx-[var(--core-spacing-xl)] py-[var(--core-spacing-lg)] px-[var(--core-spacing-xl)] bg-[var(--semantic-color-bg-negative-subtlest)] text-[var(--semantic-color-text-default)]">
                   <div className="flex items-start">
-                    <XCircle className="w-5 h-5 mr-2 mt-1 flex-shrink-0" />
-                    <div>
-                      <p>
-                        မှားပါတယ်၊ ဆိုလိုတာမှန်းမသိတဲ့အတွက်
-                        မျှော်မှန်းချက်နိမ့်ပါတယ်။ ဒါပေမဲ့ ဆေးစာအနေနဲ့
-                        ခြောက်လသားကလေးလို့ လူတကားမျိုးစုံထည့်သေးတယ်ဘူး။
-                      </p>
-                      <p className="mt-2">
-                        ကတ်နိုင်တဲ့အတွက် မေတ္တာသဒ္ဓါအခြေပြုခဲ့ပါတယ်။
-                        မေတ္တာပိုင်ပိုင်ပါတယ်သည်ပင်လျှင် အခေါ်အဝေါ်ပါတယ်။
-                        ငယ်ငယ်မှစ၍တည်းက မှန်မှန်သည့်ဖြစ်ခဲ့ပါတယ်။
-                      </p>
-                    </div>
+                    <XCircle className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-[var(--semantic-color-icon-negative-default)]" />
+                    <SLTypo
+                      as="div"
+                      text="မှားပါတယ်၊  ဆံပင်သန်မှု၊မသန်မှုဟာ မျိုးဗီဇနဲ့ပိုဆိုင်ပါတယ်။ ဒါကြောင့် မွေးစကနေ ခြောက်လအထိကလေးကို လုံးဝကတုံးမရိတ်ပေးသင့်ပါဘူး။ ကတုံးရိတ်ရာကနေ မတော်တဆအနာဖြစ်နိုင်ပါတယ်။ မေးခိုင်ပိုးဝင်နိုင်ပါတယ်။ဆံပင်မရှိလို့ နှာစေးနိုင်ပါတယ်။ ငယ်ထိပ်မပိတ်တဲ့အချိန်အရေပြားပွန်းရာကနေ ပိုးဝင်ပြီး ဦးနှောက်အမြှေးပါးယောင်ပြီး မစွမ်းမသန်ဖြစ်နိုင်ပါတယ်။"
+                      variant="fontBody2Normal"
+                      className={cn(
+                        "text-[var(--semantic-color-text-default)]"
+                      )}
+                    />
                   </div>
-                  <button
-                    onClick={() => {}}
-                    className="mt-4 w-full p-3 bg-red-200 text-red-700 rounded-md"
-                  >
-                    ဆက်လုပ်ပါ
-                  </button>
                 </div>
               )}
 
               {/* Feedback for correct answer */}
               {quizState === "correct" && (
-                <div className="mt-4 p-4 bg-green-100 rounded-md text-green-700">
+                <div className="mt-4 mx-0 md:mx-[var(--core-spacing-xl)] py-[var(--core-spacing-lg)] px-[var(--core-spacing-xl)] bg-[var(--semantic-color-bg-positive-subtlest)] text-[var(--semantic-color-text-default)]">
                   <div className="flex items-center">
-                    <CheckCircle2 className="w-5 h-5 mr-2 flex-shrink-0" />
-                    <p>အခြေဖြေမှန်ပါတယ်ဟုတ်။</p>
+                    <CheckCircle2 className="w-4 h-4 mr-2 flex-shrink-0 text-[var(--semantic-color-icon-positive-default)]" />
+                    <SLTypo
+                      as="div"
+                      text="အဖြေမှန်ပါတယ်နော်။"
+                      variant="fontBody2Normal"
+                      className={cn(
+                        "text-[var(--semantic-color-text-default)]"
+                      )}
+                    />
                   </div>
-                  <button
-                    onClick={() => {}}
-                    className="mt-4 w-full p-3 bg-green-200 text-green-700 rounded-md"
-                  >
-                    ဆက်လုပ်ပါ
-                  </button>
                 </div>
               )}
 
               {/* Feedback for timeout */}
               {quizState === "timeout" && (
-                <div className="mt-4 p-4 bg-orange-100 rounded-md text-orange-700">
+                <div className="mt-4 mx-0 md:mx-[var(--core-spacing-xl)] py-[var(--core-spacing-lg)] px-[var(--core-spacing-xl)] bg-[var(--semantic-color-bg-negative-subtlest)] text-[var(--semantic-color-text-default)]">
                   <div className="flex items-start">
-                    <XCircle className="w-5 h-5 mr-2 mt-1 flex-shrink-0" />
-                    <div>
-                      <p>အချိန်ကုန်ဆုံးသွားပါပြီ။ သင်အမှတ်မရရှိပါ။</p>
-                      <p className="mt-2">
-                        ကျေးဇူးပြု၍ နောက်တစ်ခုကို ဆက်လုပ်ပါ။
-                      </p>
-                    </div>
+                    <XCircle className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-[var(--semantic-color-icon-negative-default)]" />
+                    <SLTypo
+                      as="div"
+                      text="အချိန်ပြည့်သွားပါပြီ။"
+                      variant="fontBody2Normal"
+                      className={cn(
+                        "text-[var(--semantic-color-text-default)]"
+                      )}
+                    />
                   </div>
-                  <button
-                    onClick={() => {}}
-                    className="mt-4 w-full p-3 bg-orange-200 text-orange-700 rounded-md"
-                  >
-                    ဆက်လုပ်ပါ
-                  </button>
                 </div>
               )}
             </div>
           </>
         ) : (
           // Complete screen
-          <div className="flex flex-col items-center justify-center p-8 h-full">
-            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-6">
-              <CheckCircle2 className="w-10 h-10 text-white" />
-            </div>
-            <h2 className="text-xl mb-8 text-center">
-              သင်ခန်းစာ သင်ယူပြီးဆုံးသွားပြီ။
-            </h2>
-            <div className="w-full flex justify-between mb-2">
-              <span>ဟုတ်မှန်း ဟေးနား</span>
+          <div className="flex flex-col items-center justify-center p-8 h-full gap-y-[var(--core-spacing-lg)]">
+            <CircleCheck className="h-20 w-20 text-white" fill="#28A745" />
+            <SLTypo
+              as="p"
+              isDangerously
+              text={
+                (isFinalExam && "ဂုဏ်ယူပါတယ်။<br/>စာမေးပွဲအောင်မြင်ပါတယ်။") ||
+                "သင်ခန်းစာ သင်ယူပြီးဆုံးသွားပါပြီ။"
+              }
+              variant="fontH4Semibold"
+              className={cn(
+                "text-[var(--semantic-color-text-default)] text-center px-6"
+              )}
+            />
+
+            <SLTypo
+              as="p"
+              variant="fontBody3Normal"
+              className={cn(
+                "text-[var(--semantic-color-text-default)] w-full flex items-center justify-between"
+              )}
+            >
+              <span>ဉာဏ်စမ်း မေးခွန်း</span>
               <span>{score.correct} ခု</span>
-            </div>
-            <div className="w-full flex justify-between">
-              <span>အခြေဖြေ</span>
+            </SLTypo>
+            <SLTypo
+              as="p"
+              variant="fontBody3Normal"
+              className={cn(
+                "text-[var(--semantic-color-text-default)] w-full flex items-center justify-between"
+              )}
+            >
+              <span>အဖြေမှန်</span>
               <span>{score.total} ခု</span>
-            </div>
+            </SLTypo>
           </div>
         )}
       </div>
