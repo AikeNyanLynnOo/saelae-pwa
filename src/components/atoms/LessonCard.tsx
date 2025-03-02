@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { CalendarDays, CircleCheck, LockKeyhole } from "lucide-react";
 import Image from "next/image";
 import { SLTypo } from "@/components/SLTypo";
-import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
+import { ImageWithPlaceholder } from "@/components/atoms/ImageWithPlaceholder";
 import { useRouter } from "next/navigation";
 
 interface LessonCardProps {
@@ -72,7 +72,7 @@ export function LessonCard({
               className="h-12 w-12 rounded-sm object-cover"
             />
           )) || (
-            <ImagePlaceholder
+            <ImageWithPlaceholder
               className="h-10 w-10 rounded-none"
               containerClassName="mb-0"
             />

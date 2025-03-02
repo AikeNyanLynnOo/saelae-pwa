@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
+import { ImageWithPlaceholder } from "@/components/atoms/ImageWithPlaceholder";
 import { CommonLayout } from "@/components/layouts/CommonLayout";
 import { SLTypo } from "@/components/SLTypo";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ export const WelcomeLayout = () => {
     <CommonLayout isLoading={false}>
       <div className="w-full sm:w-fit px-4 sm:px-0">
         {/* Image placeholder */}
-        <ImagePlaceholder />
+        <ImageWithPlaceholder src="/images/logo.png"/>
 
         <div className="mb-12">
           {/* Title */}

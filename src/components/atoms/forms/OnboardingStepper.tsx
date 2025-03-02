@@ -60,7 +60,7 @@ function StepIndicator({
   );
 }
 
-const CustomInput = forwardRef(
+export const CustomInput = forwardRef(
   (
     {
       value,

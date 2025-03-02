@@ -15,6 +15,8 @@ interface LabelWithIconProps {
   labelClassName?: string;
   labelFontFamily?: string;
   onClick?: () => void;
+  iconProps?: any;
+  children?: any;
 }
 
 export const LabelWithIcon = ({
@@ -27,6 +29,8 @@ export const LabelWithIcon = ({
   labelClassName,
   labelFontFamily,
   onClick,
+  iconProps,
+  children,
 }: LabelWithIconProps) => {
   return (
     <div
@@ -39,14 +43,23 @@ export const LabelWithIcon = ({
       role={onClick ? "button" : "none"}
     >
       <Icon
-        className={cn("w-4 h-4 text-[var(--semantic-color-text-subtlest)]", iconClassName)}
+        className={cn(
+          "w-4 h-4 text-[var(--semantic-color-text-subtlest)]",
+          iconClassName
+        )}
+        strokeWidth={1.5}
+        {...iconProps}
       />
       <SLTypo
         text={label}
         variant={variant}
-        className={cn("text-[var(--semantic-color-text-subtlest)]", labelClassName)}
+        className={cn(
+          "text-[var(--semantic-color-text-subtlest)]",
+          labelClassName
+        )}
         fontFamily={labelFontFamily}
       />
+      {children}
     </div>
   );
 };

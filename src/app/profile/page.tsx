@@ -1,9 +1,9 @@
 "use client";
-import { TabLayout } from "@/components/layouts/TabLayout";
+import { ProfilePageLayout } from "@/components/clients/ProfilePageLayout";
 export default function ProfilePage() {
   return (
     <section>
-      <TabLayout>Profile page</TabLayout>
+      <ProfilePageLayout />
     </section>
   );
 }

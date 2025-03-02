@@ -55,66 +55,69 @@ export const ContentHeader = ({
   };
 
   return (
-    <div className={cn("w-full px-6 py-4", className)}>
-      <div className="flex flex-col gap-[var(--core-spacing-md)]">
-        {showBackButton && (
-          <Button variant="link" onClick={handleBack} className="w-fit p-0">
-            <ArrowLeft className="w-5 h-5 text-[var(--semantic-color-icon-default)]" />
-          </Button>
-        )}
-        <div className="space-y-[var(--core-spacing-base)]">
+    <div
+      className={cn(
+        "w-full px-6 py-4 flex flex-col gap-[var(--core-spacing-md)]",
+        className
+      )}
+    >
+      {showBackButton && (
+        <Button variant="link" onClick={handleBack} className="w-fit p-0">
+          <ArrowLeft className="w-5 h-5 text-[var(--semantic-color-icon-default)]" />
+        </Button>
+      )}
+      <div className="space-y-[var(--core-spacing-base)]">
+        <SLTypo
+          as="h1"
+          text={title}
+          variant={titleVariant || "fontH4Semibold"}
+          className={cn(
+            "text-[var(--semantic-color-text-default)]",
+            titleClassName
+          )}
+        />
+        {description && (
           <SLTypo
-            as="h1"
-            text={title}
-            variant={titleVariant || "fontH4Semibold"}
+            as="p"
+            text={description}
+            variant={descriptionVariant || "fontBody3Normal"}
             className={cn(
-              "text-[var(--semantic-color-text-default)]",
-              titleClassName
+              "text-[var(--semantic-color-text-subtle)]",
+              descriptionClassName
             )}
           />
-          {description && (
-            <SLTypo
-              as="p"
-              text={description}
-              variant={descriptionVariant || "fontBody3Normal"}
-              className={cn(
-                "text-[var(--semantic-color-text-subtle)]",
-                descriptionClassName
-              )}
-            />
-          )}
-        </div>
-        {!hideCta && (
-          <div className="flex gap-[var(--core-spacing-md)] items-center">
-            {showPrimaryButton && (
-              <Button
-                variant="outline"
-                className={`w-full rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)] border-none py-[var(--core-spacing-sm)]`}
-                onClick={onPrimaryButtonClick}
-              >
-                <SLTypo
-                  as="span"
-                  text={primaryButtonText}
-                  variant="fontButtonMdSemibold"
-                  className="text-[var(--semantic-color-text-bold)]"
-                />
-              </Button>
-            )}
-            {showHeartButton && (
-              <Button
-                variant="outline"
-                className={`w-fit rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-new-subtlest)] hover:bg-[var(--semantic-color-bg-new-subtle)] border-none py-[var(--core-spacing-sm)] px-[var(--core-spacing-md)]`}
-                onClick={onHeartButtonClick}
-              >
-                <Heart
-                  className="w-5 h-5 text-[var(--semantic-color-icon-new-default)]"
-                  fill={isHeartActive ? "currentColor" : "none"}
-                />
-              </Button>
-            )}
-          </div>
         )}
       </div>
+      {!hideCta && (
+        <div className="flex gap-[var(--core-spacing-md)] items-center">
+          {showPrimaryButton && (
+            <Button
+              variant="outline"
+              className={`w-full rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)] border-none py-[var(--core-spacing-sm)]`}
+              onClick={onPrimaryButtonClick}
+            >
+              <SLTypo
+                as="span"
+                text={primaryButtonText}
+                variant="fontButtonMdSemibold"
+                className="text-[var(--semantic-color-text-bold)]"
+              />
+            </Button>
+          )}
+          {showHeartButton && (
+            <Button
+              variant="outline"
+              className={`w-fit rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-new-subtlest)] hover:bg-[var(--semantic-color-bg-new-subtle)] border-none py-[var(--core-spacing-sm)] px-[var(--core-spacing-md)]`}
+              onClick={onHeartButtonClick}
+            >
+              <Heart
+                className="w-5 h-5 text-[var(--semantic-color-icon-new-default)]"
+                fill={isHeartActive ? "currentColor" : "none"}
+              />
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
