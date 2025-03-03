@@ -1,9 +1,9 @@
 "use client";
-import { TabLayout } from "@/components/layouts/TabLayout";
+import { BabyPageLayout } from "@/components/clients/BabyPageLayout";
 export default function BabyProfilePage() {
   return (
     <section>
-      <TabLayout>Baby Profile page</TabLayout>
+      <BabyPageLayout />
     </section>
   );
 }

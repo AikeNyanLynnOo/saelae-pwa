@@ -7,7 +7,8 @@ import { LucideIcon } from "lucide-react";
 
 interface LabelWithIconProps {
   label: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  customIcon?: () => JSX.Element;
   iconPosition?: "start" | "end";
   variant?: (typeof TypoVariants)[number];
   className?: string;
@@ -22,6 +23,7 @@ interface LabelWithIconProps {
 export const LabelWithIcon = ({
   label,
   icon: Icon,
+  customIcon,
   iconPosition = "start",
   variant = "fontLabelMedium",
   className,
@@ -42,14 +44,18 @@ export const LabelWithIcon = ({
       onClick={onClick}
       role={onClick ? "button" : "none"}
     >
-      <Icon
-        className={cn(
-          "w-4 h-4 text-[var(--semantic-color-text-subtlest)]",
-          iconClassName
-        )}
-        strokeWidth={1.5}
-        {...iconProps}
-      />
+      {Icon && (
+        <Icon
+          className={cn(
+            "w-4 h-4 text-[var(--semantic-color-text-subtlest)]",
+            iconClassName
+          )}
+          strokeWidth={1.5}
+          {...iconProps}
+        />
+      )}
+      {customIcon && customIcon()}
+
       <SLTypo
         text={label}
         variant={variant}

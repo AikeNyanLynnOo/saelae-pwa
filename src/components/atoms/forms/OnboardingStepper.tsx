@@ -399,7 +399,7 @@ export const OnboardingStepper = () => {
                   className={cn(
                     "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-info-subtlest)] hover:text-[var(--semantic-color-text-default)]",
                     formData.gender === "ကျား"
-                      ? "bg-[var(--semantic-color-bg-info-primary)] text-[var(--semantic-color-text-inverse)]"
+                      ? "bg-[var(--semantic-color-bg-info-secondary)] text-[var(--semantic-color-text-inverse)]"
                       : "bg-white text-[var(--semantic-color-text-default)]",
                     formData.gender === "" && "bg-transparent"
                   )}
@@ -415,9 +415,9 @@ export const OnboardingStepper = () => {
 
                 <Button
                   className={cn(
-                    "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-info-subtlest)] hover:text-[var(--semantic-color-text-default)]",
+                    "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-new-subtlest)] hover:text-[var(--semantic-color-text-default)]",
                     formData.gender === "မ"
-                      ? "bg-[var(--semantic-color-bg-info-primary)] text-[var(--semantic-color-text-inverse)]"
+                      ? "bg-[var(--semantic-color-bg-new-primary)] text-[var(--semantic-color-text-inverse)]"
                       : "bg-white text-[var(--semantic-color-text-default)]",
                     formData.gender === "" && "bg-transparent"
                   )}
