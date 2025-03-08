@@ -49,7 +49,10 @@ interface TabLayoutProps {
 export const TabLayout = ({ children, customClasses }: TabLayoutProps) => {
   const pathname = usePathname();
 
-  const isActiveRoute = (tabPath: string) => {
+  const isActiveRoute = (tabPath: string | string[]) => {
+    if (Array.isArray(tabPath)) {
+      return tabPath.some((path) => pathname === path);
+    }
     return pathname === tabPath || pathname?.startsWith(tabPath + "/");
   };
 

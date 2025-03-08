@@ -1,7 +1,7 @@
 "use client";
 import { RotateCw, Router } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
+import { ImageWithPlaceholder } from "@/components/atoms/ImageWithPlaceholder";
 import { InputGroup } from "@/components/atoms/forms/InputGroup";
 import { CommonLayout } from "@/components/layouts/CommonLayout";
 import { Button } from "@/components/ui/button";
@@ -59,7 +59,7 @@ export const OTPInputLayout = () => {
     <CommonLayout customClasses="items-start relative">
       <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit text-center flex flex-col px-4 sm:px-0">
         {/* Image Placeholder */}
-        <ImagePlaceholder />
+        <ImageWithPlaceholder src="/images/logo.png" />
 
         {/* OTP Input */}
         <InputGroup

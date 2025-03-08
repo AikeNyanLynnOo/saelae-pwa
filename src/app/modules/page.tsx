@@ -4,6 +4,7 @@ import { LessonCard } from "@/components/atoms/LessonCard";
 import { PageHeader } from "@/components/atoms/PageHeader";
 import { TabLayout } from "@/components/layouts/TabLayout";
 import { LabelWithContentScroll } from "@/components/molecules/LabelWithContentScroll";
+import { useRouter } from "next/navigation";
 
 const items = [
   { label: "အားလုံး", value: "all", isActive: true },
@@ -15,6 +16,11 @@ const items = [
 ];
 
 export default function ModulesPage() {
+  const router = useRouter();
+  const onButtonClick = (module_id: string) => {
+    router.push(`/${module_id}`);
+  };
+
   return (
     <section>
       <TabLayout>
@@ -43,6 +49,7 @@ export default function ModulesPage() {
             description="ဆည်းလည်းလေးကို ကျန်းကျန်းမာမာနဲ့ ဖွားမြင်နိုင်ဖို့ဆို ဆည်းလည်းလေးရဲ့ မေမေကျန်းမာရေးနဲ့ ပတ်သက်တာတွေကို သင်ယူကြရအောင်နော်။"
             totalLessons="၆"
             state="default"
+            onButtonClick={() => onButtonClick("23")}
           />
           <LessonCard
             title="ကိုယ်ဝန်ဆောင်ကျန်းမာရေး"

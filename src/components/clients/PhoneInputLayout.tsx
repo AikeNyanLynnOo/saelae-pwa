@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { CommonLayout } from "@/components/layouts/CommonLayout";
-import { ImagePlaceholder } from "@/components/atoms/ImagePlaceholder";
+import { ImageWithPlaceholder } from "@/components/atoms/ImageWithPlaceholder";
 import { InputGroup } from "@/components/atoms/forms/InputGroup";
 import { Button } from "@/components/ui/button";
 import { SLPhoneInput } from "@/components/atoms/forms/SLPhoneInput";
@@ -31,7 +31,7 @@ export const PhoneInputLayout = () => {
     <CommonLayout customClasses="items-start relative">
       <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit px-4 sm:px-0">
         {/* Image Placeholder */}
-        <ImagePlaceholder />
+        <ImageWithPlaceholder src="/images/logo.png" />
 
         {/* Label */}
         <InputGroup

@@ -68,7 +68,7 @@ export const LabelWithContentScroll = ({
           labelClassName
         )}
       />
-      <div className="relative">
+      <div className="relative px-0.5">
         {showLeftArrow && (
           <button
             onClick={() => scroll("left")}

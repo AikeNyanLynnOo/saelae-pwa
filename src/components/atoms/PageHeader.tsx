@@ -4,8 +4,9 @@ import { cn } from "@/lib/utils";
 import { Flame } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Divider } from "./Divider";
-import { ImagePlaceholder } from "./ImagePlaceholder";
+import { ImageWithPlaceholder } from "./ImageWithPlaceholder";
 import { LabelWithIcon } from "./LabelWithIcon";
+import { useMemo } from "react";
 
 interface PageHeaderProps {
   title?: string;
@@ -15,6 +16,7 @@ interface PageHeaderProps {
   className?: string;
   titleClassName?: string;
   descriptionClassName?: string;
+  [otherProp: string]: any;
 }
 
 export const PageHeader = ({
@@ -25,6 +27,7 @@ export const PageHeader = ({
   className,
   titleClassName,
   descriptionClassName,
+  ...props
 }: PageHeaderProps) => {
   const router = useRouter();
 
@@ -38,11 +41,17 @@ export const PageHeader = ({
 
   return (
     <>
-      <div className={cn("w-full px-6 py-4 space-y-2", className)}>
+      <div
+        className={cn(
+          `w-full px-[var(--core-spacing-xl)] py-[var(--core-spacing-lg)] ${(props.children && "space-y-[var(--core-spacing-sm)]") || ""} `,
+          className
+        )}
+      >
         <div className="flex items-center justify-between gap-3">
-          <ImagePlaceholder
+          <ImageWithPlaceholder
             className="w-10 h-10 rounded-sm"
             containerClassName="mb-0"
+            src="/images/logo.png"
           />
           <LabelWithIcon
             label="3"
@@ -50,10 +59,11 @@ export const PageHeader = ({
             variant="fontBody2IntenseSemibold"
           />
         </div>
+        <div>{props.children}</div>
       </div>
       <Divider
         className="my-0"
-        wrapperClassName="px-0 md:px-6 sticky top-[73px] z-20"
+        wrapperClassName={`px-0 md:px-6 sticky ${(props.children && "top-[116px]") || "top-[73px]"} z-20`}
       />
     </>
   );

@@ -4,9 +4,12 @@ import { PageHeader } from "@/components/atoms/PageHeader";
 import { LessonPageLayout } from "@/components/clients/LessonPageLayout";
 import { SLTypo } from "@/components/SLTypo";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function LessonPage() {
+  const router = useRouter();
+  const params = useParams();
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -23,13 +26,23 @@ export default function LessonPage() {
     };
   }, []);
 
-  const hideBottomCta = useMemo(() => {
-    if (scrollY >= 300) {
-      return false;
-    } else {
+  const hideTopCta = useMemo(() => {
+    if (scrollY > 250) {
       return true;
     }
   }, [scrollY]);
+
+  const hideBottomCta = useMemo(() => {
+    if (scrollY < 300) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [scrollY]);
+
+  const onPrimaryButtonClick = useCallback(() => {
+    router.push(`/lessons/${params.lesson_id}/quiz`);
+  }, [params, router]);
 
   return (
     <section>
@@ -37,10 +50,11 @@ export default function LessonPage() {
         showHeartButton
         showPrimaryButton
         hideBottomCta={hideBottomCta}
+        onPrimaryButtonClick={onPrimaryButtonClick}
       >
         <PageHeader className="sticky top-0 bg-white z-20" />
         <ContentHeader
-          hideCta={!hideBottomCta}
+          hideCta={hideTopCta}
           showBackButton
           showPrimaryButton
           showHeartButton
@@ -48,6 +62,7 @@ export default function LessonPage() {
           description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
           className="sticky top-[72px] bg-white z-10"
           //   isHeartActive
+          onPrimaryButtonClick={onPrimaryButtonClick}
         />
         <div className="px-6 space-y-[var(--core-spacing-lg)] pb-20">
           <Image

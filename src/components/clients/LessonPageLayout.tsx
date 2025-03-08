@@ -20,7 +20,7 @@ export const LessonPageLayout = ({
   customClasses,
   hideBottomCta = false,
   showHeartButton,
-  showPrimaryButton,
+  showPrimaryButton = true,
   primaryButtonText = "ဉာဏ်စမ်းဖြေမယ်",
   onPrimaryButtonClick,
   isHeartActive,
@@ -34,8 +34,8 @@ export const LessonPageLayout = ({
       <main className="flex-1">{children}</main>
 
       {!hideBottomCta && (
-        <div className="w-full px-0 md:px-5 lg:px-12 xl:px-20 max-w-screen-lg left-1/2 -translate-x-1/2 fixed bottom-0">
-          <div className="w-full px-0 md:px-6 md:w-4/6 lg:w-1/2 flex items-center gap-[var(--core-spacing-md)] mx-auto bg-white py-2">
+        <div className="w-full p-[var(--core-spacing-xl)] md:py-0 lg:px-12 xl:px-20 max-w-screen-lg left-1/2 -translate-x-1/2 fixed bottom-0 bg-[var(--semantic-color-bg-layoutprimary)] md:bg-transparent rounded-t-[var(--core-border-radius-md)]">
+          <div className="w-full px-0 md:px-6 md:w-4/6 lg:w-1/2 flex items-center gap-[var(--core-spacing-md)] mx-auto bg-transparent md:bg-white md:py-2">
             {showPrimaryButton && (
               <Button
                 variant="outline"
