@@ -8,6 +8,8 @@ import Image from "next/image";
 import { SLTypo } from "@/components/SLTypo";
 import { ImageWithPlaceholder } from "@/components/atoms/ImageWithPlaceholder";
 import { useRouter } from "next/navigation";
+import { useTranslate } from "../hooks/use-translate";
+import { useCommonStore } from "@/store/common-store";
 
 interface LessonCardProps {
   title: string;
@@ -29,11 +31,14 @@ export function LessonCard({
   state = "default",
   progressValue = 0,
   onButtonClick,
-  buttonText = "စတင်သင်ယူမယ်",
+  buttonText,
   totalLessons,
   completedLessons,
   ctaRoute = "lessons",
 }: LessonCardProps) {
+  const { lang } = useCommonStore();
+  const { messages, isLoading } = useTranslate();
+  const { modules, common } = messages;
   const router = useRouter();
   return (
     <Card
@@ -55,7 +60,7 @@ export function LessonCard({
             variant="fontLabelMedium"
             className="text-[var(--semantic-color-text-brand-default)] bg-[var(--semantic-color-bg-brand-subtlest)] px-[var(--core-spacing-sm)] py-0.5 rounded-full"
           >
-            သင်ယူနေဆဲ
+            {modules.is_learning_text}
           </SLTypo>
         </div>
       )}
@@ -135,16 +140,28 @@ export function LessonCard({
                   {`${completedLessons} ပိုင်း သင်ယူပြီး`}
                 </SLTypo>
               </div>
-              <Button onClick={onButtonClick} className="w-fit">
-                စတင်သင်ယူမယ်
+              <Button
+                onClick={onButtonClick}
+                className="w-fit"
+                style={{
+                  fontFamily: lang === "en" ? "var(--font-figtree)" : "",
+                }}
+              >
+                {common.cta_lesson_start}
               </Button>
             </div>
           )}
 
           {/* Default State */}
           {state === "default" && (
-            <Button onClick={onButtonClick} className="w-fit mt-3">
-              စတင်သင်ယူမယ်
+            <Button
+              onClick={onButtonClick}
+              className="w-fit mt-3"
+              style={{
+                fontFamily: lang === "en" ? "var(--font-figtree)" : "",
+              }}
+            >
+              {common.cta_lesson_start}
             </Button>
           )}
         </div>

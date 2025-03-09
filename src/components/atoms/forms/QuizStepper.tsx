@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { CheckCircle2, CircleCheck, Timer, X, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LabelWithIcon } from "../LabelWithIcon";
+import { useTranslate } from "@/components/hooks/use-translate";
+import { useCommonStore } from "@/store/common-store";
 
 interface StepProps {
   isActive: boolean;
@@ -60,6 +62,9 @@ export const QuizStepper = ({
   setQuizState: any;
   isFinalExam?: boolean;
 }) => {
+  const { lang } = useCommonStore();
+  const { messages, isLoading } = useTranslate();
+  const { lessons } = messages;
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [score, setScore] = useState({ correct: 0, total: 1 });
   const [timeLeft, setTimeLeft] = useState(20);
@@ -242,7 +247,7 @@ export const QuizStepper = ({
                     <CheckCircle2 className="w-4 h-4 mr-2 flex-shrink-0 text-[var(--semantic-color-icon-positive-default)]" />
                     <SLTypo
                       as="div"
-                      text="အဖြေမှန်ပါတယ်နော်။"
+                      text={lessons.correct_text}
                       variant="fontBody2Normal"
                       className={cn(
                         "text-[var(--semantic-color-text-default)]"
@@ -259,7 +264,7 @@ export const QuizStepper = ({
                     <XCircle className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-[var(--semantic-color-icon-negative-default)]" />
                     <SLTypo
                       as="div"
-                      text="အချိန်ပြည့်သွားပါပြီ။"
+                      text={lessons.times_up_text}
                       variant="fontBody2Normal"
                       className={cn(
                         "text-[var(--semantic-color-text-default)]"
@@ -278,8 +283,8 @@ export const QuizStepper = ({
               as="p"
               isDangerously
               text={
-                (isFinalExam && "ဂုဏ်ယူပါတယ်။<br/>စာမေးပွဲအောင်မြင်ပါတယ်။") ||
-                "သင်ခန်းစာ သင်ယူပြီးဆုံးသွားပါပြီ။"
+                (isFinalExam && lessons.exam_complete_title) ||
+                lessons.lesson_complete_title
               }
               variant="fontH4Semibold"
               className={cn(
@@ -294,8 +299,10 @@ export const QuizStepper = ({
                 "text-[var(--semantic-color-text-default)] w-full flex items-center justify-between"
               )}
             >
-              <span>ဉာဏ်စမ်း မေးခွန်း</span>
-              <span>{score.correct} ခု</span>
+              <span>{lessons.question_count_text}</span>
+              <span>
+                {score.correct} {lang === "mm" && "ခု"}
+              </span>
             </SLTypo>
             <SLTypo
               as="p"
@@ -304,7 +311,7 @@ export const QuizStepper = ({
                 "text-[var(--semantic-color-text-default)] w-full flex items-center justify-between"
               )}
             >
-              <span>အဖြေမှန်</span>
+              <span>{lessons.correct_count_text}</span>
               <span>{score.total} ခု</span>
             </SLTypo>
           </div>

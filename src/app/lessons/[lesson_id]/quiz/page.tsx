@@ -2,12 +2,15 @@
 import { QuizStepper } from "@/components/atoms/forms/QuizStepper";
 import { PageHeader } from "@/components/atoms/PageHeader";
 import { QuizPageLayout } from "@/components/clients/QuizPageLayout";
+import { useTranslate } from "@/components/hooks/use-translate";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 type QuizState = "question" | "incorrect" | "correct" | "complete" | "timeout";
 
 export default function LessonPage() {
+  const { messages, isLoading } = useTranslate();
+  const { lessons } = messages;
   const router = useRouter();
   const totalSteps = 1;
   const [quizState, setQuizState] = useState<QuizState>("question");
@@ -46,25 +49,27 @@ export default function LessonPage() {
 
   return (
     <section>
-      <QuizPageLayout
-        canProceed={canProceed}
-        onPrimaryButtonClick={handleNext}
-        showSecondaryButton={showSecondaryButton}
-        isCompleted={quizState === "complete"}
-      >
-        <PageHeader className="sticky top-0 bg-white z-20" />
+      {!isLoading && (
+        <QuizPageLayout
+          canProceed={canProceed}
+          onPrimaryButtonClick={handleNext}
+          showSecondaryButton={showSecondaryButton}
+          isCompleted={quizState === "complete"}
+        >
+          <PageHeader className="sticky top-0 bg-white z-20" />
 
-        <div className="space-y-[var(--core-spacing-lg)] pb-20">
-          <QuizStepper
-            step={step}
-            totalSteps={totalSteps}
-            quizState={quizState}
-            setQuizState={setQuizState}
-            updateFormData={updateFormData}
-            isFinalExam={isFinalExam}
-          />
-        </div>
-      </QuizPageLayout>
+          <div className="space-y-[var(--core-spacing-lg)] pb-20">
+            <QuizStepper
+              step={step}
+              totalSteps={totalSteps}
+              quizState={quizState}
+              setQuizState={setQuizState}
+              updateFormData={updateFormData}
+              isFinalExam={isFinalExam}
+            />
+          </div>
+        </QuizPageLayout>
+      )}
     </section>
   );
 }
