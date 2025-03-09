@@ -3,24 +3,27 @@ import { useState } from "react";
 import { LessonCard } from "@/components/atoms/LessonCard";
 import { CommonLayout } from "@/components/layouts/CommonLayout";
 import { SLTypo } from "@/components/SLTypo";
+import { useTranslate } from "../hooks/use-translate";
 
 export const PersonalizationLayout = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const { messages, isLoading } = useTranslate();
+  const { personalize } = messages;
+  const [apiLoading, setApiLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);
+      setApiLoading(false);
     }, 6000);
   }, []);
 
   return (
-    <CommonLayout isLoading={isLoading}>
+    <CommonLayout isLoading={isLoading || apiLoading}>
       <div className="space-y-[var(--core-spacing-xl)] pb-12 w-full md:w-4/6 lg:w-3/6 mx-auto min-h-[100dvh] max-h-[100vh] overflow-y-scroll relative hide-scrollbar">
         <div className="pt-10 px-4 lg:px-0">
           {/* Title */}
           <SLTypo
             as="h3"
-            text="စတင်လေ့လာချင်သော ဘာသာရပ်ကို ရွေးခြယ်ပါ..."
+            text={personalize.title}
             variant="fontH3Medium"
             className="text-center text-[var(--semantic-color-text-default)] mb-4 px-4 lg:px-0"
           />
@@ -28,7 +31,7 @@ export const PersonalizationLayout = () => {
           {/* Description */}
           <SLTypo
             as="p"
-            text="အချိန်မရွေးပြန်လည် ပြင်ဆင်လို့ရတယ်နော်"
+            text={personalize.text}
             variant="fontBody3Normal"
             className="text-center text-[var(--semantic-color-text-subtle)] px-4 lg:px-0"
           />
@@ -37,7 +40,7 @@ export const PersonalizationLayout = () => {
         <div className="px-4 lg:px-0 w-fit mx-auto">
           <SLTypo
             as="h6"
-            text="ဦးစားပေးလေ့လာသင့်သော"
+            text={personalize.priority_lesson}
             variant="fontH6Semibold"
             className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-lg)]"
           />
@@ -54,7 +57,7 @@ export const PersonalizationLayout = () => {
         <div className="px-4 lg:px-0 w-fit mx-auto">
           <SLTypo
             as="h6"
-            text="အခြားလေ့လာစရာများ"
+            text={personalize.other_lesson}
             variant="fontH6Semibold"
             className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-lg)]"
           />

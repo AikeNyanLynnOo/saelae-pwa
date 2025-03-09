@@ -1,6 +1,7 @@
 "use client";
 
 import { InputGroup } from "@/components/atoms/forms/InputGroup";
+import { useTranslate } from "@/components/hooks/use-translate";
 import { SLTypo } from "@/components/SLTypo";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -11,7 +12,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -74,38 +75,45 @@ export const CustomInput = forwardRef(
       placeholder?: string;
     },
     ref: any
-  ) => (
-    <Button
-      variant={"outline"}
-      className={cn(
-        "w-full justify-start items-center text-left font-normal text-sm",
-        !value && "text-[var(--semantic-color-text-disabled)]",
-        className
-      )}
-      onClick={onClick}
-      ref={ref}
-    >
-      <CalendarIcon className="mr-1 h-4 w-4" />
+  ) => {
+    const { lang } = useCommonStore();
 
-      {value ? (
-        <SLTypo
-          as="span"
-          variant="fontBody2Normal"
-          fontFamily="var(--font-figtree)"
-          text={format(value, "PPP")}
-        />
-      ) : (
-        <span className="text-[var(--semantic-color-text-disabled)]">
-          {placeholder || "ရက်စွဲကို ရွေးခြယ်ပါ"}
-        </span>
-      )}
-    </Button>
-  )
+    return (
+      <Button
+        variant={"outline"}
+        className={cn(
+          "w-full justify-start items-center text-left font-normal text-sm",
+          !value && "text-[var(--semantic-color-text-disabled)]",
+          className
+        )}
+        onClick={onClick}
+        ref={ref}
+      >
+        <CalendarIcon className="mr-1 h-4 w-4" />
+
+        {value ? (
+          <SLTypo
+            as="span"
+            variant="fontBody2Normal"
+            fontFamily="var(--font-figtree)"
+            text={format(value, "PPP")}
+          />
+        ) : (
+          <span className="text-[var(--semantic-color-text-disabled)]">
+            {placeholder ||
+              (lang === "mm" ? "ရက်စွဲကို ရွေးခြယ်ပါ" : "Select Date")}
+          </span>
+        )}
+      </Button>
+    );
+  }
 );
 
 CustomInput.displayName = "CustomInput";
 
 export const OnboardingStepper = () => {
+  const { messages, isLoading } = useTranslate();
+  const { onboard } = messages;
   const { setLoadingText } = useCommonStore();
   const router = useRouter();
   const [step, setStep] = React.useState(1);
@@ -127,6 +135,35 @@ export const OnboardingStepper = () => {
   });
 
   const totalSteps = 3;
+
+  const { lang } = useCommonStore();
+
+  const relationships = React.useMemo(() => {
+    if (lang === "mm") {
+      return [
+        { value: "mom", label: "မေမေ" },
+        { value: "dad", label: "ဖေဖေ" },
+        { value: "grandpa", label: "ဖိုးဖိုး" },
+        { value: "grandma", label: "ဖွားဖွား" },
+        { value: "uncle", label: "ဦးဦး" },
+        { value: "aunt", label: "ဒေါ်ဒေါ်" },
+        { value: "brother", label: "ကိုကို" },
+        { value: "sister", label: "မမ" },
+        { value: "caregiver", label: "စောင့်ရှောက်သူ" },
+      ];
+    }
+    return [
+      { value: "mom", label: "Mom" },
+      { value: "dad", label: "Dad" },
+      { value: "grandpa", label: "Grandpa" },
+      { value: "grandma", label: "Grandma" },
+      { value: "uncle", label: "Uncle" },
+      { value: "aunt", label: "Aunt" },
+      { value: "brother", label: "Brother" },
+      { value: "sister", label: "Sister" },
+      { value: "caregiver", label: "Caregiver" },
+    ];
+  }, [lang]);
 
   const canProceed = React.useMemo(() => {
     switch (step) {
@@ -151,9 +188,15 @@ export const OnboardingStepper = () => {
   const handleNext = () => {
     if (step === totalSteps) {
       router.push("/onboard/personalize");
-      setLoadingText(
-        `${formData.relationship} အတွက် အဆင်ပြေဆုံးဖြစ်မယ့် ဘာသာရပ်များကို ရွေးခြယ်ပေးနေပါတယ်...`
-      );
+      if (lang === "mm") {
+        setLoadingText(
+          `${formData.relationship} အတွက် အဆင်ပြေဆုံးဖြစ်မယ့် ဘာသာရပ်များကို ရွေးခြယ်ပေးနေပါတယ်...`
+        );
+      } else {
+        setLoadingText(
+          "We're choosing the perfect launchpad for you to begin your learning journey."
+        );
+      }
     }
     if (step < totalSteps) {
       setStep(step + 1);
@@ -161,327 +204,328 @@ export const OnboardingStepper = () => {
   };
 
   return (
-    <div className="w-full min-h-[100dvh] max-h-[100vh] overflow-y-scroll relative hide-scrollbar">
-      {/* Progress Indicators */}
-      <div className="flex gap-2 mb-12 pt-10 px-4 lg:px-0">
-        {[...Array(totalSteps)].map((_, index) => (
-          <StepIndicator
-            key={index}
-            step={index + 1}
-            isActive={step > index}
-            isCompleted={step > index + 1}
-            isNextStep={index === step}
-            onClick={() => {
-              // Only allow going back to completed steps or current step
-              if (step > index || index === step - 1) {
-                setStep(index + 1);
-              }
-            }}
-          />
-        ))}
-      </div>
-      <div className="mb-12">
-        {/* Title */}
-        <SLTypo
-          as="h1"
-          text="ဆည်းလည်း မှကြိုဆိုပါတယ်"
-          variant="fontH4Semibold"
-          className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-4 lg:px-0"
-        />
-
-        {/* Description */}
-        <SLTypo
-          as="p"
-          text={
-            (step === 1 && "အရင်ဆုံး မိမိကိုယ်ကို မိတ်ဆက်ပေးပါဦး") ||
-            "ဆည်းလည်းလေးအကြောင်း ပြောပြပေးပါဦး"
-          }
-          variant="fontBody1Normal"
-          className="text-center text-[var(--semantic-color-text-subtle)] px-4 lg:px-0"
-        />
-      </div>
-
-      {/* Form Content */}
-      <div
-        className={`space-y-6 pb-28 flex flex-col items-center min-h-[calc(100dvh-20rem)] ${step === 2 ? "justify-center" : ""}`}
-      >
-        {step === 1 && (
-          <div className="space-y-4 px-4 lg:px-0 w-full">
-            {/* User Name Input */}
-            <InputGroup
-              labelText="သင့်နာမည် ဘယ်လိုခေါ်လဲ"
-              className="mb-4"
-              htmlFor="name"
-            >
-              <Input
-                id="name"
-                placeholder="နာမည်အပြည့်အစုံကိုရေးထည့်ပါ"
-                color="primary"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                className="w-full flex items-center"
-              />
-            </InputGroup>
-
-            {/* User City Input */}
-            <InputGroup
-              labelText="ဘယ်မြို့မှာနေထိုင်ပါသလဲ"
-              className="mb-4"
-              htmlFor="city"
-            >
-              <Select
-                value={formData.city}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, city: value })
-                }
-              >
-                <SelectTrigger
-                  id="city"
-                  className={cn(
-                    "w-full",
-                    formData.city
-                      ? "text-black"
-                      : "text-[var(--semantic-color-text-disabled)]"
-                  )}
-                >
-                  <SelectValue placeholder="မြို့နာမည်ကိုရွေးခြယ်ပါ" />
-                </SelectTrigger>
-                <SelectContent className="text-black">
-                  <SelectGroup>
-                    <SelectItem value="yangon">ရန်ကုန်</SelectItem>
-                    <SelectItem value="mandalay">မန္တလေး</SelectItem>
-
-                    <SelectItem value="naypyidaw">နေပြည်တော်</SelectItem>
-                    <SelectItem value="bago">ပဲခူး</SelectItem>
-                    <SelectItem value="mawlamyine">မော်လမြိုင်</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </InputGroup>
-            <InputGroup
-              labelText="လိပ်စာလေးပြောပြပေးပါဦး"
-              className="mb-4"
-              htmlFor="address"
-            >
-              <Textarea
-                id="address"
-                rows={3}
-                placeholder="လက်ရှိနေထိုင်တဲ့ လိပ်စာကို ထည့်ပေးနော်"
-                value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
-                className="w-full"
-              />
-            </InputGroup>
-
-            {/* User Birthdate Input */}
-            <InputGroup
-              labelText="သင့်မွေးနေ့ကိုပြောပြပါဦး"
-              className="mb-4"
-              htmlFor="birthdate"
-            >
-              <Calendar
-                mode="single"
-                className="rounded-md overflow-x-scroll"
-                selected={formData.dob || undefined}
-                onSelect={(date: any) => {
-                  if (date) {
-                    console.log(date, typeof date, Object.keys(date));
-                    setFormData({ ...formData, dob: date });
+    <>
+      {!isLoading && (
+        <div className="w-full min-h-[100dvh] max-h-[100vh] overflow-y-scroll relative hide-scrollbar">
+          {/* Progress Indicators */}
+          <div className="flex gap-2 mb-12 pt-10 px-4 lg:px-0">
+            {[...Array(totalSteps)].map((_, index) => (
+              <StepIndicator
+                key={index}
+                step={index + 1}
+                isActive={step > index}
+                isCompleted={step > index + 1}
+                isNextStep={index === step}
+                onClick={() => {
+                  // Only allow going back to completed steps or current step
+                  if (step > index || index === step - 1) {
+                    setStep(index + 1);
                   }
                 }}
-                customInput={
-                  <CustomInput
-                    value={formData.dob}
-                    placeholder="ရက်စွဲကို ရွေးခြယ်ပါ"
-                  />
-                }
               />
-            </InputGroup>
+            ))}
           </div>
-        )}
-
-        {step === 2 && (
-          <div className="space-y-4 px-4 lg:px-0 w-full">
+          <div className="mb-12">
+            {/* Title */}
             <SLTypo
               as="h1"
-              text="ဆည်းလည်းလေးကို မွေးဖွားပြီးပြီလား"
+              text={onboard.step1.title}
               variant="fontH4Semibold"
               className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-4 lg:px-0"
             />
-            <Button
-              variant="outline"
-              className={`w-full ${typeof formData.isBorn === "boolean" && formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
-              onClick={() => setFormData({ ...formData, isBorn: true })}
-            >
-              <SLTypo
-                as="span"
-                text="မွေးဖွားပြီးပါပြီ"
-                variant="fontButtonMdNormal"
-                className="text-[var(--semantic-color-text-bold)]"
-              />
-            </Button>
-            <Button
-              variant="outline"
-              className={`w-full ${typeof formData.isBorn === "boolean" && !formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
-              onClick={() => setFormData({ ...formData, isBorn: false })}
-            >
-              <SLTypo
-                as="span"
-                text="မမွေးဖွားရသေးပါဘူး"
-                variant="fontButtonMdNormal"
-                className="text-[var(--semantic-color-text-bold)]"
-              />
-            </Button>
+
+            {/* Description */}
+            <SLTypo
+              as="p"
+              text={(step === 1 && onboard.step1.text) || onboard.step2.text}
+              variant="fontBody1Normal"
+              className="text-center text-[var(--semantic-color-text-subtle)] px-4 lg:px-0"
+            />
           </div>
-        )}
 
-        {step === 3 && (
-          <div className="space-y-4 px-4 lg:px-0 w-full">
-            {/* Sae Lae Name Input */}
-            <InputGroup
-              labelText="ဆည်းလည်းလေးရဲ့နာမည် ဘယ်လိုခေါ်လဲ"
-              className="mb-4"
-              htmlFor="name"
-            >
-              <Input
-                id="name"
-                placeholder="ကလေးလေးကိုခေါ်စေချင်တဲ့ နာမည်ကိုရေးထည့်ပါ"
-                color="primary"
-                value={formData.saelaeName}
-                onChange={(e) =>
-                  setFormData({ ...formData, saelaeName: e.target.value })
-                }
-                className="w-full flex items-center"
-              />
-            </InputGroup>
-
-            {/* Sae Lae Birthdate Input */}
-            <InputGroup
-              labelText={
-                formData.isBorn
-                  ? "ဆည်းလည်းလေးရဲ့ မွေးနေ့ ကိုပြောပြပါဦး"
-                  : "မွေးဖွားမည့်ရက်(Due Date) ကိုပြောပြပါဦး"
-              }
-              className="mb-4"
-              htmlFor="birthdate"
-            >
-              <Calendar
-                mode="single"
-                className="rounded-md overflow-x-scroll"
-                selected={formData.saelabDob || undefined}
-                onSelect={(date: any) => {
-                  if (date) {
-                    console.log(date, typeof date, Object.keys(date));
-                    setFormData({ ...formData, saelabDob: date });
-                  }
-                }}
-                customInput={
-                  <CustomInput
-                    value={formData.saelabDob}
-                    placeholder="ရက်စွဲကို ရွေးခြယ်ပါ"
+          {/* Form Content */}
+          <div
+            className={`space-y-6 pb-28 flex flex-col items-center min-h-[calc(100dvh-20rem)] ${step === 2 ? "justify-center" : ""}`}
+          >
+            {step === 1 && (
+              <div className="space-y-4 px-4 lg:px-0 w-full">
+                {/* User Name Input */}
+                <InputGroup
+                  labelText={onboard.step1.name_label}
+                  className="mb-4"
+                  htmlFor="name"
+                >
+                  <Input
+                    id="name"
+                    placeholder={onboard.step1.name_placeholder}
+                    color="primary"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    className="w-full flex items-center"
                   />
-                }
-              />
-            </InputGroup>
+                </InputGroup>
 
-            {/* Sae Lae Gender Input */}
-            <InputGroup
-              labelText="ဆည်းလည်းလေးရဲ့ လိင် ကိုပြောပြပေးပါဦး"
-              className="mb-4"
-              htmlFor="gender"
-            >
-              <div className="flex items-center gap-2">
+                {/* User City Input */}
+                <InputGroup
+                  labelText={onboard.step1.city_label}
+                  className="mb-4"
+                  htmlFor="city"
+                >
+                  <Select
+                    value={formData.city}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, city: value })
+                    }
+                  >
+                    <SelectTrigger
+                      id="city"
+                      className={cn(
+                        "w-full",
+                        formData.city
+                          ? "text-black"
+                          : "text-[var(--semantic-color-text-disabled)]"
+                      )}
+                    >
+                      <SelectValue
+                        placeholder={onboard.step1.city_placeholder}
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="text-black">
+                      <SelectGroup>
+                        <SelectItem value="yangon">ရန်ကုန်</SelectItem>
+                        <SelectItem value="mandalay">မန္တလေး</SelectItem>
+
+                        <SelectItem value="naypyidaw">နေပြည်တော်</SelectItem>
+                        <SelectItem value="bago">ပဲခူး</SelectItem>
+                        <SelectItem value="mawlamyine">မော်လမြိုင်</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </InputGroup>
+                <InputGroup
+                  labelText={onboard.step1.address_label}
+                  className="mb-4"
+                  htmlFor="address"
+                >
+                  <Textarea
+                    id="address"
+                    rows={3}
+                    placeholder={onboard.step1.address_placeholder}
+                    value={formData.address}
+                    onChange={(e) =>
+                      setFormData({ ...formData, address: e.target.value })
+                    }
+                    className="w-full"
+                  />
+                </InputGroup>
+
+                {/* User Birthdate Input */}
+                <InputGroup
+                  labelText={onboard.step1.dob_label}
+                  className="mb-4"
+                  htmlFor="birthdate"
+                >
+                  <Calendar
+                    mode="single"
+                    className="rounded-md overflow-x-scroll"
+                    selected={formData.dob || undefined}
+                    onSelect={(date: any) => {
+                      if (date) {
+                        console.log(date, typeof date, Object.keys(date));
+                        setFormData({ ...formData, dob: date });
+                      }
+                    }}
+                    customInput={
+                      <CustomInput
+                        value={formData.dob}
+                        placeholder={onboard.step1.dob_placeholder}
+                      />
+                    }
+                  />
+                </InputGroup>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="space-y-4 px-4 lg:px-0 w-full">
+                <SLTypo
+                  as="h1"
+                  text={onboard.step2.question}
+                  variant="fontH4Semibold"
+                  className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-4 lg:px-0"
+                />
                 <Button
-                  className={cn(
-                    "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-info-subtlest)] hover:text-[var(--semantic-color-text-default)]",
-                    formData.gender === "ကျား"
-                      ? "bg-[var(--semantic-color-bg-info-secondary)] text-[var(--semantic-color-text-inverse)]"
-                      : "bg-white text-[var(--semantic-color-text-default)]",
-                    formData.gender === "" && "bg-transparent"
-                  )}
-                  onClick={() => setFormData({ ...formData, gender: "ကျား" })}
+                  variant="outline"
+                  className={`w-full ${typeof formData.isBorn === "boolean" && formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
+                  onClick={() => setFormData({ ...formData, isBorn: true })}
                 >
                   <SLTypo
                     as="span"
-                    variant="fontLabelNormal"
-                    text="ကျား"
-                    className="-mt-1"
+                    text={onboard.step2.true_cta_text}
+                    variant="fontButtonMdNormal"
+                    className="text-[var(--semantic-color-text-bold)]"
                   />
                 </Button>
-
                 <Button
-                  className={cn(
-                    "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-new-subtlest)] hover:text-[var(--semantic-color-text-default)]",
-                    formData.gender === "မ"
-                      ? "bg-[var(--semantic-color-bg-new-primary)] text-[var(--semantic-color-text-inverse)]"
-                      : "bg-white text-[var(--semantic-color-text-default)]",
-                    formData.gender === "" && "bg-transparent"
-                  )}
-                  onClick={() => setFormData({ ...formData, gender: "မ" })}
+                  variant="outline"
+                  className={`w-full ${typeof formData.isBorn === "boolean" && !formData.isBorn ? "bg-[var(--semantic-color-bg-update-secondary)] hover:bg-[var(--semantic-color-bg-update-primary)]" : "bg-[var(--semantic-color-bg-brand-subtlest)] hover:bg-[var(--semantic-color-bg-brand-subtle)]"} border-none h-12`}
+                  onClick={() => setFormData({ ...formData, isBorn: false })}
                 >
                   <SLTypo
                     as="span"
-                    variant="fontLabelNormal"
-                    text="မ"
-                    className="-mt-1"
+                    text={onboard.step2.false_cta_text}
+                    variant="fontButtonMdNormal"
+                    className="text-[var(--semantic-color-text-bold)]"
                   />
                 </Button>
               </div>
-            </InputGroup>
+            )}
 
-            {/* Sae Lae Relationship Input */}
-            <InputGroup
-              labelText="ဆည်းလည်းလေးနဲ့ ဘယ်လိုတော်စပ်ပါသလဲ"
-              className="mb-4"
-              htmlFor="relationship"
-            >
-              <Select
-                value={formData.relationship}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, relationship: value })
-                }
-              >
-                <SelectTrigger
-                  id="city"
-                  className={cn(
-                    "w-full",
-                    formData.relationship
-                      ? "text-black"
-                      : "text-[var(--semantic-color-text-disabled)]"
-                  )}
+            {step === 3 && (
+              <div className="space-y-4 px-4 lg:px-0 w-full">
+                {/* Sae Lae Name Input */}
+                <InputGroup
+                  labelText={onboard.step3.saelae_name_label}
+                  className="mb-4"
+                  htmlFor="name"
                 >
-                  <SelectValue placeholder="အောက်ပါထဲမှ တစ်ခုခုကိုရွေးခြယ်ပါ" />
-                </SelectTrigger>
-                <SelectContent className="text-black">
-                  <SelectGroup>
-                    <SelectItem value="မေမေ">မေမေ</SelectItem>
-                    <SelectItem value="ဖေဖေ">ဖေဖေ</SelectItem>
-                    <SelectItem value="ဖိုးဖိုး">ဖိုးဖိုး</SelectItem>
-                    <SelectItem value="ဖွားဖွား">ဖွားဖွား</SelectItem>
-                    <SelectItem value="ဦးဦး">ဦးဦး</SelectItem>
-                    <SelectItem value="ဒေါ်ဒေါ်">ဒေါ်ဒေါ်</SelectItem>
-                    <SelectItem value="ကိုကို">ကိုကို</SelectItem>
-                    <SelectItem value="မမ">မမ</SelectItem>
-                    <SelectItem value="စောင့်ရှောက်သူ">
-                      စောင့်ရှောက်သူ
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </InputGroup>
-          </div>
-        )}
-      </div>
+                  <Input
+                    id="name"
+                    placeholder={onboard.step3.saelae_name_placeholder}
+                    color="primary"
+                    value={formData.saelaeName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, saelaeName: e.target.value })
+                    }
+                    className="w-full flex items-center"
+                  />
+                </InputGroup>
 
-      <div className="absolute bottom-0 w-full bg-[var(--semantic-color-bg-layoutsecondary)] md:bg-transparent p-[var(--core-spacing-xl)] md:px-0 rounded-t-[var(--core-border-radius-md)]">
-        <Button disabled={!canProceed} onClick={handleNext}>
-          ဆက်သွားမယ် <MoveRight className="!h-4 ml-1" />
-        </Button>
-      </div>
-    </div>
+                {/* Sae Lae Birthdate Input */}
+                <InputGroup
+                  labelText={
+                    formData.isBorn
+                      ? onboard.step3.saelae_dob_born_label
+                      : onboard.step3.saelae_dob_notyet_label
+                  }
+                  className="mb-4"
+                  htmlFor="birthdate"
+                >
+                  <Calendar
+                    mode="single"
+                    className="rounded-md overflow-x-scroll"
+                    selected={formData.saelabDob || undefined}
+                    onSelect={(date: any) => {
+                      if (date) {
+                        console.log(date, typeof date, Object.keys(date));
+                        setFormData({ ...formData, saelabDob: date });
+                      }
+                    }}
+                    customInput={
+                      <CustomInput
+                        value={formData.saelabDob}
+                        placeholder={onboard.step3.saelae_dob_placeholder}
+                      />
+                    }
+                  />
+                </InputGroup>
+
+                {/* Sae Lae Gender Input */}
+                <InputGroup
+                  labelText={onboard.step3.saelae_gender_label}
+                  className="mb-4"
+                  htmlFor="gender"
+                >
+                  <div className="flex items-center gap-2">
+                    <Button
+                      className={cn(
+                        "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-info-subtlest)] hover:text-[var(--semantic-color-text-default)]",
+                        formData.gender === "ကျား"
+                          ? "bg-[var(--semantic-color-bg-info-secondary)] text-[var(--semantic-color-text-inverse)]"
+                          : "bg-white text-[var(--semantic-color-text-default)]",
+                        formData.gender === "" && "bg-transparent"
+                      )}
+                      onClick={() =>
+                        setFormData({ ...formData, gender: "ကျား" })
+                      }
+                    >
+                      <SLTypo
+                        as="span"
+                        variant="fontLabelNormal"
+                        text={onboard.step3.saelae_gender_male}
+                        className="-mt-1"
+                      />
+                    </Button>
+
+                    <Button
+                      className={cn(
+                        "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-new-subtlest)] hover:text-[var(--semantic-color-text-default)]",
+                        formData.gender === "မ"
+                          ? "bg-[var(--semantic-color-bg-new-primary)] text-[var(--semantic-color-text-inverse)]"
+                          : "bg-white text-[var(--semantic-color-text-default)]",
+                        formData.gender === "" && "bg-transparent"
+                      )}
+                      onClick={() => setFormData({ ...formData, gender: "မ" })}
+                    >
+                      <SLTypo
+                        as="span"
+                        variant="fontLabelNormal"
+                        text={onboard.step3.saelae_gender_female}
+                        className="-mt-1"
+                      />
+                    </Button>
+                  </div>
+                </InputGroup>
+
+                {/* Sae Lae Relationship Input */}
+                <InputGroup
+                  labelText={onboard.step3.relationship_label}
+                  className="mb-4"
+                  htmlFor="relationship"
+                >
+                  <Select
+                    value={formData.relationship}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, relationship: value })
+                    }
+                  >
+                    <SelectTrigger
+                      id="city"
+                      className={cn(
+                        "w-full",
+                        formData.relationship
+                          ? "text-black"
+                          : "text-[var(--semantic-color-text-disabled)]"
+                      )}
+                    >
+                      <SelectValue
+                        placeholder={onboard.step3.relationship_placeholder}
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="text-black">
+                      <SelectGroup>
+                        {relationships.map((relationship, index) => (
+                          <SelectItem key={index} value={relationship.value}>
+                            {relationship.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </InputGroup>
+              </div>
+            )}
+          </div>
+
+          <div className="absolute bottom-0 w-full bg-[var(--semantic-color-bg-layoutsecondary)] md:bg-transparent p-[var(--core-spacing-xl)] md:px-0 rounded-t-[var(--core-border-radius-md)]">
+            <Button disabled={!canProceed} onClick={handleNext}>
+              {onboard.cta_text} <MoveRight className="!h-4 ml-1" />
+            </Button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };

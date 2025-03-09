@@ -2,12 +2,15 @@
 import { ContentHeader } from "@/components/atoms/ContentHeader";
 import { PageHeader } from "@/components/atoms/PageHeader";
 import { LessonPageLayout } from "@/components/clients/LessonPageLayout";
+import { useTranslate } from "@/components/hooks/use-translate";
 import { SLTypo } from "@/components/SLTypo";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export default function LessonPage() {
+  const { messages, isLoading } = useTranslate();
+  const { lessons } = messages;
   const router = useRouter();
   const params = useParams();
   const [scrollY, setScrollY] = useState(0);
@@ -46,37 +49,38 @@ export default function LessonPage() {
 
   return (
     <section>
-      <LessonPageLayout
-        showHeartButton
-        showPrimaryButton
-        hideBottomCta={hideBottomCta}
-        onPrimaryButtonClick={onPrimaryButtonClick}
-      >
-        <PageHeader className="sticky top-0 bg-white z-20" />
-        <ContentHeader
-          hideCta={hideTopCta}
-          showBackButton
-          showPrimaryButton
+      {!isLoading && (
+        <LessonPageLayout
           showHeartButton
-          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-          className="sticky top-[72px] bg-white z-10"
-          //   isHeartActive
+          showPrimaryButton
+          hideBottomCta={hideBottomCta}
           onPrimaryButtonClick={onPrimaryButtonClick}
-        />
-        <div className="px-6 space-y-[var(--core-spacing-lg)] pb-20">
-          <Image
-            src="/images/lesson1.png"
-            alt="lesson-1"
-            width={390}
-            height={400}
-            className="mx-auto w-full h-auto rounded-[var(--core-radius-sm)]"
-            priority
-            loading="eager"
+        >
+          <PageHeader className="sticky top-0 bg-white z-20" />
+          <ContentHeader
+            hideCta={hideTopCta}
+            showBackButton
+            showPrimaryButton
+            showHeartButton
+            title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
+            description={lessons.description}
+            className="sticky top-[72px] bg-white z-10"
+            //   isHeartActive
+            onPrimaryButtonClick={onPrimaryButtonClick}
           />
-          <SLTypo
-            as="p"
-            text="
+          <div className="px-6 space-y-[var(--core-spacing-lg)] pb-20">
+            <Image
+              src="/images/lesson1.png"
+              alt="lesson-1"
+              width={390}
+              height={400}
+              className="mx-auto w-full h-auto rounded-[var(--core-radius-sm)]"
+              priority
+              loading="eager"
+            />
+            <SLTypo
+              as="p"
+              text="
             ခေတ်တွေပြောင်းလာတာနဲ့အမျှ ကျွန်မတို့လူသားတွေရဲ့ကျန်းမာရေးစောင့်ရှောက်မှုတွေဟာလည်းပြောင်းလဲတိုးတက်လာပါတယ်။ 
 
             မိခင်နဲ့ကလေးကျန်းမာရေးပြုစုစောင့်ရှောက်မှုများမှာလည်း ယခင်အယူအဆနဲ့ကွဲလွဲတဲ့ ဆေးပညာဆိုင်ရာအချက်အလက်များပေါ်ပေါက်လာပါတယ်။ Evidence based medicine လို့ခေါ်တဲ့ သက်သေပြချက်ခိုင်ခိုင်မာမာရှိတဲ့ဆေးပညာအချက်အလက်တွေကိုသာ လူထုကိုအသိပညာပေးဖို့အတွက် လိုအပ်လာပါတယ်။ 
@@ -100,11 +104,12 @@ export default function LessonPage() {
             မိခင်စားတဲ့အစားအစာကြောင့် ကလေးလေနာခြင်း၊ ဝမ်းပျက်ခြင်းမဖြစ်ပါဘူး။ မိခင်အာဟာရမပြည့်ဝရင်သာ ဗီတာမင်ဓာတ်တွေချို့တဲ့ပြီး ကလေးရော၊အမေပါ ကျန်းမာရေးထိခိုက်ပါတယ်​။ ဥပမာ Vit B1 deficiency။ 
             အသားလုံးဝမစားရတဲ့ အာဟာရချို့တဲ့သွားတဲ့နို့တိုက်မိခင်ရဲ့ကလေးဟာ Vitamin B 12 ချို့တဲ့ပြီး သွေးနီဥထုတ်လုပ်မှု၊ ဦးနှောက်ဖွံ့ဖြိုးမှုကိုထိခိုက်နိုင်ပါတယ်။ 
             "
-            variant="fontBody2Normal"
-            className="text-[var(--semantic-color-text-default)] !leading-6"
-          />
-        </div>
-      </LessonPageLayout>
+              variant="fontBody2Normal"
+              className="text-[var(--semantic-color-text-default)] !leading-6"
+            />
+          </div>
+        </LessonPageLayout>
+      )}
     </section>
   );
 }

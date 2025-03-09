@@ -1,0 +1,165 @@
+{
+  "welcome": {
+    "lang_setting": "App Setting Language",
+    "lang_en": "English",
+    "lang_mm": "Burmese",
+    "title": "A sound to your happy home",
+    "text": "Children are the precious harmonies in every home.<br/> Our mission is to nurture these harmonies to be healthy and joyful,<br/> and to enrich all family members with knowledge and learning.",
+    "cta_text": "Start"
+  },
+  "auth": {
+    "phone": {
+      "label": "Mobile Number",
+      "helper_text": "Kindly enter your number after \"09\".",
+      "cta_text": "Submit"
+    },
+    "otp": {
+      "helper": "A six digit OTP code is sent to your number.",
+      "sec_helper": "60",
+      "sec_text": "Request again if not received within seconds.",
+      "otp_not_received": "Didn't receive an OTP",
+      "otp_wrong": "Your OTP code is wrong",
+      "cta_text": "Resend"
+    }
+  },
+  "onboard": {
+    "step1": {
+      "title": "Welcome to Sae-Lae",
+      "text": "First, please introduce yourself.",
+      "name_label": "Your Name",
+      "name_placeholder": "Enter your full name",
+      "city_label": "Your City",
+      "city_placeholder": "Select your city",
+      "address_label": "Your Address",
+      "address_placeholder": "Enter your current address",
+      "dob_label": "Your Birthday",
+      "dob_placeholder": "Select your birthday"
+    },
+    "step2": {
+      "title": "Welcome to Sae-Lae",
+      "text": "Tell us about your baby",
+      "question": "Is your baby born yet?",
+      "true_cta_text": "Yes",
+      "false_cta_text": "No"
+    },
+    "step3": {
+      "title": "Welcome to SaeLae",
+      "text": "Tell us about your little one",
+      "saelae_name_label": "Your Baby Name",
+      "saelae_name_placeholder": "Enter your baby's full name or nickname",
+      "saelae_dob_born_label": "Your Baby's Birthday",
+      "saelae_dob_notyet_label": "Your Baby's Due Date",
+      "saelae_dob_placeholder": "Select date",
+      "saelae_gender_label": "Your Baby's Sex",
+      "saelae_gender_male": "Male",
+      "saelae_gender_female": "Female",
+      "relationship_label": "Your Relationship with the baby",
+      "relationship_placeholder": "Select one option from the list"
+    },
+    "cta_text": "Continue"
+  },
+  "personalize": {
+    "title": "Select a module to get started",
+    "text": "Don't worry, you can always change this later.",
+    "priority_lesson": "Recommended for you",
+    "other_lesson": "Other Modules"
+  },
+  "lessons": {
+    "description": "A brief lesson Explanation",
+    "cta_for_quiz": "Start Quiz",
+    "confirm_question": "Are you sure to quit?",
+    "confirm_text": "If you decide to quit now, you'll lose your current progress. But, you can always pick this up later!",
+    "confirm_no": "Quit Now",
+    "confirm_yes": "Continue",
+    "cta_continue_quiz": "Next",
+    "lesson_complete_title": "Lesson is completed.",
+    "exam_complete_title": "Congratulations!<br/> You passed the exam.",
+    "exam_fail_title": "Sorry,<br/>You failed the test, please try again.",
+    "question_count_text": "Quizzes",
+    "correct_count_text": "Correct Answers",
+    "cta_try_agin": "Try Again",
+    "cta_continue": "Continue Learning",
+    "exam_loading_title": "Please wait...",
+    "exam_loading_text": "You have 30 seconds to answer each question...",
+    "correct_text": "You answer is correct.",
+    "wrong_text": "Wrong answer",
+    "times_up_text": "Time's up!"
+  },
+  "modules": {
+    "title": "Modules",
+    "is_learning_text": "In Progress"
+  },
+  "baby": {
+    "profile": {
+      "title": "Baby Diary",
+      "cta_edit": "Edit",
+      "cta_add": "Add New"
+    },
+    "edit": {
+      "title": "Edit Baby Profile",
+      "cta_photo_edit": "Edit Photo",
+      "saelae_name_label": "Your Baby Name",
+      "saelae_name_placeholder": "Enter the name you'd like to call your baby",
+      "saelae_dob_born_label": "Baby's Birthday",
+      "saelae_dob_notyet_label": "Your Baby's Due Date",
+      "saelae_dob_placeholder": "Select date",
+      "saelae_gender_label": "Your Baby's Sex",
+      "saelae_gender_male": "Male",
+      "saelae_gender_female": "Female",
+      "cta_save": "Save Changes"
+    },
+    "new": {
+      "step1": {
+        "text": "Edit Baby Profile",
+        "question": "Is your baby born yet?",
+        "true_cta_text": "Yes",
+        "false_cta_text": "No"
+      },
+      "step2": {
+        "text": "Edit Baby Profile",
+        "saelae_name_label": "Your Baby Name",
+        "saelae_name_placeholder": "Enter the name you'd like to call your baby",
+        "saelae_dob_born_label": "Baby's Birthday",
+        "saelae_dob_notyet_label": "Your Baby's Due Date",
+        "saelae_dob_placeholder": "Select date",
+        "saelae_gender_label": "Your Baby's Sex",
+        "saelae_gender_male": "Male",
+        "saelae_gender_female": "Female",
+        "relationship_label": "Your Relationship with the baby",
+        "relationship_placeholder": "Select one option from the list"
+      },
+      "cta_continue_text": "Continue",
+      "cta_save": "Save"
+    }
+  },
+  "bookmarks": {
+    "title": "Bookmarks"
+  },
+  "profile": {
+    "title": "Profile",
+    "cta_edit": "Edit",
+    "brief_text": "Summary Learning",
+    "lang_setting": "App Setting Language",
+    "lang_en": "English",
+    "lang_mm": "Burmese",
+    "cta_logout": "Log out",
+    "edit": {
+      "title": "Edit Profile",
+      "cta_photo_edit": "Edit Photo",
+      "name_label": "Name",
+      "name_placeholder": "Enter your full name",
+      "city_label": "Your City",
+      "city_placeholder": "Select your city",
+      "address_label": "Your Address",
+      "address_placeholder": "Enter your current address",
+      "dob_label": "Your Birthday",
+      "dob_placeholder": "Select date"
+    },
+    "cta_save": "Save Changes"
+  },
+  "common": {
+    "lessons": "Lessons",
+    "loading": "Please wait",
+    "cta_lesson_start": "Start Learning"
+  }
+}
