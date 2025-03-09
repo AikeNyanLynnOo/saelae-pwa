@@ -15,8 +15,13 @@ import { SLTypo } from "@/components/SLTypo";
 import { useRouter } from "next/navigation";
 
 import toast, { Toaster } from "react-hot-toast";
+import { useTranslate } from "../hooks/use-translate";
+import { useCommonStore } from "@/store/common-store";
 
 export const OTPInputLayout = () => {
+  const { messages, isLoading } = useTranslate();
+  const { auth } = messages;
+  const { lang } = useCommonStore();
   const router = useRouter();
 
   const [otp, setOtp] = useState("");
@@ -56,18 +61,13 @@ export const OTPInputLayout = () => {
   };
 
   return (
-    <CommonLayout customClasses="items-start relative">
+    <CommonLayout isLoading={isLoading} customClasses="items-start relative">
       <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit text-center flex flex-col px-4 sm:px-0">
         {/* Image Placeholder */}
         <ImageWithPlaceholder src="/images/logo.png" />
 
         {/* OTP Input */}
-        <InputGroup
-          bottomText={
-            "သင့်ဖုန်းနံပါတ်ကို ဂဏန်း ၆ လုံးပါတဲ့ OTP ပို့ပေးထားပါတယ်"
-          }
-          className="mb-4 text-center"
-        >
+        <InputGroup bottomText={auth.otp.helper} className="mb-4 text-center">
           <InputOTP
             maxLength={6}
             value={otp}
@@ -94,15 +94,27 @@ export const OTPInputLayout = () => {
             variant="fontBody4Normal"
             className="text-[var(--semantic-color-text-subtle)] flex items-center justify-center mb-4"
           >
-            <span className="text-[var(--semantic-color-text-negative-default)] mr-1">
-              60
-            </span>
-            <span>စက္ကန့်အတွင်းမရခဲ့ဘူးဆိုရင် ပြန်တောင်းပါ။</span>
+            {(lang === "mm" && (
+              <>
+                <span className="text-[var(--semantic-color-text-negative-default)] mr-1">
+                  60
+                </span>
+                <span>စက္ကန့်အတွင်းမရခဲ့ဘူးဆိုရင် ပြန်တောင်းပါ။</span>
+              </>
+            )) || (
+              <>
+                <span>Request again if you do not receive within</span>
+                <span className="text-[var(--semantic-color-text-negative-default)] mx-1">
+                  60
+                </span>
+                <span>seconds</span>
+              </>
+            )}
           </SLTypo>
         )) || (
           <SLTypo
             variant="fontBody4Normal"
-            text="OTP နံပါတ်မရခဲ့ဘူးလား။"
+            text={auth.otp.otp_not_received}
             className="text-[var(--semantic-color-text-subtle)] mb-4"
           />
         )}
@@ -114,7 +126,7 @@ export const OTPInputLayout = () => {
           onClick={handleResendOTP}
         >
           <RotateCw className="!h-3 text-[var(--semantic-color-icon-brand-default)]" />
-          ပြန်ပို့မယ်
+          {auth.otp.cta_text}
         </Button>
       </div>
       <Toaster position="top-center" reverseOrder={false} />

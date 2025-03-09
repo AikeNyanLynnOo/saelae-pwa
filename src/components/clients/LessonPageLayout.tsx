@@ -2,6 +2,7 @@ import { CommonLayout } from "@/components/layouts/CommonLayout";
 import { Button } from "../ui/button";
 import { SLTypo } from "../SLTypo";
 import { Heart } from "lucide-react";
+import { useTranslate } from "../hooks/use-translate";
 
 interface LessonPageLayoutProps {
   children: React.ReactNode;
@@ -21,14 +22,17 @@ export const LessonPageLayout = ({
   hideBottomCta = false,
   showHeartButton,
   showPrimaryButton = true,
-  primaryButtonText = "ဉာဏ်စမ်းဖြေမယ်",
+  primaryButtonText,
   onPrimaryButtonClick,
   isHeartActive,
   onHeartButtonClick,
 }: LessonPageLayoutProps) => {
+  const { messages, isLoading } = useTranslate();
+  const { lessons } = messages;
+
   return (
     <CommonLayout
-      isLoading={false}
+      isLoading={isLoading}
       customClasses="block h-[100dvh] relative w-full md:w-4/6 lg:w-1/2 mx-auto"
     >
       <main className="flex-1">{children}</main>
@@ -44,7 +48,11 @@ export const LessonPageLayout = ({
               >
                 <SLTypo
                   as="span"
-                  text={primaryButtonText}
+                  text={
+                    primaryButtonText ||
+                    lessons.cta_for_quiz ||
+                    "ဉာဏ်စမ်းဖြေမယ်"
+                  }
                   variant="fontButtonMdSemibold"
                   className="text-[var(--semantic-color-text-bold)]"
                 />

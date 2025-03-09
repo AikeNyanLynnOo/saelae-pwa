@@ -19,6 +19,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { CommonLayout } from "../layouts/CommonLayout";
+import { useTranslate } from "../hooks/use-translate";
+import { useCommonStore } from "@/store/common-store";
 
 interface BabyPageNewLayoutProps {
   children?: React.ReactNode;
@@ -31,6 +33,37 @@ export const BabyPageNewLayout = ({
   customClasses,
   customBackUrl,
 }: BabyPageNewLayoutProps) => {
+  const { messages, isLoading } = useTranslate();
+  const { baby } = messages;
+
+  const { lang } = useCommonStore();
+
+  const relationships = useMemo(() => {
+    if (lang === "mm") {
+      return [
+        { value: "mom", label: "မေမေ" },
+        { value: "dad", label: "ဖေဖေ" },
+        { value: "grandpa", label: "ဖိုးဖိုး" },
+        { value: "grandma", label: "ဖွားဖွား" },
+        { value: "uncle", label: "ဦးဦး" },
+        { value: "aunt", label: "ဒေါ်ဒေါ်" },
+        { value: "brother", label: "ကိုကို" },
+        { value: "sister", label: "မမ" },
+        { value: "caregiver", label: "စောင့်ရှောက်သူ" },
+      ];
+    }
+    return [
+      { value: "mom", label: "Mom" },
+      { value: "dad", label: "Dad" },
+      { value: "grandpa", label: "Grandpa" },
+      { value: "grandma", label: "Grandma" },
+      { value: "uncle", label: "Uncle" },
+      { value: "aunt", label: "Aunt" },
+      { value: "brother", label: "Brother" },
+      { value: "sister", label: "Sister" },
+      { value: "caregiver", label: "Caregiver" },
+    ];
+  }, [lang]);
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -79,7 +112,10 @@ export const BabyPageNewLayout = ({
   };
 
   return (
-    <CommonLayout customClasses="block h-[100dvh] relative w-full md:w-4/6 lg:w-1/2 mx-auto">
+    <CommonLayout
+      isLoading={isLoading}
+      customClasses="block h-[100dvh] relative w-full md:w-4/6 lg:w-1/2 mx-auto"
+    >
       <PageHeader className="sticky top-0 bg-white z-20" />
       <div className="max-w-md mx-auto bg-white min-h-[100dvh] p-6 pb-20">
         <div className="flex flex-col gap-y-[var(--core-spacing-lg)] items-center mb-6">
@@ -93,7 +129,7 @@ export const BabyPageNewLayout = ({
           </div>
           <SLTypo
             as="h1"
-            text="ဆည်းလည်းလေးအကြောင်း ပြောပြပေးပါဦး"
+            text={baby.new.step1.text}
             variant={"fontH5Medium"}
             className="text-[var(--semantic-color-text-default)]"
           />
@@ -104,7 +140,7 @@ export const BabyPageNewLayout = ({
               <div className="space-y-4 px-4 lg:px-0 w-full">
                 <SLTypo
                   as="h1"
-                  text="ဆည်းလည်းလေးကို မွေးဖွားပြီးပြီလား"
+                  text={baby.new.step1.question}
                   variant="fontH4Semibold"
                   className="text-center text-[var(--semantic-color-text-bold)] mb-2 px-4 lg:px-0"
                 />
@@ -115,7 +151,7 @@ export const BabyPageNewLayout = ({
                 >
                   <SLTypo
                     as="span"
-                    text="မွေးဖွားပြီးပါပြီ"
+                    text={baby.new.step1.true_cta_text}
                     variant="fontButtonMdNormal"
                     className="text-[var(--semantic-color-text-bold)]"
                   />
@@ -127,7 +163,7 @@ export const BabyPageNewLayout = ({
                 >
                   <SLTypo
                     as="span"
-                    text="မမွေးဖွားရသေးပါဘူး"
+                    text={baby.new.step1.false_cta_text}
                     variant="fontButtonMdNormal"
                     className="text-[var(--semantic-color-text-bold)]"
                   />
@@ -139,13 +175,13 @@ export const BabyPageNewLayout = ({
               <div className="space-y-4 px-4 lg:px-0 w-full">
                 {/* Sae Lae Name Input */}
                 <InputGroup
-                  labelText="ဆည်းလည်းလေးရဲ့နာမည် ဘယ်လိုခေါ်လဲ"
+                  labelText={baby.new.step2.saelae_name_label}
                   className="mb-4"
                   htmlFor="name"
                 >
                   <Input
                     id="name"
-                    placeholder="ကလေးလေးကိုခေါ်စေချင်တဲ့ နာမည်ကိုရေးထည့်ပါ"
+                    placeholder={baby.new.step2.saelae_name_placeholder}
                     color="primary"
                     value={formData.saelaeName}
                     onChange={(e) =>
@@ -159,8 +195,8 @@ export const BabyPageNewLayout = ({
                 <InputGroup
                   labelText={
                     formData.isBorn
-                      ? "ဆည်းလည်းလေးရဲ့ မွေးနေ့ ကိုပြောပြပါဦး"
-                      : "မွေးဖွားမည့်ရက်(Due Date) ကိုပြောပြပါဦး"
+                      ? baby.new.step2.saelae_dob_born_label
+                      : baby.new.step2.saelae_dob_notyet_label
                   }
                   className="mb-4"
                   htmlFor="birthdate"
@@ -178,7 +214,7 @@ export const BabyPageNewLayout = ({
                     customInput={
                       <CustomInput
                         value={formData.saelabDob}
-                        placeholder="ရက်စွဲကို ရွေးခြယ်ပါ"
+                        placeholder={baby.new.step2.saelae_dob_placeholder}
                       />
                     }
                   />
@@ -186,7 +222,7 @@ export const BabyPageNewLayout = ({
 
                 {/* Sae Lae Gender Input */}
                 <InputGroup
-                  labelText="ဆည်းလည်းလေးရဲ့ လိင် ကိုပြောပြပေးပါဦး"
+                  labelText={baby.new.step2.saelae_gender_label}
                   className="mb-4"
                   htmlFor="gender"
                 >
@@ -206,7 +242,7 @@ export const BabyPageNewLayout = ({
                       <SLTypo
                         as="span"
                         variant="fontLabelNormal"
-                        text="ကျား"
+                        text={baby.new.step2.saelae_gender_male}
                         className="-mt-1"
                       />
                     </Button>
@@ -224,7 +260,7 @@ export const BabyPageNewLayout = ({
                       <SLTypo
                         as="span"
                         variant="fontLabelNormal"
-                        text="မ"
+                        text={baby.new.step2.saelae_gender_female}
                         className="-mt-1"
                       />
                     </Button>
@@ -233,7 +269,7 @@ export const BabyPageNewLayout = ({
 
                 {/* Sae Lae Relationship Input */}
                 <InputGroup
-                  labelText="ဆည်းလည်းလေးနဲ့ ဘယ်လိုတော်စပ်ပါသလဲ"
+                  labelText={baby.new.step2.relationship_label}
                   className="mb-4"
                   htmlFor="relationship"
                 >
@@ -252,21 +288,17 @@ export const BabyPageNewLayout = ({
                           : "text-[var(--semantic-color-text-disabled)]"
                       )}
                     >
-                      <SelectValue placeholder="အောက်ပါထဲမှ တစ်ခုခုကိုရွေးခြယ်ပါ" />
+                      <SelectValue
+                        placeholder={baby.new.step2.relationship_placeholder}
+                      />
                     </SelectTrigger>
                     <SelectContent className="text-black">
                       <SelectGroup>
-                        <SelectItem value="မေမေ">မေမေ</SelectItem>
-                        <SelectItem value="ဖေဖေ">ဖေဖေ</SelectItem>
-                        <SelectItem value="ဖိုးဖိုး">ဖိုးဖိုး</SelectItem>
-                        <SelectItem value="ဖွားဖွား">ဖွားဖွား</SelectItem>
-                        <SelectItem value="ဦးဦး">ဦးဦး</SelectItem>
-                        <SelectItem value="ဒေါ်ဒေါ်">ဒေါ်ဒေါ်</SelectItem>
-                        <SelectItem value="ကိုကို">ကိုကို</SelectItem>
-                        <SelectItem value="မမ">မမ</SelectItem>
-                        <SelectItem value="စောင့်ရှောက်သူ">
-                          စောင့်ရှောက်သူ
-                        </SelectItem>
+                        {relationships.map((relationship, index) => (
+                          <SelectItem key={index} value={relationship.value}>
+                            {relationship.label}
+                          </SelectItem>
+                        ))}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -278,7 +310,8 @@ export const BabyPageNewLayout = ({
       </div>
       <div className="absolute bottom-0 w-full bg-[var(--semantic-color-bg-layoutsecondary)] md:bg-transparent p-[var(--core-spacing-xl)] md:px-6 rounded-t-[var(--core-border-radius-md)]">
         <Button disabled={!canProceed} onClick={handleNext}>
-          {(step === totalSteps && "သိမ်းဆည်းမယ်") || "ဆက်သွားမယ်"}{" "}
+          {(step === totalSteps && baby.new.cta_save) ||
+            baby.new.cta_continue_text}{" "}
           <MoveRight className="!h-4 ml-1" />
         </Button>
       </div>

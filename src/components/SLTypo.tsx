@@ -1,5 +1,6 @@
 "use client";
 import { fontFunc, typoSystem, TypoVariants } from "@/lib/typoSystem";
+import { useCommonStore } from "@/store/common-store";
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -35,6 +36,7 @@ export const SLTypo = ({
   isDangerously = false,
   ...props
 }: SLTypoProps) => {
+  const { lang } = useCommonStore();
   const typoClasses = useMemo(
     () => twMerge("leading-6", className),
     [className]
@@ -53,7 +55,10 @@ export const SLTypo = ({
       className: typoClasses,
       style: {
         ...typoStyle,
-        fontFamily: fontFamily || typoStyle.fontFamily,
+        fontFamily:
+          (lang === "en" && "var(--font-figtree)") ||
+          fontFamily ||
+          typoStyle.fontFamily,
       },
       ...(isDangerously && {
         dangerouslySetInnerHTML: { __html: text || props.children || "" },

@@ -1,22 +1,18 @@
 "use client";
 
 import * as React from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SLTypo } from "../SLTypo";
-import { LabelWithIcon } from "./LabelWithIcon";
 import { ChevronDown } from "lucide-react";
+import { SLTypo } from "../SLTypo";
 import { Female, Male } from "./CustomIcon";
+import { LabelWithIcon } from "./LabelWithIcon";
 
 interface Baby {
   name: string;
@@ -71,7 +67,7 @@ export const BabyNameWithDropDown = ({
                     className="py-[var(--core-spacing-sm)] px-[var(--core-spacing-lg)]"
                     iconClassName="h-6 w-6"
                     labelClassName="text-[var(--semantic-color-text-default)]"
-                    labelFontFamily="var(--font-figma)"
+                    labelFontFamily="var(--font-figtree)"
                   />
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

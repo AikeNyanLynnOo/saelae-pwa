@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import "@/app/globals.css";
 import { FloatingBanner } from "@/components/atoms/FloatingBanner";
+import { useCommonStore } from "@/store/common-store";
 
 export default function RootLayoutClient({
   children,

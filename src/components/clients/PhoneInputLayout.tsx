@@ -8,6 +8,7 @@ import { SLPhoneInput } from "@/components/atoms/forms/SLPhoneInput";
 import { ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
 import { splitInputValue } from "@/components/atoms/forms/PhoneInput/utils/splitInputValue";
 import { useRouter } from "next/navigation";
+import { useTranslate } from "../hooks/use-translate";
 
 export const PhoneInputLayout = () => {
   const router = useRouter();
@@ -15,6 +16,9 @@ export const PhoneInputLayout = () => {
   const [countryCode, setCountryCode] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [showBottomMm, setShowBottomMm] = useState(false);
+
+  const { messages, isLoading } = useTranslate();
+  const { auth } = messages;
 
   const onChange = (
     phone: string,
@@ -28,18 +32,15 @@ export const PhoneInputLayout = () => {
   };
 
   return (
-    <CommonLayout customClasses="items-start relative">
+    <CommonLayout isLoading={isLoading} customClasses="items-start relative">
       <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit px-4 sm:px-0">
         {/* Image Placeholder */}
         <ImageWithPlaceholder src="/images/logo.png" />
 
         {/* Label */}
         <InputGroup
-          labelText="ဖုန်းနံပါတ်"
-          bottomText={
-            (showBottomMm && "၀၉ မပါဘဲ နောက်က ဖုန်းနံပါတ်ကိုပဲထည့်ပေးနော်။") ||
-            ""
-          }
+          labelText={auth.phone.label}
+          bottomText={(showBottomMm && auth.phone.helper_text) || ""}
           className="mb-4"
         >
           {/* Phone Input */}
@@ -47,7 +48,9 @@ export const PhoneInputLayout = () => {
         </InputGroup>
 
         {/* Submit Button */}
-        <Button onClick={() => router.push("/auth/otp")}>အတည်ပြုမယ်</Button>
+        <Button onClick={() => router.push("/auth/otp")}>
+          {auth.phone.cta_text}
+        </Button>
       </div>
     </CommonLayout>
   );
