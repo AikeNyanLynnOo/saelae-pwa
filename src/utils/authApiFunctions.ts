@@ -28,3 +28,28 @@ export const requestOtp = async ({
 
   return res;
 };
+export const verifyOtp = async ({
+  phone_number,
+  otp,
+}: {
+  phone_number?: string;
+  otp?: string;
+}): Promise<any> => {
+  const data = {
+    phone_number,
+    otp,
+  };
+  let config = {
+    method: "POST",
+    maxBodyLength: Infinity,
+    url: `${baseURL}/otp/verify`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(data),
+  };
+  const res = await makeRequest(config);
+
+  return res;
+};

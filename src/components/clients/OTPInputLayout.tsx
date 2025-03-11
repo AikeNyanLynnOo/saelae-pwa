@@ -1,6 +1,6 @@
 "use client";
 import { RotateCw, Router } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ImageWithPlaceholder } from "@/components/atoms/ImageWithPlaceholder";
 import { InputGroup } from "@/components/atoms/forms/InputGroup";
 import { CommonLayout } from "@/components/layouts/CommonLayout";
@@ -17,9 +17,13 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { useTranslate } from "../hooks/use-translate";
 import { useCommonStore } from "@/store/common-store";
+import { useAuthStore } from "@/store/auth-store";
+import { verifyOtp } from "@/utils/authApiFunctions";
+import { extractMessage, setAppTokenCookie } from "@/utils/helperFunction";
 
 export const OTPInputLayout = () => {
   const { messages, isLoading } = useTranslate();
+  const { phoneNumber } = useAuthStore();
   const { auth } = messages;
   const { lang } = useCommonStore();
   const router = useRouter();
@@ -28,13 +32,40 @@ export const OTPInputLayout = () => {
 
   const [timeLeft, setTimeLeft] = useState(60); // 60 seconds timer
   const [isResendDisabled, setIsResendDisabled] = useState(false);
+  const [errMessage, setErrMessage] = useState("");
 
   useEffect(() => {
     if (otp.length === 6) {
-      toast.success("Successfully verified!");
-      setTimeout(() => {
-        router.push("/onboard");
-      }, 1000);
+      // toast.success("Successfully verified!");
+      // setTimeout(() => {
+      //   router.push("/onboard");
+      // }, 1000);
+      verifyOtp({
+        phone_number: phoneNumber,
+        otp,
+      })
+        .then(({ status, statusText, success, message, data }) => {
+          console.log({
+            status,
+            statusText,
+            success,
+            message,
+            data,
+          });
+          const extractedMsg = extractMessage(message);
+          if (!success) {
+            setErrMessage(extractedMsg);
+          } else {
+            if (data && data && data.token) {
+              setAppTokenCookie(data.token);
+              toast.success("Successfully verified!");
+              router.push("/onboard");
+            }
+          }
+        })
+        .catch((e) => {
+          // error
+        });
     }
   }, [otp, router]);
 
@@ -60,6 +91,10 @@ export const OTPInputLayout = () => {
     console.log("Resending OTP...");
   };
 
+  const otpHelperText = useMemo(() => {
+    return errMessage || auth.otp.helper;
+  }, [errMessage]);
+
   return (
     <CommonLayout isLoading={isLoading} customClasses="items-start relative">
       <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit text-center flex flex-col px-4 sm:px-0">
@@ -67,12 +102,19 @@ export const OTPInputLayout = () => {
         <ImageWithPlaceholder src="/images/logo.png" />
 
         {/* OTP Input */}
-        <InputGroup bottomText={auth.otp.helper} className="mb-4 text-center">
+        <InputGroup
+          bottomText={otpHelperText}
+          className="mb-4 text-center"
+          isErr={(errMessage && true) || false}
+        >
           <InputOTP
             maxLength={6}
             value={otp}
             pattern="^[0-9]+$"
-            onChange={(value) => setOtp(value)}
+            onChange={(value) => {
+              setErrMessage("");
+              setOtp(value);
+            }}
           >
             <InputOTPGroup>
               <InputOTPSlot index={0} />

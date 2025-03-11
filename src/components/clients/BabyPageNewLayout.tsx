@@ -243,7 +243,6 @@ export const BabyPageNewLayout = ({
                         as="span"
                         variant="fontLabelNormal"
                         text={baby.new.step2.saelae_gender_male}
-                        className="-mt-1"
                       />
                     </Button>
 
@@ -261,7 +260,6 @@ export const BabyPageNewLayout = ({
                         as="span"
                         variant="fontLabelNormal"
                         text={baby.new.step2.saelae_gender_female}
-                        className="-mt-1"
                       />
                     </Button>
                   </div>

@@ -167,7 +167,6 @@ export const BabyPageEditLayout = ({
                       as="span"
                       variant="fontLabelNormal"
                       text={baby.edit.saelae_gender_male}
-                      className="-mt-1"
                     />
                   </Button>
 
@@ -185,7 +184,6 @@ export const BabyPageEditLayout = ({
                       as="span"
                       variant="fontLabelNormal"
                       text={baby.edit.saelae_gender_female}
-                      className="-mt-1"
                     />
                   </Button>
                 </div>

@@ -455,7 +455,6 @@ export const OnboardingStepper = () => {
                         as="span"
                         variant="fontLabelNormal"
                         text={onboard.step3.saelae_gender_male}
-                        className="-mt-1"
                       />
                     </Button>
 
@@ -473,7 +472,6 @@ export const OnboardingStepper = () => {
                         as="span"
                         variant="fontLabelNormal"
                         text={onboard.step3.saelae_gender_female}
-                        className="-mt-1"
                       />
                     </Button>
                   </div>
