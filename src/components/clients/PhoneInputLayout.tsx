@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { CommonLayout } from "@/components/layouts/CommonLayout";
 import { ImageWithPlaceholder } from "@/components/atoms/ImageWithPlaceholder";
 import { InputGroup } from "@/components/atoms/forms/InputGroup";
@@ -9,8 +11,10 @@ import { ParsedCountry } from "@/components/atoms/forms/PhoneInput/types";
 import { splitInputValue } from "@/components/atoms/forms/PhoneInput/utils/splitInputValue";
 import { useRouter } from "next/navigation";
 import { useTranslate } from "../hooks/use-translate";
+import toast, { Toaster } from "react-hot-toast";
 
-export const PhoneInputLayout = () => {
+export const PhoneInputLayout = ({ authCookies }: { authCookies?: any[] }) => {
+  const params = useSearchParams();
   const router = useRouter();
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useState("");
@@ -30,6 +34,19 @@ export const PhoneInputLayout = () => {
       (meta && meta.country && splitInputValue(inputValue).value) || ""
     );
   };
+
+  useEffect(() => {
+    if (
+      params.get("session_expired") &&
+      params.get("session_expired") === "true" &&
+      authCookies &&
+      authCookies.length === 0
+    ) {
+      toast("Session Expired! Please login again.", {
+        icon: "🔓",
+      });
+    }
+  }, [params, authCookies]);
 
   return (
     <CommonLayout isLoading={isLoading} customClasses="items-start relative">
@@ -52,6 +69,7 @@ export const PhoneInputLayout = () => {
           {auth.phone.cta_text}
         </Button>
       </div>
+      <Toaster position="top-center" reverseOrder={false} />
     </CommonLayout>
   );
 };
