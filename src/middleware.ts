@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const authCookieName =
+  process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME || process.env.AUTH_COOKIE_NAME;
+
 export function middleware(request: NextRequest) {
-  // const token = request.cookies.get("auth_token");
-  const token = "auth_token";
+  const token = request.cookies.get(authCookieName || "app_token");
 
   // Public paths that don't require authentication
   const publicPaths = ["/welcome", "/auth"];
@@ -12,7 +14,9 @@ export function middleware(request: NextRequest) {
   );
 
   if (!token && !isPublicPath) {
-    return NextResponse.redirect(new URL("/auth", request.url));
+    const redirectUrl = new URL("/auth", request.url);
+    redirectUrl.searchParams.set("session_expired", "true");
+    return NextResponse.redirect(redirectUrl);
   }
 
   return NextResponse.next();
