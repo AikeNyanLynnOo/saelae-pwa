@@ -59,7 +59,8 @@ export const OTPInputLayout = () => {
             if (data && data && data.token) {
               setAppTokenCookie(data.token);
               toast.success("Successfully verified!");
-              router.push("/onboard");
+
+              router.push(data.is_new_user ? "/onboard" : "/");
             }
           }
         })

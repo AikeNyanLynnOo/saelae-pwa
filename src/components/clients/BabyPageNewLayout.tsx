@@ -230,13 +230,13 @@ export const BabyPageNewLayout = ({
                     <Button
                       className={cn(
                         "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-info-subtlest)] hover:text-[var(--semantic-color-text-default)]",
-                        formData.gender === "ကျား"
+                        formData.gender === "male"
                           ? "bg-[var(--semantic-color-bg-info-secondary)] text-[var(--semantic-color-text-inverse)]"
                           : "bg-white text-[var(--semantic-color-text-default)]",
                         formData.gender === "" && "bg-transparent"
                       )}
                       onClick={() =>
-                        setFormData({ ...formData, gender: "ကျား" })
+                        setFormData({ ...formData, gender: "male" })
                       }
                     >
                       <SLTypo
@@ -249,12 +249,12 @@ export const BabyPageNewLayout = ({
                     <Button
                       className={cn(
                         "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-new-subtlest)] hover:text-[var(--semantic-color-text-default)]",
-                        formData.gender === "မ"
+                        formData.gender === "female"
                           ? "bg-[var(--semantic-color-bg-new-secondary)] text-[var(--semantic-color-text-inverse)]"
                           : "bg-white text-[var(--semantic-color-text-default)]",
                         formData.gender === "" && "bg-transparent"
                       )}
-                      onClick={() => setFormData({ ...formData, gender: "မ" })}
+                      onClick={() => setFormData({ ...formData, gender: "female" })}
                     >
                       <SLTypo
                         as="span"

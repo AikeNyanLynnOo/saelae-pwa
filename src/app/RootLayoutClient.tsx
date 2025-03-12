@@ -4,12 +4,14 @@ import React, { Suspense } from "react";
 import "@/app/globals.css";
 import { FloatingBanner } from "@/components/atoms/FloatingBanner";
 import { useCommonStore } from "@/store/common-store";
+import { usePathname } from "next/navigation";
 
 export default function RootLayoutClient({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathName = usePathname();
   // Add state to track install prompt and app installability
   const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null);
   const [isInstallable, setIsInstallable] = React.useState(false);
@@ -69,14 +71,17 @@ export default function RootLayoutClient({
   return (
     <div className="flex flex-col">
       <div className="min-h-[100dvh] container mx-auto px-0 md:px-5 lg:px-12 xl:px-20 max-w-screen-lg">
-        {isIOS ? (
-          <FloatingBanner
-            handleInstallClick={handleInstallClick}
-            isIOS={isIOS}
-          />
-        ) : isInstallable ? (
-          <FloatingBanner handleInstallClick={handleInstallClick} />
-        ) : null}
+        {(pathName === "/auth" ||
+          pathName === "/welcome" ||
+          pathName === "/") &&
+          (isIOS ? (
+            <FloatingBanner
+              handleInstallClick={handleInstallClick}
+              isIOS={isIOS}
+            />
+          ) : isInstallable ? (
+            <FloatingBanner handleInstallClick={handleInstallClick} />
+          ) : null)}
         {children}
       </div>
     </div>

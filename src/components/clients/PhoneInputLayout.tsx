@@ -73,7 +73,7 @@ export const PhoneInputLayout = ({ authCookies }: { authCookies?: any[] }) => {
       authCookies &&
       authCookies.length === 0
     ) {
-      toast("Session Expired! Please login again.", {
+      toast("Please Login to continue", {
         icon: "🔓",
       });
     }

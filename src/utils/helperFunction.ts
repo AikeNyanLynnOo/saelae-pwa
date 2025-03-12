@@ -1,11 +1,9 @@
 import { setCookie } from "nookies";
-/**
- * Sets the app_token cookie with a 24-hour expiration using next/cookies
- * @param token - The token value to be stored in the cookie
- */
+
 export const setAppTokenCookie = (token: string): void => {
   const maxAge = 24 * 60 * 60; // 24 hours in seconds
 
+  // Decode the token before setting it in the cookie to prevent URL encoding
   setCookie(null, "app_token", token, {
     maxAge: maxAge,
     path: "/",
@@ -14,11 +12,6 @@ export const setAppTokenCookie = (token: string): void => {
   });
 };
 
-/**
- * Extracts a readable string message from various message formats
- * @param message - The message that can be either a string or an object with nested arrays
- * @returns A formatted string message
- */
 export const extractMessage = (message: any): string => {
   // If message is string, return directly
   if (typeof message === "string") {
@@ -36,4 +29,25 @@ export const extractMessage = (message: any): string => {
 
   // Return empty string for undefined/null cases
   return "";
+};
+
+export const formatDate = (date: any) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
+export const getStateBaseOnData = (
+  progressData: any
+): "default" | "completed" | "half-completed" | "locked" | "progress" => {
+  if (progressData.is_completed) {
+    return "completed";
+  }
+  if (progressData.has_started && !progressData.is_completed) {
+    return "progress";
+  }
+
+  return "default";
 };

@@ -107,7 +107,8 @@ export function LessonCard({
                 className="text-[var(--semantic-color-text-subtle)] !leading-6 mb-2 flex items-center gap-1"
               >
                 <CalendarDays className="w-3 h-3" />
-                {`သင်ခန်းစာ ${totalLessons} ခု`}
+                {(lang === "mm" && `သင်ခန်းစာ ${totalLessons} ခု`) ||
+                  `${totalLessons} Lessons`}
               </SLTypo>
             )}
           </div>
@@ -137,7 +138,8 @@ export function LessonCard({
                   variant="fontBody3Normal"
                   className="text-[var(--semantic-color-text-subtle)] !leading-6 whitespace-nowrap"
                 >
-                  {`${completedLessons} ပိုင်း သင်ယူပြီး`}
+                  {(lang === "mm" && `${completedLessons} ပိုင်း သင်ယူပြီး`) ||
+                    `${completedLessons} Lessons Completed`}
                 </SLTypo>
               </div>
               <Button

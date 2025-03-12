@@ -1,23 +1,46 @@
+"use client";
 import { useEffect } from "react";
 import { useState } from "react";
 import { LessonCard } from "@/components/atoms/LessonCard";
 import { CommonLayout } from "@/components/layouts/CommonLayout";
 import { SLTypo } from "@/components/SLTypo";
 import { useTranslate } from "../hooks/use-translate";
+import { useFetchData } from "../hooks/use-fetch-data";
+import { getInitialModules } from "@/utils/moduleApiFunctions";
+import { useRouter } from "next/navigation";
 
-export const PersonalizationLayout = () => {
+interface PersonalizationLayoutProps {
+  cookies?: any;
+}
+export const PersonalizationLayout = ({
+  cookies,
+}: PersonalizationLayoutProps) => {
+  const router = useRouter();
   const { messages, isLoading } = useTranslate();
   const { personalize } = messages;
-  const [apiLoading, setApiLoading] = useState(true);
+  // const [apiLoading, setApiLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setApiLoading(false);
-    }, 6000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setApiLoading(false);
+  //   }, 6000);
+  // }, []);
+
+  const { status, statusText, success, message, data, loading, error } =
+    useFetchData({
+      fetcher: getInitialModules,
+      args: {
+        cookies,
+      },
+      deps: [],
+      redirect: {
+        status: 404,
+        path: "/onboard?profile=incomplete",
+      },
+    });
 
   return (
-    <CommonLayout isLoading={isLoading || apiLoading}>
+    <CommonLayout isLoading={isLoading || loading}>
       <div className="space-y-[var(--core-spacing-xl)] pb-12 w-full md:w-4/6 lg:w-3/6 mx-auto min-h-[100dvh] max-h-[100vh] overflow-y-scroll relative hide-scrollbar">
         <div className="pt-10 px-4 lg:px-0">
           {/* Title */}
@@ -45,12 +68,19 @@ export const PersonalizationLayout = () => {
             className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-lg)]"
           />
           <div className="flex flex-col gap-[var(--core-spacing-lg)]">
-            <LessonCard
-              title="ကိုယ်ဝန်ဆောင်ကျန်းမာရေး"
-              description="ဆည်းလည်းလေးကို ကျန်းကျန်းမာမာနဲ့ ဖွားမြင်နိုင်ဖို့ဆို ဆည်းလည်းလေးရဲ့ မေမေကျန်းမာရေးနဲ့ ပတ်သက်တာတွေကို သင်ယူကြရအောင်နော်။"
-              totalLessons="၆"
-              state="default"
-            />
+            {data &&
+              data.recommended &&
+              data.recommended.length > 0 &&
+              data.recommended.map((data: any, index: number) => (
+                <LessonCard
+                  key={index}
+                  title={data.title || ""}
+                  description={data.description || ""}
+                  totalLessons={data.total_lessons_count || ""}
+                  state="default"
+                  onButtonClick={() => router.push(`/${data.id}`)}
+                />
+              ))}
           </div>
         </div>
 
@@ -62,13 +92,21 @@ export const PersonalizationLayout = () => {
             className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-lg)]"
           />
           <div className="flex flex-col gap-[var(--core-spacing-lg)]">
-            <LessonCard
-              title="သန္ဓေသား ဆည်းလည်းလေးရဲ့ ဖွံ့ဖြိုးမှု"
-              description="ဆည်းလည်းလေးတို့တွေ မေမေ့ရဲ့ ဗိုက်ထဲမှာ ဘယ်လိုမျိုးရှင်သန်ကြလဲ လေ့လာရအောင်နော်။"
-              totalLessons="၆"
-              state="default"
-            />
-            <LessonCard
+            {data &&
+              data.normal &&
+              data.normal.length > 0 &&
+              data.normal.map((data: any, index: number) => (
+                <LessonCard
+                  key={index}
+                  title={data.title || ""}
+                  description={data.description || ""}
+                  totalLessons={data.total_lessons_count || ""}
+                  state="default"
+                  onButtonClick={() => router.push(`/${data.id}`)}
+                />
+              ))}
+
+            {/* <LessonCard
               title="မွေးကင်းစကလေး ပြုစုစောင့်ရှောက်ခြင်း"
               description="ဆည်းလည်းလေးတို့တွေဟာ မွေးစအချိန်မှာ အရမ်းကိုနုနယ်လွန်းတာမို့ စနစ်တကျ ပြုစုစောင့်ရှောက်နည်းတွေကို လေ့လာရအောင်နော်။"
               totalLessons="၆"
@@ -79,7 +117,7 @@ export const PersonalizationLayout = () => {
               description="ဆည်းလည်းလေးတို့တွေဟာ မွေးစအချိန်မှာ အရမ်းကိုနုနယ်လွန်းတာမို့ စနစ်တကျ ပြုစုစောင့်ရှောက်နည်းတွေကို လေ့လာရအောင်နော်။"
               totalLessons="၆"
               state="default"
-            />
+            /> */}
           </div>
         </div>
       </div>
