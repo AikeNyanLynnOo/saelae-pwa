@@ -18,21 +18,26 @@ import toast, { Toaster } from "react-hot-toast";
 import { useTranslate } from "../hooks/use-translate";
 import { useCommonStore } from "@/store/common-store";
 import { useAuthStore } from "@/store/auth-store";
-import { verifyOtp } from "@/utils/authApiFunctions";
+import { requestOtp, verifyOtp } from "@/utils/authApiFunctions";
 import { extractMessage, setAppTokenCookie } from "@/utils/helperFunction";
 
 export const OTPInputLayout = () => {
   const { messages, isLoading } = useTranslate();
-  const { phoneNumber } = useAuthStore();
+  const { phoneNumber, iso2Code } = useAuthStore();
   const { auth } = messages;
   const { lang } = useCommonStore();
   const router = useRouter();
 
   const [otp, setOtp] = useState("");
-
   const [timeLeft, setTimeLeft] = useState(60); // 60 seconds timer
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [errMessage, setErrMessage] = useState("");
+
+  useEffect(() => {
+    if (phoneNumber === "") {
+      router.replace("/auth");
+    }
+  }, [phoneNumber, router]);
 
   useEffect(() => {
     if (otp.length === 6) {
@@ -85,16 +90,22 @@ export const OTPInputLayout = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const handleResendOTP = () => {
+  const handleResendOTP = async () => {
     setTimeLeft(60); // Reset the timer
     setIsResendDisabled(true); // Disable the resend button again
     // Add your OTP resend logic here
-    console.log("Resending OTP...");
+    // console.log("Resending OTP...");
+    const { status, statusText, success, message, data } = await requestOtp({
+      phone_number: phoneNumber,
+      country_code: iso2Code,
+    });
+    const extractedMsg = extractMessage(message);
+    if (!success) {
+      setErrMessage(extractedMsg);
+    } else {
+      setErrMessage("");
+    }
   };
-
-  const otpHelperText = useMemo(() => {
-    return errMessage || auth.otp.helper;
-  }, [errMessage]);
 
   return (
     <CommonLayout isLoading={isLoading} customClasses="items-start relative">
@@ -104,7 +115,7 @@ export const OTPInputLayout = () => {
 
         {/* OTP Input */}
         <InputGroup
-          bottomText={otpHelperText}
+          bottomText={errMessage || auth.otp.helper}
           className="mb-4 text-center"
           isErr={(errMessage && true) || false}
         >

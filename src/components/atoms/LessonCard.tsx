@@ -12,6 +12,8 @@ import { useTranslate } from "../hooks/use-translate";
 import { useCommonStore } from "@/store/common-store";
 
 interface LessonCardProps {
+  id?: string;
+  moduleId?: string;
   title: string;
   description: string;
   imageUrl?: string;
@@ -25,6 +27,8 @@ interface LessonCardProps {
 }
 
 export function LessonCard({
+  id,
+  moduleId,
   title,
   description,
   imageUrl = "",
@@ -49,7 +53,8 @@ export function LessonCard({
       }`}
       onClick={() => {
         if (state !== "locked" && state !== "progress" && state !== "default") {
-          router.push(`/${ctaRoute}/${title.toLowerCase().replace(/ /g, "-")}`);
+          // router.push(`/${ctaRoute}/${title.toLowerCase().replace(/ /g, "-")}`);
+          router.push(`/${ctaRoute}/${id}?module_id=${moduleId}`);
         }
       }}
     >

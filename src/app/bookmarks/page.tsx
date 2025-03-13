@@ -19,7 +19,7 @@ export default function BookmarksPage() {
             className="sticky top-[72px] bg-white z-10 gap-0"
           />
           <div className="px-6 space-y-[var(--core-spacing-md)] pb-20">
-            <LessonCard
+            {/* <LessonCard
               title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
               description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
               state="completed"
@@ -63,7 +63,7 @@ export default function BookmarksPage() {
               title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
               description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
               state="locked"
-            />
+            /> */}
           </div>
         </TabLayout>
       )}
