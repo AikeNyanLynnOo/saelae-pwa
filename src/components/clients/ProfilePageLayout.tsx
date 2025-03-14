@@ -1,3 +1,4 @@
+"use client";
 import {
   Cake,
   ChevronRight,
@@ -18,18 +19,40 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslate } from "../hooks/use-translate";
+import { useEffect } from "react";
+import { getUserProfile } from "@/utils/userAPIFunctions";
+import { useAuthStore } from "@/store/auth-store";
+import { formatDateString, getRelationshipLabel } from "@/utils/helperFunction";
+import { useCommonStore } from "@/store/common-store";
 
 interface ProfilePageLayoutProps {
+  cookies?: any;
   children?: React.ReactNode;
   customClasses?: string;
 }
 
 export const ProfilePageLayout = ({
+  cookies,
   children,
   customClasses,
 }: ProfilePageLayoutProps) => {
+  const { lang } = useCommonStore();
+  const { currentUser, setCurrentUser } = useAuthStore();
   const { messages, isLoading } = useTranslate();
   const { profile } = messages;
+
+  // fetchUser
+  // checkIsValid
+  useEffect(() => {
+    getUserProfile({ cookies }).then(({ success, data }) => {
+      // console.log("User >>", success);
+      if (success && data) {
+        setCurrentUser((data && data.profile) || null);
+      } else {
+        router.push("/auth?session_expired=true");
+      }
+    });
+  }, [cookies]);
 
   const router = useRouter();
 
@@ -54,13 +77,22 @@ export const ProfilePageLayout = ({
               <div className="flex flex-col gap-y-[var(--core-spacing-xs)] items-center">
                 <SLTypo
                   as="h2"
-                  text="အောင်အောင်"
+                  text={(currentUser && currentUser.name) || ""}
                   variant={"fontH4Semibold"}
                   className="text-[var(--semantic-color-text-default)]"
                 />
                 <SLTypo
                   as="span"
-                  text={`{baby's name} လေး {selectedRelation}`}
+                  text={
+                    (currentUser &&
+                      currentUser.children &&
+                      currentUser.children.length > 0 &&
+                      getRelationshipLabel({
+                        children: currentUser.children,
+                        lang,
+                      })) ||
+                    ""
+                  }
                   variant={"fontBody2Normal"}
                   className="text-[var(--semantic-color-text-subtle)] text-center"
                 />
@@ -86,7 +118,11 @@ export const ProfilePageLayout = ({
 
             <div className="space-y-[var(--core-spacing-sm)]">
               <LabelWithIcon
-                label="30/06/1995"
+                label={
+                  (currentUser &&
+                    formatDateString(currentUser.date_of_birth)) ||
+                  ""
+                }
                 icon={Cake}
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-brand-default)]"
@@ -95,7 +131,7 @@ export const ProfilePageLayout = ({
                 labelFontFamily="var(--font-figtree)"
               />
               <LabelWithIcon
-                label="မရမ်းကုန်း"
+                label={(currentUser && currentUser.city) || ""}
                 icon={House}
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-update-default)]"
@@ -113,7 +149,11 @@ export const ProfilePageLayout = ({
                 className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-sm)]"
               />
               <LabelWithIcon
-                label="၃ ရက်ဆက်တိုက် သင်ယူပြီး"
+                label={
+                  lang === "mm"
+                    ? `${(currentUser && currentUser.streak_count) || 0} ရက်ဆက်တိုက် သင်ယူပြီး`
+                    : `${(currentUser && currentUser.streak_count) || 0} learning streak`
+                }
                 icon={Flame}
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-negative-default)]"
@@ -121,7 +161,11 @@ export const ProfilePageLayout = ({
                 className="gap-x-[var(--core-spacing-md)] border w-full p-[var(--core-spacing-lg)] rounded-[var(--core-border-radius-sm)] shadow-sm"
               />
               <LabelWithIcon
-                label="သင်ခန်းစာ ၃ ခုပြီးမြှောက်ခဲ့"
+                label={
+                  lang === "mm"
+                    ? `သင်ခန်းစာ ${(currentUser && currentUser.completed_lesson_count) || 0} ခု ပြီးမြှောက်ခဲ့`
+                    : `${(currentUser && currentUser.completed_lesson_count) || 0} lessons completed`
+                }
                 icon={CircleCheck}
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-update-default)] text-white"

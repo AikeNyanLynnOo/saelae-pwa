@@ -80,6 +80,7 @@ export const CustomInput = forwardRef(
   ) => {
     const { lang } = useCommonStore();
 
+    console.log("Value>>", value);
     return (
       <Button
         variant={"outline"}
@@ -192,21 +193,26 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
 
   const handleNext = async () => {
     console.log(cookies);
+
+    const child: any = {
+      name: formData.saelaeName,
+      is_born: formData.isBorn || false,
+      gender: formData.gender,
+      guardian_role: formData.relationship,
+    };
+    if (formData.isBorn) {
+      child.birth_date = formatDate(formData.saelabDob);
+    } else {
+      child.due_date = formatDate(formData.saelabDob);
+    }
+
     if (step === totalSteps) {
       console.log("Data>>", {
         name: formData.name,
         address: formData.address,
         city: formData.city,
         date_of_birth: formatDate(formData.dob),
-        children: [
-          {
-            name: formData.saelaeName,
-            is_born: formData.isBorn,
-            birth_date: formatDate(formData.saelabDob),
-            gender: formData.gender,
-            guardian_role: formData.relationship,
-          },
-        ],
+        children: [child],
         cookies,
       });
 
@@ -216,15 +222,7 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
           address: formData.address,
           city: formData.city,
           date_of_birth: formatDate(formData.dob),
-          children: [
-            {
-              name: formData.saelaeName,
-              is_born: formData.isBorn || false,
-              birth_date: formatDate(formData.saelabDob),
-              gender: formData.gender,
-              guardian_role: formData.relationship,
-            },
-          ],
+          children: [child],
           cookies,
         });
       if (success) {

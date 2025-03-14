@@ -67,7 +67,7 @@ export const QuizStepper = ({
   const { lessons } = messages;
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [score, setScore] = useState({ correct: 0, total: 1 });
-  const [timeLeft, setTimeLeft] = useState(20);
+  const [timeLeft, setTimeLeft] = useState(30);
   const [timerActive, setTimerActive] = useState(true);
 
   useEffect(() => {
@@ -111,7 +111,7 @@ export const QuizStepper = ({
   };
 
   return (
-    <div className="w-full min-h-[100dvh] max-h-[100vh] overflow-y-scroll relative hide-scrollbar">
+    <div className="w-full min-h-[80dvh] max-h-[80vh] overflow-y-scroll relative hide-scrollbar">
       {/* Form Content */}
       <div
         className={`space-y-6 pb-28 flex flex-col items-center min-h-[calc(100dvh-20rem)] ${step === 2 ? "justify-center" : ""}`}

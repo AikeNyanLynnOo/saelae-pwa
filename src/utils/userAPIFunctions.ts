@@ -38,14 +38,14 @@ export const updateProfile = async ({
   address,
   city,
   date_of_birth,
-  children,
+  media_file,
   cookies,
 }: {
   name: string;
   address: string;
   city: string;
   date_of_birth: string; // YYYY-MM-DD
-  children: Child[];
+  media_file: any;
   cookies?: any;
 }): Promise<any> => {
   const authCookies =
@@ -57,12 +57,21 @@ export const updateProfile = async ({
       authCookies[0]?.value) ||
     "";
 
+  let data = new FormData();
+  data.append("name", name);
+  data.append("address", address);
+  data.append("city", city);
+  data.append("date_of_birth", date_of_birth);
+  if (media_file) {
+    data.append("media_file", media_file);
+  }
+
   let config = {
     method: "POST",
     maxBodyLength: Infinity,
-    url: `${baseURL}/user/update`,
+    url: `${baseURL}/user/update?method=PUT`,
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${authToken}`,
     },
   };

@@ -1,47 +1,33 @@
 "use client";
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
-import { useMediaQuery } from "../hooks/use-media-query";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { LabelWithContentScroll } from "./LabelWithContentScroll";
-import { LessonCard } from "../atoms/LessonCard";
-import { Divider } from "../atoms/Divider";
-import { useRouter } from "next/navigation";
-import { useModuleStore } from "@/store/module-store";
-import { useTranslate } from "../hooks/use-translate";
-import { getStateBaseOnData } from "@/utils/helperFunction";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useCommonStore } from "@/store/common-store";
+import { useLessonStore } from "@/store/lesson-store";
+import { useModuleStore } from "@/store/module-store";
+import { getStateBaseOnData } from "@/utils/helperFunction";
 import { getModules } from "@/utils/moduleApiFunctions";
+import { useRouter } from "next/navigation";
+import { LessonCard } from "../atoms/LessonCard";
+import { useMediaQuery } from "../hooks/use-media-query";
+import { useTranslate } from "../hooks/use-translate";
+import { SLTypo } from "../SLTypo";
+import { LabelWithContentScroll } from "./LabelWithContentScroll";
 
-const items = [
-  { label: "အားလုံး", value: "all", isActive: true },
-  { label: "ကိုယ်ဝန်ဆောင်ကျန်းမာရေး", value: "pregnancy" },
-  { label: "မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး", value: "newborn" },
-  { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
-  { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
-  { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
-];
+// const items = [
+//   { label: "အားလုံး", value: "all", isActive: true },
+//   { label: "ကိုယ်ဝန်ဆောင်ကျန်းမာရေး", value: "pregnancy" },
+//   { label: "မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး", value: "newborn" },
+//   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
+//   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
+//   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
+// ];
 interface ResponsiveModalProps {
   cookies?: any;
   children?: any;
@@ -62,7 +48,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
 
   const router = useRouter();
   const onButtonClick = (module_id: string) => {
-    console.log("Clicked:", module_id);
+    // console.log("Clicked:", module_id);
     router.push(`/${module_id}`);
     setOpen(false);
   };
@@ -74,7 +60,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
       cookies,
       category_id: value,
     }).then((res) => {
-      if (res && res.success && res.data && res.data.length > 0) {
+      if (res && res.success && res.data) {
         setModules(res.data);
       }
     });
@@ -83,6 +69,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTitle className="sr-only">test</DialogTitle>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px] p-[var(--core-spacing-lg)]">
           <div className="w-full overflow-x-hidden py-1">
@@ -91,7 +78,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
               items={[
                 {
                   label: lang === "mm" ? "အားလုံး" : "All",
-                  value: "all",
+                  value: "",
                   isActive: (!currentCategory && true) || false,
                 },
                 ...categories.map((category: any) => {
@@ -122,7 +109,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
               <Divider className="my-0" />
             </div> */}
             <div className="space-y-[var(--core-spacing-md)] pb-4">
-              {modules &&
+              {(modules &&
                 modules.length > 0 &&
                 modules.map((module: any, index: number) => {
                   return (
@@ -135,7 +122,18 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
                       onButtonClick={() => onButtonClick(module.id)}
                     />
                   );
-                })}
+                })) || (
+                <SLTypo
+                  as="p"
+                  text={
+                    lang === "mm"
+                      ? "လေ့လာစရာ များ မရှိသေးပါ..."
+                      : "No modules found..."
+                  }
+                  variant="fontBody3Normal"
+                  className="text-center text-[var(--semantic-color-text-default)] mb-4 px-4 lg:px-0 min-h-[70dvh] flex items-center justify-center"
+                />
+              )}
               {/* <LessonCard
                 title="ကိုယ်ဝန်ဆောင်ကျန်းမာရေး"
                 description="ဆည်းလည်းလေးကို ကျန်းကျန်းမာမာနဲ့ ဖွားမြင်နိုင်ဖို့ဆို ဆည်းလည်းလေးရဲ့ မေမေကျန်းမာရေးနဲ့ ပတ်သက်တာတွေကို သင်ယူကြရအောင်နော်။"

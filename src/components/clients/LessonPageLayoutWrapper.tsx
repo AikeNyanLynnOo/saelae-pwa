@@ -4,8 +4,10 @@ import { PageHeader } from "@/components/atoms/PageHeader";
 import { LessonPageLayout } from "@/components/clients/LessonPageLayout";
 import { useTranslate } from "@/components/hooks/use-translate";
 import { SLTypo } from "@/components/SLTypo";
+import { useAuthStore } from "@/store/auth-store";
 import { useLessonStore } from "@/store/lesson-store";
 import { getLesson } from "@/utils/lessonApiFunctions";
+import { getUserProfile } from "@/utils/userAPIFunctions";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -20,12 +22,28 @@ export const LessonPageLayoutWrapper = ({
   const searchParams = useSearchParams();
   const module_id = searchParams.get("module_id");
 
+  const { currentUser, setCurrentUser } = useAuthStore();
   const { lesson, setLesson } = useLessonStore();
   const { messages, isLoading } = useTranslate();
   const { lessons } = messages;
   const router = useRouter();
   const params = useParams();
   const [scrollY, setScrollY] = useState(0);
+
+  // fetchUser
+  // checkIsValid
+  useEffect(() => {
+    getUserProfile({ cookies }).then(
+      ({ status, statusText, success, message, data, loading, error }) => {
+        // console.log("User >>", success);
+        if (success && data) {
+          setCurrentUser((data && data.profile) || null);
+        } else {
+          router.push("/auth?session_expired=true");
+        }
+      }
+    );
+  }, [cookies]);
 
   useEffect(() => {
     // console.log("Module_id", module_id);
@@ -72,7 +90,7 @@ export const LessonPageLayoutWrapper = ({
   }, [scrollY]);
 
   const onPrimaryButtonClick = useCallback(() => {
-    router.push(`/lessons/${params.lesson_id}/quiz`);
+    router.push(`/lessons/${params.lesson_id}/quiz?module_id=${module_id}`);
   }, [params, router]);
   return (
     <section>

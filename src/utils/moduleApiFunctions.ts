@@ -47,6 +47,10 @@ export const getModules = async ({
       authCookies.length > 0 &&
       authCookies[0]?.value) ||
     "";
+  const params: any = {};
+  if (category_id) {
+    params["category"] = category_id;
+  }
 
   let config = {
     method: "GET",
@@ -56,9 +60,7 @@ export const getModules = async ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
     },
-    params: {
-      category: category_id,
-    },
+    params,
   };
   const res = await makeRequest(config);
 
@@ -111,6 +113,11 @@ export const getModuleLessons = async ({
       authCookies[0]?.value) ||
     "";
 
+  const params: any = {};
+  if (category_id) {
+    params["category"] = category_id;
+  }
+
   let config = {
     method: "GET",
     maxBodyLength: Infinity,
@@ -119,9 +126,7 @@ export const getModuleLessons = async ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
     },
-    params: {
-      category_id,
-    },
+    params,
   };
   const res = await makeRequest(config);
 

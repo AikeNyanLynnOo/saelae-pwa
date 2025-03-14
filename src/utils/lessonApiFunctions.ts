@@ -23,6 +23,10 @@ export const getLesson = async ({
       authCookies.length > 0 &&
       authCookies[0]?.value) ||
     "";
+  const params: any = {};
+  if (category_id) {
+    params["category"] = category_id;
+  }
 
   let config = {
     method: "GET",
@@ -32,9 +36,7 @@ export const getLesson = async ({
       "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
     },
-    params: {
-      category_id,
-    },
+    params,
   };
   const res = await makeRequest(config);
 

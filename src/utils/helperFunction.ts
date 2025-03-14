@@ -38,6 +38,25 @@ export const formatDate = (date: any) => {
 
   return `${year}-${month}-${day}`;
 };
+export const formatDateString = (dateString: string): string => {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+export const getDateFromString = (dateString: string): Date => {
+  // Parse the ISO 8601 formatted date string to create a new Date object
+  const date = new Date(dateString);
+
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid date string format");
+  }
+
+  return date;
+};
 
 export const getStateBaseOnData = (
   progressData: any
@@ -50,4 +69,108 @@ export const getStateBaseOnData = (
   }
 
   return "default";
+};
+
+export const getStringForEachRsType = (
+  arr: any[],
+  lang: string,
+  relationship: string
+) => {
+  let rsLabel = "";
+  if (lang === "mm") {
+    if (arr.length === 1) {
+      return `${arr[0].name} ရဲ့ ${relationship} `;
+    }
+    arr.forEach((child, index) => {
+      if (index === arr.length - 1) {
+        rsLabel += `နဲ့ ${child.name} တို့ ${relationship} `;
+      } else {
+        rsLabel += `${child.name}၊ `;
+      }
+    });
+    return rsLabel;
+  }
+  if (arr.length === 1) {
+    return `${relationship} of ${arr[0].name}`;
+  }
+  arr.forEach((child, index) => {
+    if (index === 0) {
+      rsLabel += `${relationship} of ${arr[0].name}, `;
+    }
+    if (index === arr.length - 1) {
+      rsLabel += `and ${child.name}`;
+    }
+
+    if (index > 0 && index < arr.length - 1) {
+      rsLabel += `${child.name}, `;
+    }
+  });
+};
+
+export const getRelationshipLabel = ({
+  children,
+  lang = "mm",
+}: {
+  children: any[];
+  lang?: string;
+}) => {
+  const mom = children.filter((child) => child.guardian_role === "mom");
+  const dad = children.filter((child) => child.guardian_role === "dad");
+  const grandpa = children.filter((child) => child.guardian_role === "grandpa");
+  const grandma = children.filter((child) => child.guardian_role === "grandma");
+  const uncle = children.filter((child) => child.guardian_role === "uncle");
+  const aunt = children.filter((child) => child.guardian_role === "aunt");
+  const brother = children.filter((child) => child.guardian_role === "brother");
+  const sister = children.filter((child) => child.guardian_role === "sister");
+  const caregiver = children.filter(
+    (child) => child.guardian_role === "caregiver"
+  );
+
+  const momLabel = getStringForEachRsType(
+    mom,
+    lang,
+    lang === "en" ? "Mom" : "မေမေ"
+  );
+  const dadLabel = getStringForEachRsType(
+    dad,
+    lang,
+    lang === "en" ? "Dad" : "ဖေဖေ"
+  );
+  const grandpaLabel = getStringForEachRsType(
+    grandpa,
+    lang,
+    lang === "en" ? "Grandpa" : "ဖိုးဖိုး"
+  );
+  const grandmaLabel = getStringForEachRsType(
+    grandma,
+    lang,
+    lang === "en" ? "Grandma" : "ဖွားဖွား"
+  );
+  const uncleLabel = getStringForEachRsType(
+    uncle,
+    lang,
+    lang === "en" ? "Uncle" : "ဦးဦး"
+  );
+  const auntLabel = getStringForEachRsType(
+    aunt,
+    lang,
+    lang === "en" ? "Aunty" : "ဒေါ်ဒေါ်"
+  );
+  const brotherLabel = getStringForEachRsType(
+    brother,
+    lang,
+    lang === "en" ? "Brother" : "ကိုကို"
+  );
+  const sisterLabel = getStringForEachRsType(
+    sister,
+    lang,
+    lang === "en" ? "Sister" : "မမ"
+  );
+  const caregiverLabel = getStringForEachRsType(
+    caregiver,
+    lang,
+    lang === "en" ? "Caregiver" : "စောင့်ရှောက်သူ"
+  );
+
+  return `${(momLabel && `${momLabel}</br>`) || ""}${(dadLabel && `${dadLabel}</br>`) || ""}${(grandpaLabel && `${grandpaLabel}</br>`) || ""}${(grandmaLabel && `${grandmaLabel}</br>`) || ""}${(uncleLabel && `${uncleLabel}</br>`) || ""}${(auntLabel && `${auntLabel}</br>`) || ""}${(brotherLabel && `${brotherLabel}</br>`) || ""}${(sisterLabel && `${sisterLabel}</br>`) || ""}${(caregiverLabel && `${caregiverLabel}</br>`) || ""}`;
 };

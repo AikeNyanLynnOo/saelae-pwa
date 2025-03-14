@@ -17,6 +17,8 @@ import { TabLayout } from "../layouts/TabLayout";
 import { ResponsiveModal } from "../molecules/ResponsiveModal";
 import { SLTypo } from "../SLTypo";
 import { Button } from "../ui/button";
+import { getUserProfile } from "@/utils/userAPIFunctions";
+import { useAuthStore } from "@/store/auth-store";
 
 interface ModulePageLayoutProps {
   module_id?: string;
@@ -39,7 +41,23 @@ export const ModulePageLayout = ({
   } = useModuleStore();
   const { lang } = useCommonStore();
   const { lessons, setLessons } = useLessonStore();
+  const { setCurrentUser } = useAuthStore();
   const [isModuleValid, setIsModuleValid] = useState(false);
+
+  // fetchUser
+  // checkIsValid
+  useEffect(() => {
+    getUserProfile({ cookies }).then(
+      ({ status, statusText, success, message, data, loading, error }) => {
+        // console.log("User >>", success);
+        if (success && data) {
+          setCurrentUser((data && data.profile) || null);
+        } else {
+          router.push("/auth?session_expired=true");
+        }
+      }
+    );
+  }, [cookies]);
 
   useEffect(() => {
     if (module_id) {
@@ -47,17 +65,13 @@ export const ModulePageLayout = ({
         cookies,
         module_id: module_id,
       })
-        .then(
-          ({ status, statusText, success, message, data, loading, error }) => {
-            // console.log("Success >>", success);
-            if (success && data) {
-              setLessons(data.lessons || []);
-              setIsModuleValid(true);
-            } else {
-              router.push("/");
-            }
+        .then(({ success, data }) => {
+          if (success && data) {
+            setIsModuleValid(true);
+          } else {
+            router.push("/");
           }
-        )
+        })
         .catch((e) => {
           //error
         });
@@ -90,38 +104,113 @@ export const ModulePageLayout = ({
     });
   }, []);
 
+  // useEffect(() => {
+  //   setLessonsLoading(true);
+  //   setLessons([]);
+  //   if (module_id) {
+  //     getModuleLessons({
+  //       cookies,
+  //       module_id: module_id,
+  //     })
+  //       .then(
+  //         ({ status, statusText, success, message, data, loading, error }) => {
+  //           // console.log("Success >>", success);
+
+  //           setLessonsLoading(false);
+  //           if (success && data) {
+  //             setLessons(data.lessons || []);
+  //             const foundModule = modules.find(
+  //               (item) => `${item.id}` === `${module_id}`
+  //             );
+  //             console.log("setting current module from array>>", module);
+  //             setCurrentModule(foundModule || null);
+  //           } else {
+  //             // router.push("/");
+  //             const firstModule =
+  //               (modules && modules.length > 0 && modules[0]) || null;
+  //             console.log("setting first module>>", firstModule);
+  //             setCurrentModule(firstModule);
+  //             if (firstModule && firstModule.id) {
+  //               getModuleLessons({
+  //                 cookies,
+  //                 module_id: firstModule.id,
+  //               })
+  //                 .then(
+  //                   ({
+  //                     status,
+  //                     statusText,
+  //                     success,
+  //                     message,
+  //                     data,
+  //                     loading,
+  //                     error,
+  //                   }) => {
+  //                     // console.log("Success >>", success);
+  //                     if (success && data) {
+  //                       setLessons(data.lessons || []);
+  //                       setLessonsLoading(false);
+  //                     } else {
+  //                       setLessons([]);
+  //                       setLessonsLoading(false);
+  //                     }
+  //                   }
+  //                 )
+  //                 .catch((e) => {
+  //                   //error
+  //                 });
+  //             } else {
+  //               setLessons([]);
+  //               setLessonsLoading(false);
+  //             }
+  //           }
+  //         }
+  //       )
+  //       .catch((e) => {
+  //         //error
+  //       });
+  //   }
+  // }, [module_id, modules]);
+
   useEffect(() => {
     if (isModuleValid) {
-      const module = modules.find((item) => `${item.id}` === `${module_id}`);
-      console.log("setting current module from array>>", module);
-      setCurrentModule(module || null);
+      const foundModule = modules.find(
+        (item) => `${item.id}` === `${module_id}`
+      );
+      setCurrentModule(foundModule || null);
+
+      if (foundModule && foundModule.id) {
+        getModuleLessons({
+          cookies,
+          module_id: foundModule.id,
+        })
+          .then(({ success, data }) => {
+            if (success && data) {
+              setLessons(data.lessons || []);
+            } else {
+              setLessons([]);
+            }
+          })
+          .catch((e) => {
+            //error
+          });
+      } else {
+        setLessons([]);
+      }
     } else {
       const firstModule = (modules && modules.length > 0 && modules[0]) || null;
-      console.log("setting first module>>", firstModule);
       setCurrentModule(firstModule);
       if (firstModule && firstModule.id) {
         getModuleLessons({
           cookies,
           module_id: firstModule.id,
         })
-          .then(
-            ({
-              status,
-              statusText,
-              success,
-              message,
-              data,
-              loading,
-              error,
-            }) => {
-              // console.log("Success >>", success);
-              if (success && data) {
-                setLessons(data.lessons || []);
-              } else {
-                setLessons([]);
-              }
+          .then(({ success, data }) => {
+            if (success && data) {
+              setLessons(data.lessons || []);
+            } else {
+              setLessons([]);
             }
-          )
+          })
           .catch((e) => {
             //error
           });
@@ -131,64 +220,20 @@ export const ModulePageLayout = ({
     }
   }, [isModuleValid, module_id, modules]);
 
-  //   console.log("current module>>", currentModule);
-  //   { status, statusText, success, message, data, loading, error }
-  //   const categoriesRes = useFetchData({
-  //     fetcher: getModuleCategories,
-  //     args: {
-  //       cookies,
-  //     },
-  //     deps: [],
-  //   });
-  //   const modulesRes = useFetchData({
-  //     fetcher: getModules,
-  //     args: {
-  //       cookies,
-  //     },
-  //     deps: [],
-  //   });
-
-  //   console.log("Categories res>>", categoriesRes);
-  //   console.log("Modules res>>", modulesRes);
-
-  //   useEffect(() => {
-  //     if (
-  //       categoriesRes &&
-  //       categoriesRes.success &&
-  //       categoriesRes.data &&
-  //       categoriesRes.data.categories &&
-  //       categoriesRes.data.categories.length > 0
-  //     ) {
-  //       setCategories(categoriesRes.data.categories);
-  //     }
-  //   }, [categoriesRes]);
-
-  //   useEffect(() => {
-  //     if (
-  //       modulesRes &&
-  //       modulesRes.success &&
-  //       modulesRes.data &&
-  //       modulesRes.data.length > 0
-  //     ) {
-  //       setModules(modulesRes.data);
-  //       setCurrentModule(modulesRes.data[0]);
-  //     }
-  //   }, [modulesRes]);
-
   return (
     <TabLayout>
       <PageHeader className="sticky top-0 bg-white z-10">
         <ResponsiveModal cookies={cookies}>
           <Button
             variant="outline"
-            className={`w-fit flex-wrap rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-primary)] border-none py-[var(--core-spacing-sm)] px-2 sm:px-[var(--core-spacing-lg)]`}
+            className={`w-fit max-w-full rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-primary)] border-none py-[var(--core-spacing-sm)] px-2 sm:px-[var(--core-spacing-lg)]`}
             onClick={() => {}}
           >
             <SLTypo
               as="span"
               text={(currentModule && currentModule.title) || ""}
               variant="fontBody2IntenseNormal"
-              className="text-[var(--semantic-color-text-bold)]"
+              className="text-[var(--semantic-color-text-bold)] flex-1 truncate"
             />
             <ChevronDown size={2} />
           </Button>
@@ -201,20 +246,16 @@ export const ModulePageLayout = ({
         className="sticky top-[116px] bg-white z-10 gap-0"
       />
       <div className="px-6 space-y-[var(--core-spacing-md)] pb-20">
-        {lessons &&
-          lessons.length > 0 &&
-          lessons.map((lesson, index) => (
-            <LessonCard
-              key={index}
-              id={lesson.id}
-              moduleId={(currentModule && currentModule.id) || ""}
-              title={lesson.title}
-              description={lesson.description}
-              state={lesson.is_completed ? "completed" : "half-completed"}
-            />
-          ))}
-
-        {/* default card on frontend */}
+        {lessons.map((lesson, index) => (
+          <LessonCard
+            key={index}
+            id={lesson.id}
+            moduleId={(currentModule && currentModule.id) || ""}
+            title={lesson.title}
+            description={lesson.description}
+            state={lesson.is_completed ? "completed" : "half-completed"}
+          />
+        ))}
         {currentModule && currentModule.has_quiz && (
           <LessonCard
             title={lang === "mm" ? "စာမေးပွဲ" : "Final Exam"}
@@ -227,46 +268,18 @@ export const ModulePageLayout = ({
           />
         )}
 
-        {/* <LessonCard
-          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-          state="completed"
-        />
-        <LessonCard
-          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-          state="completed"
-        />
-        <LessonCard
-          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-          state="completed"
-        />
-        <LessonCard
-          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-          state="completed"
-        />
-        <LessonCard
-          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-          state="completed"
-        />
-        <LessonCard
-          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-          state="completed"
-        />
-        <LessonCard
-          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-          state="half-completed"
-        />
-        <LessonCard
-          title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-          description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-          state="locked"
-        /> */}
+        {lessons.length === 0 && (
+          <SLTypo
+            as="p"
+            text={
+              lang === "mm"
+                ? "လေ့လာစရာ များ မရှိသေးပါ..."
+                : "No modules found..."
+            }
+            variant="fontBody3Normal"
+            className="text-center text-[var(--semantic-color-text-default)] mb-4 px-4 lg:px-0 min-h-[50dvh] flex items-center justify-center"
+          />
+        )}
       </div>
     </TabLayout>
   );

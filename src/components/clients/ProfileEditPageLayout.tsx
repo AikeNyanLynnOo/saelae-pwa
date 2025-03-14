@@ -1,7 +1,8 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, Pencil, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { InputGroup } from "../atoms/forms/InputGroup";
 import { CustomInput } from "../atoms/forms/OnboardingStepper";
 import { LabelWithIcon } from "../atoms/LabelWithIcon";
@@ -19,35 +20,102 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+
 import { Textarea } from "../ui/textarea";
 import { useTranslate } from "../hooks/use-translate";
+import { useCommonStore } from "@/store/common-store";
+import { useAuthStore } from "@/store/auth-store";
+import { getUserProfile, updateProfile } from "@/utils/userAPIFunctions";
+
 
 interface ProfilePageLayoutProps {
+  cookies?: any;
   children?: React.ReactNode;
   customClasses?: string;
   customBackUrl?: string;
 }
 
 export const ProfileEditPageLayout = ({
+  cookies,
   children,
   customClasses,
   customBackUrl,
 }: ProfilePageLayoutProps) => {
+  const { lang } = useCommonStore();
+  const { currentUser, setCurrentUser } = useAuthStore();
   const { messages, isLoading } = useTranslate();
   const { profile } = messages;
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    // step 1
+
+  const [formData, setFormData] = useState<any>({
+    mediaUrl: "",
+    mediaFile: null,
     name: "",
     city: "",
     address: "",
     dob: null,
   });
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      mediaUrl: formData.mediaFile
+        ? URL.createObjectURL(formData.mediaFile)
+        : "",
+    });
+  }, [formData.mediaFile]);
+
+  console.log("formdata>>", formData);
+
+  // fetchUser
+  // checkIsValid
+  useEffect(() => {
+    getUserProfile({ cookies }).then(({ success, data }) => {
+      // console.log("User >>", success);
+      if (success && data) {
+        setCurrentUser((data && data.profile) || null);
+      } else {
+        router.push("/auth?session_expired=true");
+      }
+    });
+  }, [cookies]);
+
+  useEffect(() => {
+    setFormData({
+      name: (currentUser && currentUser.name) || "",
+      city: (currentUser && currentUser.city) || "",
+      address: currentUser && currentUser.address,
+      dob:
+        currentUser && currentUser.date_of_birth
+          ? new Date(currentUser.date_of_birth)
+          : null,
+    });
+  }, [currentUser]);
+
   const handleBack = () => {
     if (customBackUrl) {
       router.push(customBackUrl);
     } else {
       router.back();
+    }
+  };
+
+  const canProceed = useMemo(() => {
+    return formData.name && formData.city && formData.address && formData.dob;
+  }, [formData]);
+
+  const handleSave = async () => {
+    // console.log(formData);
+    const { status, statusText, success, message, data } = await updateProfile({
+      name: formData.name,
+      address: formData.address,
+      city: formData.city,
+      date_of_birth: formData.dob,
+      media_file: formData.mediaFile,
+      cookies,
+    });
+    if (success) {
+      router.refresh();
     }
   };
 
@@ -77,14 +145,41 @@ export const ProfileEditPageLayout = ({
                 className="text-[var(--semantic-color-text-default)]"
               />
 
-              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center">
-                <User className="text-[var(--semantic-color-icon-brand-subtle)]" />
+              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center overflow-hidden">
+                {formData.mediaUrl ? (
+                  <img
+                    src={formData.mediaUrl}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="text-[var(--semantic-color-icon-brand-subtle)]" />
+                )}
               </div>
 
               <Button
                 variant="outline"
                 className={`w-fit rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-brand-default)] py-[var(--core-spacing-sm)]`}
-                onClick={() => {}}
+                onClick={() => {
+                  // Create a hidden file input element
+                  const fileInput = document.createElement("input");
+                  fileInput.type = "file";
+                  fileInput.accept = "image/*";
+
+                  // Handle file selection
+                  fileInput.onchange = (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      setFormData((prev: any) => ({
+                        ...prev,
+                        mediaFile: file,
+                      }));
+                    }
+                  };
+
+                  // Trigger file input click
+                  fileInput.click();
+                }}
               >
                 <LabelWithIcon
                   label={profile.edit.cta_photo_edit}
@@ -190,11 +285,16 @@ export const ProfileEditPageLayout = ({
                       placeholder={profile.edit.dob_placeholder}
                     />
                   }
+                  maxDate={new Date()}
                 />
               </InputGroup>
             </div>
 
-            <Button className="mt-[var(--core-spacing-lg)]" onClick={() => {}}>
+            <Button
+              className="mt-[var(--core-spacing-lg)]"
+              onClick={handleSave}
+              disabled={!canProceed}
+            >
               {profile.cta_save}
             </Button>
           </div>

@@ -100,7 +100,7 @@ export function LessonCard({
             <SLTypo
               as="p"
               variant="fontBody3Normal"
-              className="text-[var(--semantic-color-text-subtle)] !leading-6 mb-2"
+              className="text-[var(--semantic-color-text-subtle)] !leading-6 mb-2 w-11/12"
             >
               {description}
             </SLTypo>
