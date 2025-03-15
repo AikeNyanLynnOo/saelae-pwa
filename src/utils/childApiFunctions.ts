@@ -101,11 +101,12 @@ export const addChild = async ({
   let config = {
     method: "POST",
     maxBodyLength: Infinity,
-    url: `${baseURL}/user/children/11`,
+    url: `${baseURL}/user/children`,
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${authToken}`,
     },
+    data,
   };
   const res = await makeRequest(config);
 
@@ -158,6 +159,7 @@ export const updateChild = async ({
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${authToken}`,
     },
+    data,
   };
   const res = await makeRequest(config);
 

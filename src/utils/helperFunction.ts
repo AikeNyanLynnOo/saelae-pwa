@@ -71,6 +71,83 @@ export const getStateBaseOnData = (
   return "default";
 };
 
+export const calculateAge = (dateString: string): string => {
+  // Parse the input date
+  const birthDate = new Date(dateString);
+  const today = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDiff = birthDate.getTime() - today.getTime();
+
+  // If date is in the future, calculate pregnancy duration
+  if (timeDiff > 0) {
+    // Convert time difference to date components for pregnancy
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const months = Math.floor(days / 30);
+    const remainingDays = days % 30;
+
+    // Build the pregnancy duration string
+    const parts: string[] = [];
+    if (months > 0) {
+      parts.push(`${months} month${months !== 1 ? "s" : ""}`);
+    }
+    if (remainingDays > 0) {
+      parts.push(`${remainingDays} day${remainingDays !== 1 ? "s" : ""}`);
+    }
+
+    return `Due in ${parts.join(" and ")}`;
+  }
+
+  // For past dates, calculate age as before
+  const pastTimeDiff = today.getTime() - birthDate.getTime();
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  let days = today.getDate() - birthDate.getDate();
+
+  // Adjust calculations if needed
+  if (days < 0) {
+    months--;
+    const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    days += lastMonth.getDate();
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  // Build the age string
+  const parts: string[] = [];
+  if (years > 0) {
+    parts.push(`${years} year${years !== 1 ? "s" : ""}`);
+  }
+  if (months > 0) {
+    parts.push(`${months} month${months !== 1 ? "s" : ""}`);
+  }
+  if (days > 0) {
+    parts.push(`${days} day${days !== 1 ? "s" : ""}`);
+  }
+  if (days === 0) {
+    parts.push(`Just Born Today`);
+  }
+
+  return parts.join(", ");
+};
+
+export const getGenderLabel = ({
+  gender,
+  lang,
+}: {
+  gender: string;
+  lang: string;
+}) => {
+  if (lang === "mm") {
+    return gender === "male" ? "ကျား" : "မ";
+  } else {
+    return gender === "male" ? "Male" : "Female";
+  }
+};
+
 export const getStringForEachRsType = (
   arr: any[],
   lang: string,

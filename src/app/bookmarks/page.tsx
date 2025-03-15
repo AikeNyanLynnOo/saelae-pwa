@@ -1,72 +1,12 @@
-"use client";
-import { ContentHeader } from "@/components/atoms/ContentHeader";
-import { LessonCard } from "@/components/atoms/LessonCard";
-import { PageHeader } from "@/components/atoms/PageHeader";
-import { useTranslate } from "@/components/hooks/use-translate";
-import { TabLayout } from "@/components/layouts/TabLayout";
+import { BookmarksPageLayout } from "@/components/clients/BookmarksPageLayout";
+import { cookies } from "next/headers";
+
 export default function BookmarksPage() {
-  const { messages, isLoading } = useTranslate();
-  const { bookmarks } = messages;
+  const cookieStore = cookies();
+
   return (
     <section>
-      {!isLoading && (
-        <TabLayout>
-          <PageHeader className="sticky top-0 bg-white z-20" />
-          <ContentHeader
-            title={bookmarks.title}
-            titleVariant="fontH5Medium"
-            titleClassName="text-[var(--semantic-color-text-default)]"
-            className="sticky top-[72px] bg-white z-10 gap-0"
-          />
-          <div className="px-6 space-y-[var(--core-spacing-md)] pb-20">
-            {/* <LessonCard
-              title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-              description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-              state="completed"
-            />
-            <LessonCard
-              title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-              description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-              state="completed"
-            />
-            <LessonCard
-              title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-              description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-              state="completed"
-            />
-            <LessonCard
-              title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-              description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-              state="completed"
-            />
-            <LessonCard
-              title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-              description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-              state="completed"
-            />
-            <LessonCard
-              title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-              description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-              state="completed"
-            />
-            <LessonCard
-              title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-              description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-              state="completed"
-            />
-            <LessonCard
-              title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-              description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-              state="half-completed"
-            />
-            <LessonCard
-              title="မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး"
-              description="သင်ခန်းစာအကြောင်းအသေးစိတ်ရှင်းလင်းချက်"
-              state="locked"
-            /> */}
-          </div>
-        </TabLayout>
-      )}
+      <BookmarksPageLayout cookies={cookieStore.getAll()} />
     </section>
   );
 }

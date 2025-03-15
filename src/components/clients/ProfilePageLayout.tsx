@@ -71,7 +71,15 @@ export const ProfilePageLayout = ({
               />
 
               <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center">
-                <User className="text-[var(--semantic-color-icon-brand-subtle)]" />
+                {(currentUser && currentUser.profile && (
+                  <img
+                    src={currentUser.profile}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                )) || (
+                  <User className="text-[var(--semantic-color-icon-brand-subtle)]" />
+                )}
               </div>
 
               <div className="flex flex-col gap-y-[var(--core-spacing-xs)] items-center">
@@ -83,6 +91,7 @@ export const ProfilePageLayout = ({
                 />
                 <SLTypo
                   as="span"
+                  isDangerously
                   text={
                     (currentUser &&
                       currentUser.children &&

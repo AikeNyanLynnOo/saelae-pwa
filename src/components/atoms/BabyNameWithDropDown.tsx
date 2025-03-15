@@ -13,6 +13,8 @@ import { ChevronDown } from "lucide-react";
 import { SLTypo } from "../SLTypo";
 import { Female, Male } from "./CustomIcon";
 import { LabelWithIcon } from "./LabelWithIcon";
+import { useBabyStore } from "@/store/baby-store";
+import { calculateAge } from "@/utils/helperFunction";
 
 interface Baby {
   name: string;
@@ -31,9 +33,9 @@ export const BabyNameWithDropDown = ({
   customClasses,
   babies,
 }: BabyNameWithDropDownProps) => {
-  const [currentBaby, setCurrentBaby] = React.useState(
-    (babies && babies[0]) || null
-  );
+  const { currentBaby, setCurrentBaby } = useBabyStore();
+
+  console.log("Babies>>", babies);
   return (
     <div className="flex flex-col gap-y-[var(--core-spacing-base)] items-center">
       {(babies && babies.length > 1 && (
@@ -78,7 +80,7 @@ export const BabyNameWithDropDown = ({
       )) || (
         <SLTypo
           as="h2"
-          text={(babies && babies.length > 1 && babies[0].name) || ""}
+          text={(currentBaby && currentBaby.name) || ""}
           variant={"fontH4Semibold"}
           className="text-[var(--semantic-color-text-default)] px-[var(--core-spacing-lg)] py-[var(--core-spacing-sm)]] bg-[var(--semantic-color-bg-primary)] rounded-[var(--core-border-radius-xs)]"
           fontFamily="var(--font-manrope)"
@@ -86,7 +88,7 @@ export const BabyNameWithDropDown = ({
       )}
       <SLTypo
         as="span"
-        text={(currentBaby && currentBaby.age) || ""}
+        text={(currentBaby && calculateAge(currentBaby.birth_date)) || ""}
         variant={"fontBody2Normal"}
         className="text-[var(--semantic-color-text-subtle)] text-center"
       />

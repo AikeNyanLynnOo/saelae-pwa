@@ -69,9 +69,97 @@ export const updateProfile = async ({
   let config = {
     method: "POST",
     maxBodyLength: Infinity,
-    url: `${baseURL}/user/update?method=PUT`,
+    url: `${baseURL}/user/profile?_method=PUT`,
     headers: {
       "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${authToken}`,
+    },
+    data: data,
+  };
+  const res = await makeRequest(config);
+
+  return res;
+};
+
+export const getUserBookmarks = async ({
+  cookies,
+}: {
+  cookies?: any;
+}): Promise<any> => {
+  const authCookies =
+    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
+  const authToken =
+    (authCookies &&
+      Array.isArray(authCookies) &&
+      authCookies.length > 0 &&
+      authCookies[0]?.value) ||
+    "";
+
+  let config = {
+    method: "GET",
+    maxBodyLength: Infinity,
+    url: `${baseURL}/user/lessons`,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
+  };
+  const res = await makeRequest(config);
+
+  return res;
+};
+
+export const saveToBookmarks = async ({
+  cookies,
+  lesson_id,
+}: {
+  cookies?: any;
+  lesson_id?: number;
+}): Promise<any> => {
+  const authCookies =
+    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
+  const authToken =
+    (authCookies &&
+      Array.isArray(authCookies) &&
+      authCookies.length > 0 &&
+      authCookies[0]?.value) ||
+    "";
+
+  let config = {
+    method: "POST",
+    maxBodyLength: Infinity,
+    url: `${baseURL}/user/lessons/${lesson_id}/save`,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
+  };
+  const res = await makeRequest(config);
+
+  return res;
+};
+export const removeFromBookmarks = async ({
+  cookies,
+  lesson_id,
+}: {
+  cookies?: any;
+  lesson_id?: number;
+}): Promise<any> => {
+  const authCookies =
+    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
+  const authToken =
+    (authCookies &&
+      Array.isArray(authCookies) &&
+      authCookies.length > 0 &&
+      authCookies[0]?.value) ||
+    "";
+
+  let config = {
+    method: "DELETE",
+    maxBodyLength: Infinity,
+    url: `${baseURL}/user/lessons/${lesson_id}/remove`,
+    headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${authToken}`,
     },
   };

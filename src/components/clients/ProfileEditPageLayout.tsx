@@ -26,7 +26,8 @@ import { useTranslate } from "../hooks/use-translate";
 import { useCommonStore } from "@/store/common-store";
 import { useAuthStore } from "@/store/auth-store";
 import { getUserProfile, updateProfile } from "@/utils/userAPIFunctions";
-
+import toast, { Toaster } from "react-hot-toast";
+import { formatDate } from "@/utils/helperFunction";
 
 interface ProfilePageLayoutProps {
   cookies?: any;
@@ -56,16 +57,14 @@ export const ProfileEditPageLayout = ({
     dob: null,
   });
 
-  useEffect(() => {
-    setFormData({
-      ...formData,
-      mediaUrl: formData.mediaFile
-        ? URL.createObjectURL(formData.mediaFile)
-        : "",
-    });
-  }, [formData.mediaFile]);
-
-  console.log("formdata>>", formData);
+  // useEffect(() => {
+  //   setFormData({
+  //     ...formData,
+  //     mediaUrl: formData.mediaFile
+  //       ? URL.createObjectURL(formData.mediaFile)
+  //       : "",
+  //   });
+  // }, [formData.mediaFile]);
 
   // fetchUser
   // checkIsValid
@@ -82,6 +81,8 @@ export const ProfileEditPageLayout = ({
 
   useEffect(() => {
     setFormData({
+      mediaUrl: (currentUser && currentUser.profile) || "",
+      mediaFile: null,
       name: (currentUser && currentUser.name) || "",
       city: (currentUser && currentUser.city) || "",
       address: currentUser && currentUser.address,
@@ -110,11 +111,12 @@ export const ProfileEditPageLayout = ({
       name: formData.name,
       address: formData.address,
       city: formData.city,
-      date_of_birth: formData.dob,
+      date_of_birth: formatDate(formData.dob),
       media_file: formData.mediaFile,
       cookies,
     });
     if (success) {
+      toast.success("Successfully updated!");
       router.refresh();
     }
   };
@@ -173,6 +175,7 @@ export const ProfileEditPageLayout = ({
                       setFormData((prev: any) => ({
                         ...prev,
                         mediaFile: file,
+                        mediaUrl: URL.createObjectURL(file),
                       }));
                     }
                   };
@@ -300,6 +303,8 @@ export const ProfileEditPageLayout = ({
           </div>
         </TabLayout>
       )}
+
+      <Toaster position="top-center" reverseOrder={false} />
     </>
   );
 };

@@ -135,7 +135,7 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
 
     // step 3
     saelaeName: "",
-    saelabDob: null,
+    saelaeDob: null,
     gender: "",
     relationship: "",
   });
@@ -182,7 +182,7 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
       case 3:
         return (
           formData.saelaeName &&
-          formData.saelabDob &&
+          formData.saelaeDob &&
           formData.gender &&
           formData.relationship
         );
@@ -201,9 +201,9 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
       guardian_role: formData.relationship,
     };
     if (formData.isBorn) {
-      child.birth_date = formatDate(formData.saelabDob);
+      child.birth_date = formatDate(formData.saelaeDob);
     } else {
-      child.due_date = formatDate(formData.saelabDob);
+      child.due_date = formatDate(formData.saelaeDob);
     }
 
     if (step === totalSteps) {
@@ -383,6 +383,7 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
                         placeholder={onboard.step1.dob_placeholder}
                       />
                     }
+                    maxDate={new Date()}
                   />
                 </InputGroup>
               </div>
@@ -457,16 +458,16 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
                     <Calendar
                       mode="single"
                       className="rounded-md overflow-x-scroll"
-                      selected={formData.saelabDob || undefined}
+                      selected={formData.saelaeDob || undefined}
                       onSelect={(date: any) => {
                         if (date) {
                           console.log(date, typeof date, Object.keys(date));
-                          setFormData({ ...formData, saelabDob: date });
+                          setFormData({ ...formData, saelaeDob: date });
                         }
                       }}
                       customInput={
                         <CustomInput
-                          value={formData.saelabDob}
+                          value={formData.saelaeDob}
                           placeholder={onboard.step3.saelae_dob_placeholder}
                         />
                       }
@@ -476,16 +477,16 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
                     <Calendar
                       mode="single"
                       className="rounded-md overflow-x-scroll"
-                      selected={formData.saelabDob || undefined}
+                      selected={formData.saelaeDob || undefined}
                       onSelect={(date: any) => {
                         if (date) {
                           console.log(date, typeof date, Object.keys(date));
-                          setFormData({ ...formData, saelabDob: date });
+                          setFormData({ ...formData, saelaeDob: date });
                         }
                       }}
                       customInput={
                         <CustomInput
-                          value={formData.saelabDob}
+                          value={formData.saelaeDob}
                           placeholder={onboard.step3.saelae_dob_placeholder}
                         />
                       }

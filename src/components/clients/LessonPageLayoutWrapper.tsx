@@ -7,10 +7,11 @@ import { SLTypo } from "@/components/SLTypo";
 import { useAuthStore } from "@/store/auth-store";
 import { useLessonStore } from "@/store/lesson-store";
 import { getLesson } from "@/utils/lessonApiFunctions";
-import { getUserProfile } from "@/utils/userAPIFunctions";
+import { getUserProfile, saveToBookmarks } from "@/utils/userAPIFunctions";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 interface LessonPageLayoutWrapperProps {
   cookies?: any;
@@ -92,6 +93,19 @@ export const LessonPageLayoutWrapper = ({
   const onPrimaryButtonClick = useCallback(() => {
     router.push(`/lessons/${params.lesson_id}/quiz?module_id=${module_id}`);
   }, [params, router]);
+
+  const handleFavoriteLesson = async () => {
+    const { status, statusText, success, message, data } =
+      await saveToBookmarks({
+        lesson_id: lesson?.id,
+        cookies,
+      });
+    if (success) {
+      toast.success("Added to bookmarks!");
+      router.refresh();
+    }
+  };
+
   return (
     <section>
       {!isLoading && (
@@ -100,6 +114,7 @@ export const LessonPageLayoutWrapper = ({
           showPrimaryButton
           hideBottomCta={hideBottomCta}
           onPrimaryButtonClick={onPrimaryButtonClick}
+          onHeartButtonClick={handleFavoriteLesson}
         >
           <PageHeader className="sticky top-0 bg-white z-20" />
           <ContentHeader
@@ -111,6 +126,7 @@ export const LessonPageLayoutWrapper = ({
             description={(lesson && lesson.description) || ""}
             className="sticky top-[72px] bg-white z-10"
             //   isHeartActive
+            onHeartButtonClick={handleFavoriteLesson}
             onPrimaryButtonClick={onPrimaryButtonClick}
           />
           <div className="px-6 space-y-[var(--core-spacing-lg)] pb-20">
@@ -163,6 +179,7 @@ export const LessonPageLayoutWrapper = ({
           </div>
         </LessonPageLayout>
       )}
+      <Toaster position="top-center" reverseOrder={false} />
     </section>
   );
 };

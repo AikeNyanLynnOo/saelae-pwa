@@ -3,10 +3,12 @@ import { create } from "zustand";
 type Store = {
   lessonsLoading: boolean;
   lessons: any[];
+  bookmarkLessons: any[];
   currentLesson: any;
   lesson: any;
   setLessonsLoading: (lessonsLoading: boolean) => void;
   setLessons: (lessons: any[]) => void;
+  setBookmarkLessons: (bookmarkLessons: any[]) => void;
   setCurrentLesson: (currentLesson: any) => void;
   setLesson: (lesson: any) => void;
 };
@@ -14,6 +16,7 @@ type Store = {
 export const useLessonStore = create<Store>()((set) => ({
   lessonsLoading: false,
   lessons: [],
+  bookmarkLessons: [],
   currentLesson: null,
   lesson: null,
 
@@ -28,6 +31,13 @@ export const useLessonStore = create<Store>()((set) => ({
     set((state) => ({
       ...state,
       lessons,
+    }));
+  },
+
+  setBookmarkLessons: (bookmarkLessons) => {
+    set((state) => ({
+      ...state,
+      bookmarkLessons,
     }));
   },
 
