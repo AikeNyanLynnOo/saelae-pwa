@@ -1,0 +1,83 @@
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useCommonStore } from "@/store/common-store";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { SLTypo } from "../SLTypo";
+import { useRouter } from "next/navigation";
+
+interface ConfirmQuitModalProps {
+  children?: any;
+//   open?: boolean;
+//   setOpen?: any;
+}
+
+export const ConfirmQuitModal = ({
+  children,
+//   open,
+//   setOpen,
+}: ConfirmQuitModalProps) => {
+  const router = useRouter();
+  const { lang } = useCommonStore();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <div onClick={() => setOpen(true)}>{children}</div>
+      <div
+        className={`fixed inset-0 z-50 flex items-center justify-center ${!open && "hidden"}`}
+        onClick={() => setOpen(false)}
+      >
+        <div className="fixed inset-0 bg-black/50" />
+        <div
+          className="relative bg-white rounded-lg shadow-lg p-6 max-w-xs w-full mx-4"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="text-center">
+            <SLTypo
+              as="h5"
+              text={
+                lang === "mm"
+                  ? "ထွက်မှာ တကယ်သေချာပြီလား။"
+                  : "Are you sure to quit?"
+              }
+              variant={"fontH5Medium"}
+              className="text-[var(--semantic-color-text-bold)] text-center"
+            />
+
+            <SLTypo
+              as="p"
+              text={
+                lang === "mm"
+                  ? "ယခုလက်ရှိထိဖြေထားသလောက် အဖြေတွေဆုံးရှုံးသွားမှာပါ။"
+                  : "If you decide to quit now, you'll lose your current progress. But, you can always pick this up later!"
+              }
+              variant={"fontBody3Normal"}
+              className="text-[var(--semantic-color-text-subtle)] text-center mt-2"
+            />
+            <div className="flex justify-start items-center gap-x-3 mt-4">
+              <Button
+                variant="outline"
+                className={`w-full flex-1 rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-brand-default)] py-[var(--core-spacing-sm)] text-[var(--semantic-color-text-brand-default)]`}
+                onClick={() => router.back()}
+              >
+                {lang === "mm" ? "ထွက်မယ်" : "Quit Now"}
+              </Button>
+              <Button className="w-full flex-1" onClick={() => setOpen(false)}>
+                {lang === "mm" ? "ဆက်ဖြေမယ်" : "Continue"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};

@@ -25,6 +25,8 @@ interface LessonCardProps {
   totalLessons?: string;
   completedLessons?: string;
   ctaRoute?: string;
+  showCtaBtn?: boolean;
+  clickRoute?: string;
 }
 
 export function LessonCard({
@@ -40,6 +42,8 @@ export function LessonCard({
   totalLessons,
   completedLessons,
   ctaRoute = "lessons",
+  showCtaBtn = true,
+  clickRoute = "",
 }: LessonCardProps) {
   const { lang } = useCommonStore();
   const { messages, isLoading } = useTranslate();
@@ -55,9 +59,13 @@ export function LessonCard({
           : ""
       }`}
       onClick={() => {
-        if (state !== "locked" && state !== "progress" && state !== "default") {
+        if (
+          state !== "locked" &&
+          state !== "progress" &&
+          showCtaBtn === false
+        ) {
           // router.push(`/${ctaRoute}/${title.toLowerCase().replace(/ /g, "-")}`);
-          router.push(`/${ctaRoute}/${id}?module_id=${moduleId}`);
+          router.push(clickRoute || `/${ctaRoute}/${id}?module_id=${moduleId}`);
         }
       }}
     >
@@ -74,7 +82,8 @@ export function LessonCard({
       )}
       <CardContent className="flex gap-4 p-4 relative">
         <div
-          className={`flex flex-col ${state === "completed" ? "justify-center" : "justify-start"}`}
+          // className={`flex flex-col ${state === "completed" &&  ? "justify-center" : "justify-start"}`}
+          className={`flex flex-col justify-start`}
         >
           {(imageUrl && (
             <Image
@@ -153,7 +162,7 @@ export function LessonCard({
             />
           )}
           {state === "locked" && (
-            <LockKeyhole className="h-5 w-5 absolute top-1/2 -translate-y-1/2 right-4 text-[var(--semantic-color-icon-default)] opacity-70" />
+            <LockKeyhole className="h-4 w-4 absolute top-1/2 -translate-y-1/2 right-4 text-[var(--semantic-color-icon-default)] opacity-70" />
           )}
 
           {/* Progress State */}
@@ -183,7 +192,18 @@ export function LessonCard({
           )}
 
           {/* Default State */}
-          {state === "default" && (
+          {state === "default" && showCtaBtn && (
+            <Button
+              onClick={onButtonClick}
+              className="w-fit mt-3"
+              style={{
+                fontFamily: lang === "en" ? "var(--font-figtree)" : "",
+              }}
+            >
+              {common.cta_lesson_start}
+            </Button>
+          )}
+          {state === "completed" && showCtaBtn && (
             <Button
               onClick={onButtonClick}
               className="w-fit mt-3"

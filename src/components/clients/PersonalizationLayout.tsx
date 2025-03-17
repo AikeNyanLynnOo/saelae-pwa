@@ -63,7 +63,7 @@ export const PersonalizationLayout = ({
         </div>
 
         {data && data.recommended && data.recommended.length > 0 && (
-          <div className="px-4 lg:px-0 w-fit mx-auto">
+          <div className="px-4 lg:px-0 w-full mx-auto">
             <SLTypo
               as="h6"
               text={personalize.priority_lesson}
@@ -87,7 +87,7 @@ export const PersonalizationLayout = ({
         )}
 
         {data && data.normal && data.normal.length > 0 && (
-          <div className="px-4 lg:px-0 w-fit mx-auto">
+          <div className="px-4 lg:px-0 w-full mx-auto">
             <SLTypo
               as="h6"
               text={personalize.other_lesson}
