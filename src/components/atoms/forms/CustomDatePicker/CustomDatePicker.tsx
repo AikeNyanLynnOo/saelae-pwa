@@ -10,15 +10,17 @@ import { Button } from "@/components/ui/button";
 
 const CustomDatePicker = ({
   customInput,
+  value,
   ...props
 }: {
   customInput: any;
+  value?: any;
   onSelect: (date: Date | null) => void;
 }) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(value || null);
   const years = Array.from(
-    { length: getYear(new Date()) - 1990 + 1 },
-    (_, i) => 1990 + i
+    { length: getYear(new Date()) - 1925 + 2 },
+    (_, i) => 1925 + i
   );
   const months = [
     "January",
@@ -169,6 +171,7 @@ const CustomDatePicker = ({
       dayClassName={(date: Date) =>
         date.getDate() === 28 || date.getDate() === 30 ? "highlighted-day" : ""
       }
+      {...props}
     />
   );
 };

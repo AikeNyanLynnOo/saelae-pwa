@@ -1,11 +1,11 @@
-"use client";
-
 import { BabyPageNewLayout } from "@/components/clients/BabyPageNewLayout";
+import { cookies } from "next/headers";
 
 export default function BabyNewLayout() {
+  const cookieStore = cookies();
   return (
     <section>
-      <BabyPageNewLayout />
+      <BabyPageNewLayout cookies={cookieStore.getAll()} />
     </section>
   );
 }

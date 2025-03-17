@@ -110,13 +110,13 @@
     },
     "new": {
       "step1": {
-        "text": "Edit Baby Profile",
+        "text": "New Baby Profile",
         "question": "Is your baby born yet?",
         "true_cta_text": "Yes",
         "false_cta_text": "No"
       },
       "step2": {
-        "text": "Edit Baby Profile",
+        "text": "New Baby Profile",
         "saelae_name_label": "Your Baby Name",
         "saelae_name_placeholder": "Enter the name you'd like to call your baby",
         "saelae_dob_born_label": "Baby's Birthday",

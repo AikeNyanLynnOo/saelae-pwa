@@ -9,6 +9,7 @@ interface InputGroupProps {
   labelText?: string;
   htmlFor?: string;
   bottomText?: string;
+  isErr?: boolean;
   [otherProp: string]: any;
 }
 
@@ -17,12 +18,22 @@ export const InputGroup = ({
   labelText,
   htmlFor,
   bottomText,
+  isErr = false,
   ...props
 }: InputGroupProps) => {
   const inputGroupClasses = useMemo(
     () =>
       twMerge("flex flex-col gap-y-[var(--core-spacing-sm)]", className || ""),
     [className]
+  );
+
+  const bottomTextClasses = useMemo(
+    () =>
+      twMerge(
+        "text-[var(--semantic-color-text-subtle)]",
+        isErr && "text-[var(--semantic-color-text-negative-default)]"
+      ),
+    [isErr]
   );
   return (
     <div className={inputGroupClasses}>
@@ -31,7 +42,7 @@ export const InputGroup = ({
       <SLTypo
         text={bottomText}
         variant="fontBody4Normal"
-        className="text-[var(--semantic-color-text-subtle)]"
+        className={bottomTextClasses}
       />
     </div>
   );

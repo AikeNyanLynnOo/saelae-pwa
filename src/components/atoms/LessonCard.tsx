@@ -10,12 +10,15 @@ import { ImageWithPlaceholder } from "@/components/atoms/ImageWithPlaceholder";
 import { useRouter } from "next/navigation";
 import { useTranslate } from "../hooks/use-translate";
 import { useCommonStore } from "@/store/common-store";
+import { useState } from "react";
 
 interface LessonCardProps {
+  id?: string;
+  moduleId?: string;
   title: string;
   description: string;
   imageUrl?: string;
-  state: "default" | "completed" | "half-completed" | "locked" | "progress";
+  state?: "default" | "completed" | "half-completed" | "locked" | "progress";
   progressValue?: number;
   onButtonClick?: () => void;
   buttonText?: string;
@@ -25,6 +28,8 @@ interface LessonCardProps {
 }
 
 export function LessonCard({
+  id,
+  moduleId,
   title,
   description,
   imageUrl = "",
@@ -40,6 +45,8 @@ export function LessonCard({
   const { messages, isLoading } = useTranslate();
   const { modules, common } = messages;
   const router = useRouter();
+
+  const [showFullDescription, setShowFullDescription] = useState(false);
   return (
     <Card
       className={`w-full shadow-none rounded-[var(--core-border-radius-sm)] ${
@@ -49,7 +56,8 @@ export function LessonCard({
       }`}
       onClick={() => {
         if (state !== "locked" && state !== "progress" && state !== "default") {
-          router.push(`/${ctaRoute}/${title.toLowerCase().replace(/ /g, "-")}`);
+          // router.push(`/${ctaRoute}/${title.toLowerCase().replace(/ /g, "-")}`);
+          router.push(`/${ctaRoute}/${id}?module_id=${moduleId}`);
         }
       }}
     >
@@ -92,13 +100,33 @@ export function LessonCard({
             >
               {title}
             </SLTypo>
-            <SLTypo
-              as="p"
-              variant="fontBody3Normal"
-              className="text-[var(--semantic-color-text-subtle)] !leading-6 mb-2"
-            >
-              {description}
-            </SLTypo>
+            <>
+              <SLTypo
+                as="p"
+                variant="fontBody3Normal"
+                className={`text-[var(--semantic-color-text-subtle)] !leading-6 mb-2 w-11/12 ${
+                  showFullDescription ? "" : "line-clamp-3"
+                }`}
+              >
+                {description}
+              </SLTypo>
+              {description && description.length > 150 && (
+                <Button
+                  variant="link"
+                  className="p-0 h-auto text-[var(--semantic-color-text-brand-default)]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowFullDescription(!showFullDescription);
+                  }}
+                >
+                  <SLTypo
+                    as="span"
+                    variant="fontBody3Semibold"
+                    text={showFullDescription ? "See less" : "See more"}
+                  />
+                </Button>
+              )}
+            </>
 
             {totalLessons && (
               <SLTypo
@@ -107,7 +135,8 @@ export function LessonCard({
                 className="text-[var(--semantic-color-text-subtle)] !leading-6 mb-2 flex items-center gap-1"
               >
                 <CalendarDays className="w-3 h-3" />
-                {`သင်ခန်းစာ ${totalLessons} ခု`}
+                {(lang === "mm" && `သင်ခန်းစာ ${totalLessons} ခု`) ||
+                  `${totalLessons} Lessons`}
               </SLTypo>
             )}
           </div>
@@ -137,7 +166,8 @@ export function LessonCard({
                   variant="fontBody3Normal"
                   className="text-[var(--semantic-color-text-subtle)] !leading-6 whitespace-nowrap"
                 >
-                  {`${completedLessons} ပိုင်း သင်ယူပြီး`}
+                  {(lang === "mm" && `${completedLessons} ပိုင်း သင်ယူပြီး`) ||
+                    `${completedLessons} Lessons Completed`}
                 </SLTypo>
               </div>
               <Button

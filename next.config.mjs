@@ -2,10 +2,19 @@ import withPWA from "next-pwa";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true, // Enable React strict mode for improved error handling
+  reactStrictMode: false, // Enable React strict mode for improved error handling
   swcMinify: true, // Enable SWC minification for improved performance
   compiler: {
     removeConsole: process.env.NODE_ENV !== "development", // Remove console.log in production
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname:
+          "sae-lae-sound-to-your-happy-home-develop-etcfbq.laravel.cloud",
+      },
+    ],
   },
 };
 

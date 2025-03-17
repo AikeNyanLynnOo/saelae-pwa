@@ -16,10 +16,15 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/auth-store";
 import { useCommonStore } from "@/store/common-store";
+import { formatDate } from "@/utils/helperFunction";
+import { completeOnboard } from "@/utils/onboardApiFunctions";
+import { getCities } from "@/utils/userAPIFunctions";
 import { format } from "date-fns";
 import { CalendarIcon, MoveRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { parseCookies } from "nookies";
 import * as React from "react";
 import { forwardRef } from "react";
 
@@ -78,6 +83,7 @@ export const CustomInput = forwardRef(
   ) => {
     const { lang } = useCommonStore();
 
+    console.log("Value>>", value);
     return (
       <Button
         variant={"outline"}
@@ -110,13 +116,19 @@ export const CustomInput = forwardRef(
 );
 
 CustomInput.displayName = "CustomInput";
+interface OnboardingStepperProps {
+  cookies?: any;
+}
 
-export const OnboardingStepper = () => {
+export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
+  const clientCookies = parseCookies();
   const { messages, isLoading } = useTranslate();
   const { onboard } = messages;
   const { setLoadingText } = useCommonStore();
+  const { countryName } = useAuthStore();
   const router = useRouter();
   const [step, setStep] = React.useState(1);
+  const [cities, setCities] = React.useState([]);
   const [formData, setFormData] = React.useState({
     // step 1
     name: "",
@@ -129,7 +141,7 @@ export const OnboardingStepper = () => {
 
     // step 3
     saelaeName: "",
-    saelabDob: null,
+    saelaeDob: null,
     gender: "",
     relationship: "",
   });
@@ -137,6 +149,28 @@ export const OnboardingStepper = () => {
   const totalSteps = 3;
 
   const { lang } = useCommonStore();
+
+  React.useEffect(() => {
+    getCities({ countryName }).then(
+      ({ status, statusText, success, message, data, loading, error }) => {
+        if (success && data) {
+          console.log("Cities>>", data);
+          setCities(
+            (data &&
+              data.length > 0 &&
+              data.sort().map((city: string) => ({
+                label: city,
+                value: city,
+              }))) ||
+              []
+          );
+        } else {
+          // error
+          setCities([]);
+        }
+      }
+    );
+  }, []);
 
   const relationships = React.useMemo(() => {
     if (lang === "mm") {
@@ -176,7 +210,7 @@ export const OnboardingStepper = () => {
       case 3:
         return (
           formData.saelaeName &&
-          formData.saelabDob &&
+          formData.saelaeDob &&
           formData.gender &&
           formData.relationship
         );
@@ -185,17 +219,49 @@ export const OnboardingStepper = () => {
     }
   }, [step, formData]);
 
-  const handleNext = () => {
+  const handleNext = async () => {
+
     if (step === totalSteps) {
-      router.push("/onboard/personalize");
-      if (lang === "mm") {
-        setLoadingText(
-          `${formData.relationship} အတွက် အဆင်ပြေဆုံးဖြစ်မယ့် ဘာသာရပ်များကို ရွေးခြယ်ပေးနေပါတယ်...`
-        );
+      const child: any = {
+        name: formData.saelaeName,
+        is_born: formData.isBorn || false,
+        gender: formData.gender,
+        guardian_role: formData.relationship,
+      };
+      if (formData.isBorn) {
+        child.birth_date = formatDate(formData.saelaeDob);
       } else {
-        setLoadingText(
-          "We're choosing the perfect launchpad for you to begin your learning journey."
-        );
+        child.due_date = formatDate(formData.saelaeDob);
+      }
+      console.log("Data>>", {
+        name: formData.name,
+        address: formData.address,
+        city: formData.city,
+        date_of_birth: formatDate(formData.dob),
+        children: [child],
+        cookies: clientCookies,
+      });
+
+      const { status, statusText, success, message, data } =
+        await completeOnboard({
+          name: formData.name,
+          address: formData.address,
+          city: formData.city,
+          date_of_birth: formatDate(formData.dob),
+          children: [child],
+          cookies: clientCookies,
+        });
+      if (success) {
+        router.push("/onboard/personalize");
+        if (lang === "mm") {
+          setLoadingText(
+            `${formData.relationship} အတွက် အဆင်ပြေဆုံးဖြစ်မယ့် ဘာသာရပ်များကို ရွေးခြယ်ပေးနေပါတယ်...`
+          );
+        } else {
+          setLoadingText(
+            "We're choosing the perfect launchpad for you to begin your learning journey."
+          );
+        }
       }
     }
     if (step < totalSteps) {
@@ -294,12 +360,23 @@ export const OnboardingStepper = () => {
                     </SelectTrigger>
                     <SelectContent className="text-black">
                       <SelectGroup>
-                        <SelectItem value="yangon">ရန်ကုန်</SelectItem>
+                        {/* <SelectItem value="yangon">ရန်ကုန်</SelectItem>
                         <SelectItem value="mandalay">မန္တလေး</SelectItem>
 
                         <SelectItem value="naypyidaw">နေပြည်တော်</SelectItem>
                         <SelectItem value="bago">ပဲခူး</SelectItem>
-                        <SelectItem value="mawlamyine">မော်လမြိုင်</SelectItem>
+                        <SelectItem value="mawlamyine">မော်လမြိုင်</SelectItem> */}
+                        {(cities &&
+                          cities.length > 0 &&
+                          cities.map((city: any, index: number) => (
+                            <SelectItem key={index} value={city.value}>
+                              {city.label}
+                            </SelectItem>
+                          ))) || (
+                          <SelectItem value="no_option" disabled>
+                            No options
+                          </SelectItem>
+                        )}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -343,6 +420,7 @@ export const OnboardingStepper = () => {
                         placeholder={onboard.step1.dob_placeholder}
                       />
                     }
+                    maxDate={new Date()}
                   />
                 </InputGroup>
               </div>
@@ -413,23 +491,45 @@ export const OnboardingStepper = () => {
                   className="mb-4"
                   htmlFor="birthdate"
                 >
-                  <Calendar
-                    mode="single"
-                    className="rounded-md overflow-x-scroll"
-                    selected={formData.saelabDob || undefined}
-                    onSelect={(date: any) => {
-                      if (date) {
-                        console.log(date, typeof date, Object.keys(date));
-                        setFormData({ ...formData, saelabDob: date });
+                  {(formData.isBorn && (
+                    <Calendar
+                      mode="single"
+                      className="rounded-md overflow-x-scroll"
+                      selected={formData.saelaeDob || undefined}
+                      onSelect={(date: any) => {
+                        if (date) {
+                          console.log(date, typeof date, Object.keys(date));
+                          setFormData({ ...formData, saelaeDob: date });
+                        }
+                      }}
+                      customInput={
+                        <CustomInput
+                          value={formData.saelaeDob}
+                          placeholder={onboard.step3.saelae_dob_placeholder}
+                        />
                       }
-                    }}
-                    customInput={
-                      <CustomInput
-                        value={formData.saelabDob}
-                        placeholder={onboard.step3.saelae_dob_placeholder}
-                      />
-                    }
-                  />
+                      maxDate={new Date()}
+                    />
+                  )) || (
+                    <Calendar
+                      mode="single"
+                      className="rounded-md overflow-x-scroll"
+                      selected={formData.saelaeDob || undefined}
+                      onSelect={(date: any) => {
+                        if (date) {
+                          console.log(date, typeof date, Object.keys(date));
+                          setFormData({ ...formData, saelaeDob: date });
+                        }
+                      }}
+                      customInput={
+                        <CustomInput
+                          value={formData.saelaeDob}
+                          placeholder={onboard.step3.saelae_dob_placeholder}
+                        />
+                      }
+                      minDate={new Date()}
+                    />
+                  )}
                 </InputGroup>
 
                 {/* Sae Lae Gender Input */}
@@ -442,38 +542,38 @@ export const OnboardingStepper = () => {
                     <Button
                       className={cn(
                         "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-info-subtlest)] hover:text-[var(--semantic-color-text-default)]",
-                        formData.gender === "ကျား"
+                        formData.gender === "male"
                           ? "bg-[var(--semantic-color-bg-info-secondary)] text-[var(--semantic-color-text-inverse)]"
                           : "bg-white text-[var(--semantic-color-text-default)]",
                         formData.gender === "" && "bg-transparent"
                       )}
                       onClick={() =>
-                        setFormData({ ...formData, gender: "ကျား" })
+                        setFormData({ ...formData, gender: "male" })
                       }
                     >
                       <SLTypo
                         as="span"
                         variant="fontLabelNormal"
                         text={onboard.step3.saelae_gender_male}
-                        className="-mt-1"
                       />
                     </Button>
 
                     <Button
                       className={cn(
                         "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-new-subtlest)] hover:text-[var(--semantic-color-text-default)]",
-                        formData.gender === "မ"
+                        formData.gender === "female"
                           ? "bg-[var(--semantic-color-bg-new-primary)] text-[var(--semantic-color-text-inverse)]"
                           : "bg-white text-[var(--semantic-color-text-default)]",
                         formData.gender === "" && "bg-transparent"
                       )}
-                      onClick={() => setFormData({ ...formData, gender: "မ" })}
+                      onClick={() =>
+                        setFormData({ ...formData, gender: "female" })
+                      }
                     >
                       <SLTypo
                         as="span"
                         variant="fontLabelNormal"
                         text={onboard.step3.saelae_gender_female}
-                        className="-mt-1"
                       />
                     </Button>
                   </div>
