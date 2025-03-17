@@ -26,7 +26,7 @@ export const SLPhoneInput = ({
     defaultCountry: "mm",
     value,
     onChange: (data: any) => {
-      // console.log(data);
+      console.log(data);
       onChange(data.phone, {
         country: data.country,
         inputValue: data.inputValue,

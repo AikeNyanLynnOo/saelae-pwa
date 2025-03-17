@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { getUserProfile } from "@/utils/userAPIFunctions";
 import { useAuthStore } from "@/store/auth-store";
 import { SLTypo } from "../SLTypo";
+import { parseCookies } from "nookies";
 
 // const items = [
 //   { label: "အားလုံး", value: "all", isActive: true },
@@ -30,6 +31,7 @@ interface ModulesPageLayoutProps {
 }
 
 export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
+  const clientCookies = parseCookies();
   const { lang } = useCommonStore();
   const { setCurrentUser } = useAuthStore();
   const { messages, isLoading } = useTranslate();
@@ -49,7 +51,7 @@ export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(
+    getUserProfile({ cookies: clientCookies }).then(
       ({ status, statusText, success, message, data, loading, error }) => {
         // console.log("User >>", success);
         if (success && data) {
@@ -59,12 +61,12 @@ export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
         }
       }
     );
-  }, [cookies]);
+  }, []);
 
   // fetching module categories
   useEffect(() => {
     getModuleCategories({
-      cookies,
+      cookies: clientCookies,
     }).then((res) => {
       if (
         res &&
@@ -81,7 +83,7 @@ export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
   // fetching modules
   useEffect(() => {
     getModules({
-      cookies,
+      cookies: clientCookies,
     }).then((res) => {
       if (res && res.success && res.data && res.data.length > 0) {
         setModules(res.data);
@@ -92,7 +94,7 @@ export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
   const onChipClick = (value: any) => {
     setCurrentCategory(value);
     getModules({
-      cookies,
+      cookies: clientCookies,
       category_id: value,
     }).then((res) => {
       if (res && res.success && res.data) {
@@ -148,6 +150,7 @@ export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
                   <LessonCard
                     key={index}
                     title={module.title}
+                    imageUrl={module.media_url || ""}
                     description={module.description}
                     totalLessons={module.progress_data.total_lessons || ""}
                     state={getStateBaseOnData(module.progress_data)}
@@ -157,7 +160,11 @@ export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
               })) || (
               <SLTypo
                 as="p"
-                text={lang === "mm" ? "လေ့လာစရာ များ မရှိသေးပါ..." : "No modules found..."}
+                text={
+                  lang === "mm"
+                    ? "လေ့လာစရာ များ မရှိသေးပါ..."
+                    : "No modules found..."
+                }
                 variant="fontBody3Normal"
                 className="text-center text-[var(--semantic-color-text-default)] mb-4 px-4 lg:px-0 min-h-[60dvh] flex items-center justify-center"
               />

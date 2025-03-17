@@ -2,21 +2,16 @@ import { makeRequest } from "./makeRequest";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL;
 const authCookieName =
-  process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME || process.env.AUTH_COOKIE_NAME;
+  process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME ||
+  process.env.AUTH_COOKIE_NAME ||
+  "app_token";
 
 export const getChildren = async ({
   cookies,
 }: {
   cookies?: any;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
+  const app_token = cookies[authCookieName] || "";
 
   let config = {
     method: "GET",
@@ -24,7 +19,7 @@ export const getChildren = async ({
     url: `${baseURL}/user/children`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
   };
   const res = await makeRequest(config);
@@ -39,22 +34,14 @@ export const getChild = async ({
   id: number;
   cookies?: any;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
-
+  const app_token = cookies[authCookieName] || "";
   let config = {
     method: "GET",
     maxBodyLength: Infinity,
     url: `${baseURL}/user/children/${id}`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
   };
   const res = await makeRequest(config);
@@ -79,14 +66,7 @@ export const addChild = async ({
   media_file?: any;
   cookies?: any;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
+  const app_token = cookies[authCookieName] || "";
 
   let data = new FormData();
   data.append("name", name);
@@ -104,7 +84,7 @@ export const addChild = async ({
     url: `${baseURL}/user/children`,
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
     data,
   };
@@ -132,15 +112,7 @@ export const updateChild = async ({
   media_file?: any;
   cookies?: any;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
-
+  const app_token = cookies[authCookieName] || "";
   let data = new FormData();
   data.append("name", name);
   data.append("birth_date", birth_date);
@@ -157,7 +129,7 @@ export const updateChild = async ({
     url: `${baseURL}/user/children/${id}?_method=PUT`,
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
     data,
   };
@@ -172,14 +144,7 @@ export const deleteChild = async ({
   id: number;
   cookies?: any;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
+  const app_token = cookies[authCookieName] || "";
 
   let config = {
     method: "DELETE",
@@ -187,7 +152,7 @@ export const deleteChild = async ({
     url: `${baseURL}/user/children/${id}`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
   };
   const res = await makeRequest(config);

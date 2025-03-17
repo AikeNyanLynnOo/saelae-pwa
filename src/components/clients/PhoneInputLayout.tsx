@@ -28,6 +28,7 @@ export const PhoneInputLayout = ({ authCookies }: { authCookies?: any[] }) => {
 
     setPhoneNumber,
     setCountryCode,
+    setCountryName,
     setIso2Code,
     setInputValue,
   } = useAuthStore();
@@ -48,6 +49,7 @@ export const PhoneInputLayout = ({ authCookies }: { authCookies?: any[] }) => {
     setPhoneNumber(phone || "");
     setIso2Code((meta && meta.country && meta.country.iso2) || "");
     setCountryCode((meta && meta.country && meta.country.dialCode) || "");
+    setCountryName((meta && meta.country && meta.country.name) || "");
     setInputValue(
       (meta && meta.country && splitInputValue(inputValue).value) || ""
     );
@@ -81,7 +83,7 @@ export const PhoneInputLayout = ({ authCookies }: { authCookies?: any[] }) => {
 
   const phoneHelperText = useMemo(() => {
     return errMessage || (showBottomMm && auth.phone.helper_text) || "";
-  }, [errMessage]);
+  }, [errMessage, showBottomMm]);
 
   return (
     <CommonLayout isLoading={isLoading} customClasses="items-start relative">

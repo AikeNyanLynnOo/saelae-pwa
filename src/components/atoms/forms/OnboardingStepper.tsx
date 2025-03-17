@@ -16,12 +16,15 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/auth-store";
 import { useCommonStore } from "@/store/common-store";
 import { formatDate } from "@/utils/helperFunction";
 import { completeOnboard } from "@/utils/onboardApiFunctions";
+import { getCities } from "@/utils/userAPIFunctions";
 import { format } from "date-fns";
 import { CalendarIcon, MoveRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { parseCookies } from "nookies";
 import * as React from "react";
 import { forwardRef } from "react";
 
@@ -118,11 +121,14 @@ interface OnboardingStepperProps {
 }
 
 export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
+  const clientCookies = parseCookies();
   const { messages, isLoading } = useTranslate();
   const { onboard } = messages;
   const { setLoadingText } = useCommonStore();
+  const { countryName } = useAuthStore();
   const router = useRouter();
   const [step, setStep] = React.useState(1);
+  const [cities, setCities] = React.useState([]);
   const [formData, setFormData] = React.useState({
     // step 1
     name: "",
@@ -143,6 +149,28 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
   const totalSteps = 3;
 
   const { lang } = useCommonStore();
+
+  React.useEffect(() => {
+    getCities({ countryName }).then(
+      ({ status, statusText, success, message, data, loading, error }) => {
+        if (success && data) {
+          console.log("Cities>>", data);
+          setCities(
+            (data &&
+              data.length > 0 &&
+              data.sort().map((city: string) => ({
+                label: city,
+                value: city,
+              }))) ||
+              []
+          );
+        } else {
+          // error
+          setCities([]);
+        }
+      }
+    );
+  }, []);
 
   const relationships = React.useMemo(() => {
     if (lang === "mm") {
@@ -192,28 +220,26 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
   }, [step, formData]);
 
   const handleNext = async () => {
-    console.log(cookies);
-
-    const child: any = {
-      name: formData.saelaeName,
-      is_born: formData.isBorn || false,
-      gender: formData.gender,
-      guardian_role: formData.relationship,
-    };
-    if (formData.isBorn) {
-      child.birth_date = formatDate(formData.saelaeDob);
-    } else {
-      child.due_date = formatDate(formData.saelaeDob);
-    }
 
     if (step === totalSteps) {
+      const child: any = {
+        name: formData.saelaeName,
+        is_born: formData.isBorn || false,
+        gender: formData.gender,
+        guardian_role: formData.relationship,
+      };
+      if (formData.isBorn) {
+        child.birth_date = formatDate(formData.saelaeDob);
+      } else {
+        child.due_date = formatDate(formData.saelaeDob);
+      }
       console.log("Data>>", {
         name: formData.name,
         address: formData.address,
         city: formData.city,
         date_of_birth: formatDate(formData.dob),
         children: [child],
-        cookies,
+        cookies: clientCookies,
       });
 
       const { status, statusText, success, message, data } =
@@ -223,7 +249,7 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
           city: formData.city,
           date_of_birth: formatDate(formData.dob),
           children: [child],
-          cookies,
+          cookies: clientCookies,
         });
       if (success) {
         router.push("/onboard/personalize");
@@ -334,12 +360,23 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
                     </SelectTrigger>
                     <SelectContent className="text-black">
                       <SelectGroup>
-                        <SelectItem value="yangon">ရန်ကုန်</SelectItem>
+                        {/* <SelectItem value="yangon">ရန်ကုန်</SelectItem>
                         <SelectItem value="mandalay">မန္တလေး</SelectItem>
 
                         <SelectItem value="naypyidaw">နေပြည်တော်</SelectItem>
                         <SelectItem value="bago">ပဲခူး</SelectItem>
-                        <SelectItem value="mawlamyine">မော်လမြိုင်</SelectItem>
+                        <SelectItem value="mawlamyine">မော်လမြိုင်</SelectItem> */}
+                        {(cities &&
+                          cities.length > 0 &&
+                          cities.map((city: any, index: number) => (
+                            <SelectItem key={index} value={city.value}>
+                              {city.label}
+                            </SelectItem>
+                          ))) || (
+                          <SelectItem value="no_option" disabled>
+                            No options
+                          </SelectItem>
+                        )}
                       </SelectGroup>
                     </SelectContent>
                   </Select>

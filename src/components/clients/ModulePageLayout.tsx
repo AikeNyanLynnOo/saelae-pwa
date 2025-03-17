@@ -19,6 +19,7 @@ import { SLTypo } from "../SLTypo";
 import { Button } from "../ui/button";
 import { getUserProfile } from "@/utils/userAPIFunctions";
 import { useAuthStore } from "@/store/auth-store";
+import { parseCookies } from "nookies";
 
 interface ModulePageLayoutProps {
   module_id?: string;
@@ -39,6 +40,7 @@ export const ModulePageLayout = ({
     currentModule,
     setCurrentModule,
   } = useModuleStore();
+  const clientCookies = parseCookies();
   const { lang } = useCommonStore();
   const { lessons, setLessons } = useLessonStore();
   const { setCurrentUser } = useAuthStore();
@@ -47,7 +49,7 @@ export const ModulePageLayout = ({
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(
+    getUserProfile({ cookies: clientCookies }).then(
       ({ status, statusText, success, message, data, loading, error }) => {
         // console.log("User >>", success);
         if (success && data) {
@@ -57,12 +59,12 @@ export const ModulePageLayout = ({
         }
       }
     );
-  }, [cookies]);
+  }, []);
 
   useEffect(() => {
     if (module_id) {
       getModuleLessons({
-        cookies,
+        cookies: clientCookies,
         module_id: module_id,
       })
         .then(({ success, data }) => {
@@ -80,7 +82,7 @@ export const ModulePageLayout = ({
 
   useEffect(() => {
     getModuleCategories({
-      cookies,
+      cookies: clientCookies,
     }).then((res) => {
       if (
         res &&
@@ -96,7 +98,7 @@ export const ModulePageLayout = ({
 
   useEffect(() => {
     getModules({
-      cookies,
+      cookies: clientCookies,
     }).then((res) => {
       if (res && res.success && res.data && res.data.length > 0) {
         setModules(res.data);
@@ -180,7 +182,7 @@ export const ModulePageLayout = ({
 
       if (foundModule && foundModule.id) {
         getModuleLessons({
-          cookies,
+          cookies: clientCookies,
           module_id: foundModule.id,
         })
           .then(({ success, data }) => {
@@ -201,7 +203,7 @@ export const ModulePageLayout = ({
       setCurrentModule(firstModule);
       if (firstModule && firstModule.id) {
         getModuleLessons({
-          cookies,
+          cookies: clientCookies,
           module_id: firstModule.id,
         })
           .then(({ success, data }) => {
@@ -223,7 +225,7 @@ export const ModulePageLayout = ({
   return (
     <TabLayout>
       <PageHeader className="sticky top-0 bg-white z-10">
-        <ResponsiveModal cookies={cookies}>
+        <ResponsiveModal>
           <Button
             variant="outline"
             className={`w-fit max-w-full rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-primary)] border-none py-[var(--core-spacing-sm)] px-2 sm:px-[var(--core-spacing-lg)]`}
@@ -250,6 +252,7 @@ export const ModulePageLayout = ({
           <LessonCard
             key={index}
             id={lesson.id}
+            imageUrl={lesson.media_url || ""}
             moduleId={(currentModule && currentModule.id) || ""}
             title={lesson.title}
             description={lesson.description}
@@ -258,6 +261,7 @@ export const ModulePageLayout = ({
         ))}
         {currentModule && currentModule.has_quiz && (
           <LessonCard
+            imageUrl={currentModule.media_url || ""}
             title={lang === "mm" ? "စာမေးပွဲ" : "Final Exam"}
             description={
               lang === "mm"

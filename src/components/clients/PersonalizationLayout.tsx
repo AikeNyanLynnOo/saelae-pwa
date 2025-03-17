@@ -8,6 +8,7 @@ import { useTranslate } from "../hooks/use-translate";
 import { useFetchData } from "../hooks/use-fetch-data";
 import { getInitialModules } from "@/utils/moduleApiFunctions";
 import { useRouter } from "next/navigation";
+import { parseCookies } from "nookies";
 
 interface PersonalizationLayoutProps {
   cookies?: any;
@@ -15,6 +16,7 @@ interface PersonalizationLayoutProps {
 export const PersonalizationLayout = ({
   cookies,
 }: PersonalizationLayoutProps) => {
+  const clientCookies = parseCookies();
   const router = useRouter();
   const { messages, isLoading } = useTranslate();
   const { personalize } = messages;
@@ -30,7 +32,7 @@ export const PersonalizationLayout = ({
     useFetchData({
       fetcher: getInitialModules,
       args: {
-        cookies,
+        cookies: clientCookies,
       },
       deps: [],
       redirect: {
@@ -60,66 +62,53 @@ export const PersonalizationLayout = ({
           />
         </div>
 
-        <div className="px-4 lg:px-0 w-fit mx-auto">
-          <SLTypo
-            as="h6"
-            text={personalize.priority_lesson}
-            variant="fontH6Semibold"
-            className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-lg)]"
-          />
-          <div className="flex flex-col gap-[var(--core-spacing-lg)]">
-            {data &&
-              data.recommended &&
-              data.recommended.length > 0 &&
-              data.recommended.map((data: any, index: number) => (
-                <LessonCard
-                  key={index}
-                  title={data.title || ""}
-                  description={data.description || ""}
-                  totalLessons={data.total_lessons_count || ""}
-                  state="default"
-                  onButtonClick={() => router.push(`/${data.id}`)}
-                />
-              ))}
-          </div>
-        </div>
-
-        <div className="px-4 lg:px-0 w-fit mx-auto">
-          <SLTypo
-            as="h6"
-            text={personalize.other_lesson}
-            variant="fontH6Semibold"
-            className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-lg)]"
-          />
-          <div className="flex flex-col gap-[var(--core-spacing-lg)]">
-            {data &&
-              data.normal &&
-              data.normal.length > 0 &&
-              data.normal.map((data: any, index: number) => (
-                <LessonCard
-                  key={index}
-                  title={data.title || ""}
-                  description={data.description || ""}
-                  totalLessons={data.total_lessons_count || ""}
-                  state="default"
-                  onButtonClick={() => router.push(`/${data.id}`)}
-                />
-              ))}
-
-            {/* <LessonCard
-              title="မွေးကင်းစကလေး ပြုစုစောင့်ရှောက်ခြင်း"
-              description="ဆည်းလည်းလေးတို့တွေဟာ မွေးစအချိန်မှာ အရမ်းကိုနုနယ်လွန်းတာမို့ စနစ်တကျ ပြုစုစောင့်ရှောက်နည်းတွေကို လေ့လာရအောင်နော်။"
-              totalLessons="၆"
-              state="default"
+        {data && data.recommended && data.recommended.length > 0 && (
+          <div className="px-4 lg:px-0 w-fit mx-auto">
+            <SLTypo
+              as="h6"
+              text={personalize.priority_lesson}
+              variant="fontH6Semibold"
+              className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-lg)] text-left"
             />
-            <LessonCard
-              title="မွေးကင်းစကလေး အာဟာရ"
-              description="ဆည်းလည်းလေးတို့တွေဟာ မွေးစအချိန်မှာ အရမ်းကိုနုနယ်လွန်းတာမို့ စနစ်တကျ ပြုစုစောင့်ရှောက်နည်းတွေကို လေ့လာရအောင်နော်။"
-              totalLessons="၆"
-              state="default"
-            /> */}
+            <div className="flex flex-col gap-[var(--core-spacing-lg)]">
+              {data.recommended.map((data: any, index: number) => (
+                <LessonCard
+                  key={index}
+                  title={data.title || ""}
+                  imageUrl={data.media_url || ""}
+                  description={data.description || ""}
+                  totalLessons={data.total_lessons_count || ""}
+                  state="default"
+                  onButtonClick={() => router.push(`/${data.id}`)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {data && data.normal && data.normal.length > 0 && (
+          <div className="px-4 lg:px-0 w-fit mx-auto">
+            <SLTypo
+              as="h6"
+              text={personalize.other_lesson}
+              variant="fontH6Semibold"
+              className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-lg)] text-left"
+            />
+            <div className="flex flex-col gap-[var(--core-spacing-lg)]">
+              {data.normal.map((data: any, index: number) => (
+                <LessonCard
+                  key={index}
+                  title={data.title || ""}
+                  imageUrl={data.media_url || ""}
+                  description={data.description || ""}
+                  totalLessons={data.total_lessons_count || ""}
+                  state="default"
+                  onButtonClick={() => router.push(`/${data.id}`)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </CommonLayout>
   );

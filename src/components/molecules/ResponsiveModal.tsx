@@ -19,6 +19,7 @@ import { useMediaQuery } from "../hooks/use-media-query";
 import { useTranslate } from "../hooks/use-translate";
 import { SLTypo } from "../SLTypo";
 import { LabelWithContentScroll } from "./LabelWithContentScroll";
+import { parseCookies } from "nookies";
 
 // const items = [
 //   { label: "အားလုံး", value: "all", isActive: true },
@@ -34,6 +35,7 @@ interface ResponsiveModalProps {
 }
 
 export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
+  const clientCookies = parseCookies();
   const { messages } = useTranslate();
   const {
     modules,
@@ -57,7 +59,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
     console.log("Clicked:", value);
     setCurrentCategory(value);
     getModules({
-      cookies,
+      cookies: clientCookies,
       category_id: value,
     }).then((res) => {
       if (res && res.success && res.data) {
@@ -212,6 +214,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
                 return (
                   <LessonCard
                     key={index}
+                    imageUrl={module.media_url || ""}
                     title={module.title}
                     description={module.description}
                     totalLessons={module.progress_data.total_lessons || ""}

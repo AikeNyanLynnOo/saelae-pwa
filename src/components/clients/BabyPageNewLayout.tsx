@@ -27,6 +27,7 @@ import { getUserProfile } from "@/utils/userAPIFunctions";
 import { formatDate } from "@/utils/helperFunction";
 import { addChild } from "@/utils/childApiFunctions";
 import toast, { Toaster } from "react-hot-toast";
+import { parseCookies } from "nookies";
 
 interface BabyPageNewLayoutProps {
   cookies?: any;
@@ -41,6 +42,7 @@ export const BabyPageNewLayout = ({
   customClasses,
   customBackUrl,
 }: BabyPageNewLayoutProps) => {
+  const clientCookies = parseCookies();
   const { messages, isLoading } = useTranslate();
   const { baby } = messages;
 
@@ -50,7 +52,7 @@ export const BabyPageNewLayout = ({
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(({ success, data }) => {
+    getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
       // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
@@ -58,7 +60,7 @@ export const BabyPageNewLayout = ({
         router.push("/auth?session_expired=true");
       }
     });
-  }, [cookies]);
+  }, []);
 
   const relationships = useMemo(() => {
     if (lang === "mm") {
@@ -126,7 +128,7 @@ export const BabyPageNewLayout = ({
         gender: formData.gender,
         guardian_role: formData.relationship,
         media_file: formData.mediaFile,
-        cookies,
+        cookies: clientCookies,
       });
       if (success) {
         toast.success("Successfully added!");

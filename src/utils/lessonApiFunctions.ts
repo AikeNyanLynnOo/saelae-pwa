@@ -2,7 +2,9 @@ import { makeRequest } from "./makeRequest";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL;
 const authCookieName =
-  process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME || process.env.AUTH_COOKIE_NAME;
+  process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME ||
+  process.env.AUTH_COOKIE_NAME ||
+  "app_token";
 
 export const getLesson = async ({
   cookies,
@@ -15,14 +17,7 @@ export const getLesson = async ({
   lesson_id: string;
   category_id?: string;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
+  const app_token = cookies[authCookieName] || "";
   const params: any = {};
   if (category_id) {
     params["category"] = category_id;
@@ -34,7 +29,7 @@ export const getLesson = async ({
     url: `${baseURL}/modules/${module_id}/lessons/${lesson_id}`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
     params,
   };

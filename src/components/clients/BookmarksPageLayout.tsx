@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/auth-store";
 import { useLessonStore } from "@/store/lesson-store";
 import { getUserBookmarks, getUserProfile } from "@/utils/userAPIFunctions";
 import { useRouter } from "next/navigation";
+import { parseCookies } from "nookies";
 import { useEffect } from "react";
 
 interface BookmarksPageLayoutProps {
@@ -19,6 +20,7 @@ export const BookmarksPageLayout = ({
   cookies,
   children,
 }: BookmarksPageLayoutProps) => {
+  const clientCookies = parseCookies();
   const router = useRouter();
   const { currentUser, setCurrentUser } = useAuthStore();
   const { bookmarkLessons, setBookmarkLessons } = useLessonStore();
@@ -28,7 +30,7 @@ export const BookmarksPageLayout = ({
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(({ success, data }) => {
+    getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
       // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
@@ -36,12 +38,14 @@ export const BookmarksPageLayout = ({
         router.push("/auth?session_expired=true");
       }
     });
-    getUserBookmarks({ cookies }).then(({ success, data }) => {
+    getUserBookmarks({ cookies: clientCookies }).then(({ success, data }) => {
       if (success && data) {
         setBookmarkLessons((data && data.lessons) || null);
       }
     });
-  }, [cookies]);
+  }, []);
+
+  console.log("Bookmarks >>", bookmarkLessons);
 
   return (
     <>
@@ -55,16 +59,27 @@ export const BookmarksPageLayout = ({
             className="sticky top-[72px] bg-white z-10 gap-0"
           />
           <div className="px-6 space-y-[var(--core-spacing-md)] pb-20">
-            {bookmarkLessons.map((lesson, index) => (
-              <LessonCard
-                key={index}
-                id={lesson.id}
-                moduleId={lesson.module_id}
-                title={lesson.title}
-                description={lesson.description}
-                state={lesson.is_completed ? "completed" : "half-completed"}
-              />
-            ))}
+            {bookmarkLessons.map((lesson, index) => {
+              const {
+                id,
+                module_id,
+                media_url,
+                title,
+                description,
+                is_completed,
+              } = lesson.lesson || {};
+              return (
+                <LessonCard
+                  key={index}
+                  id={id}
+                  imageUrl={media_url || ""}
+                  moduleId={module_id}
+                  title={title}
+                  description={description}
+                  state={is_completed ? "completed" : "half-completed"}
+                />
+              );
+            })}
           </div>
         </TabLayout>
       )}

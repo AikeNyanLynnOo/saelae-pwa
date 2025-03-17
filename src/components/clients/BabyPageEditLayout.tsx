@@ -29,6 +29,7 @@ import { useAuthStore } from "@/store/auth-store";
 import { getChild, updateChild } from "@/utils/childApiFunctions";
 import { formatDate } from "@/utils/helperFunction";
 import toast, { Toaster } from "react-hot-toast";
+import { parseCookies } from "nookies";
 
 interface BabyPageEditProps {
   cookies?: any;
@@ -43,6 +44,7 @@ export const BabyPageEditLayout = ({
   customClasses,
   customBackUrl,
 }: BabyPageEditProps) => {
+  const clientCookies = parseCookies();
   const { lang } = useCommonStore();
   const { currentUser, setCurrentUser } = useAuthStore();
   const { currentBaby, setCurrentBaby } = useBabyStore();
@@ -53,15 +55,15 @@ export const BabyPageEditLayout = ({
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(({ success, data }) => {
-      // console.log("User >>", success);
+    getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
+      // console.log("User >>", success, data);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
       } else {
         router.push("/auth?session_expired=true");
       }
     });
-  }, [cookies]);
+  }, []);
 
   const [formData, setFormData] = useState<any>({
     mediaUrl: "",
@@ -74,14 +76,14 @@ export const BabyPageEditLayout = ({
     relationship: "",
   });
 
-  useEffect(() => {
-    setFormData({
-      ...formData,
-      mediaUrl: formData.mediaFile
-        ? URL.createObjectURL(formData.mediaFile)
-        : "",
-    });
-  }, [formData.mediaFile]);
+  // useEffect(() => {
+  //   setFormData({
+  //     ...formData,
+  //     mediaUrl: formData.mediaFile
+  //       ? URL.createObjectURL(formData.mediaFile)
+  //       : "",
+  //   });
+  // }, [formData.mediaFile]);
 
   useEffect(() => {
     setFormData({
@@ -105,7 +107,6 @@ export const BabyPageEditLayout = ({
       router.back();
     }
   };
-  console.log("Form>>", formData);
 
   const handleSave = async () => {
     console.log(formData);
@@ -117,14 +118,14 @@ export const BabyPageEditLayout = ({
       gender: formData.gender,
       guardian_role: formData.relationship,
       media_file: formData.mediaFile,
-      cookies,
+      cookies: clientCookies,
     });
     if (success) {
       toast.success("Successfully updated!");
       router.refresh();
       const childRes = await getChild({
         id: currentBaby?.id,
-        cookies,
+        cookies: clientCookies,
       });
       if (
         childRes &&
@@ -136,8 +137,6 @@ export const BabyPageEditLayout = ({
       }
     }
   };
-
-  console.log("Current baby>>", currentBaby);
 
   return (
     <>
@@ -164,7 +163,7 @@ export const BabyPageEditLayout = ({
                 variant={"fontH5Medium"}
                 className="text-[var(--semantic-color-text-default)]"
               />
-              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center overflow-hidden">
                 {formData.mediaUrl ? (
                   <img
                     src={formData.mediaUrl}
@@ -192,6 +191,7 @@ export const BabyPageEditLayout = ({
                       setFormData((prev: any) => ({
                         ...prev,
                         mediaFile: file,
+                        mediaUrl: URL.createObjectURL(file),
                       }));
                     }
                   };

@@ -22,8 +22,15 @@ import { useTranslate } from "../hooks/use-translate";
 import { useEffect } from "react";
 import { getUserProfile } from "@/utils/userAPIFunctions";
 import { useAuthStore } from "@/store/auth-store";
-import { formatDateString, getRelationshipLabel } from "@/utils/helperFunction";
+import {
+  deleteAppTokenCookie,
+  formatDateString,
+  getRelationshipLabel,
+} from "@/utils/helperFunction";
 import { useCommonStore } from "@/store/common-store";
+import { logout } from "@/utils/authApiFunctions";
+import toast, { Toaster } from "react-hot-toast";
+import { parseCookies } from "nookies";
 
 interface ProfilePageLayoutProps {
   cookies?: any;
@@ -36,6 +43,7 @@ export const ProfilePageLayout = ({
   children,
   customClasses,
 }: ProfilePageLayoutProps) => {
+  const clientCookies = parseCookies();
   const { lang } = useCommonStore();
   const { currentUser, setCurrentUser } = useAuthStore();
   const { messages, isLoading } = useTranslate();
@@ -44,7 +52,7 @@ export const ProfilePageLayout = ({
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(({ success, data }) => {
+    getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
       // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
@@ -52,9 +60,22 @@ export const ProfilePageLayout = ({
         router.push("/auth?session_expired=true");
       }
     });
-  }, [cookies]);
+  }, []);
 
   const router = useRouter();
+
+  const handleLogout = async () => {
+    const { status, statusText, success, message, data, loading, error } =
+      await logout({
+        cookies: clientCookies,
+      });
+    if (success) {
+      setCurrentUser(null);
+      deleteAppTokenCookie();
+      toast.success("Successfully logout!");
+      router.push("/auth");
+    }
+  };
 
   return (
     <>
@@ -70,7 +91,7 @@ export const ProfilePageLayout = ({
                 className="text-[var(--semantic-color-text-default)]"
               />
 
-              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center overflow-hidden">
                 {(currentUser && currentUser.profile && (
                   <img
                     src={currentUser.profile}
@@ -103,7 +124,7 @@ export const ProfilePageLayout = ({
                     ""
                   }
                   variant={"fontBody2Normal"}
-                  className="text-[var(--semantic-color-text-subtle)] text-center"
+                  className="text-[var(--semantic-color-text-subtle)] text-center !leading-6"
                 />
               </div>
 
@@ -205,7 +226,7 @@ export const ProfilePageLayout = ({
             <Button
               variant="outline"
               className={`w-fit mt-[var(--core-spacing-lg)] block mx-auto rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-bold)] py-[var(--core-spacing-sm)]`}
-              onClick={() => {}}
+              onClick={handleLogout}
             >
               <LabelWithIcon
                 label={profile.cta_logout}
@@ -219,6 +240,7 @@ export const ProfilePageLayout = ({
           </div>
         </TabLayout>
       )}
+      <Toaster position="top-center" reverseOrder={false} />
     </>
   );
 };

@@ -25,9 +25,14 @@ import { Textarea } from "../ui/textarea";
 import { useTranslate } from "../hooks/use-translate";
 import { useCommonStore } from "@/store/common-store";
 import { useAuthStore } from "@/store/auth-store";
-import { getUserProfile, updateProfile } from "@/utils/userAPIFunctions";
+import {
+  getCities,
+  getUserProfile,
+  updateProfile,
+} from "@/utils/userAPIFunctions";
 import toast, { Toaster } from "react-hot-toast";
-import { formatDate } from "@/utils/helperFunction";
+import { formatDate, getCountryNameFromISO2 } from "@/utils/helperFunction";
+import { parseCookies } from "nookies";
 
 interface ProfilePageLayoutProps {
   cookies?: any;
@@ -42,12 +47,13 @@ export const ProfileEditPageLayout = ({
   customClasses,
   customBackUrl,
 }: ProfilePageLayoutProps) => {
+  const clientCookies = parseCookies();
   const { lang } = useCommonStore();
   const { currentUser, setCurrentUser } = useAuthStore();
   const { messages, isLoading } = useTranslate();
   const { profile } = messages;
   const router = useRouter();
-
+  const [cities, setCities] = useState<any>([]);
   const [formData, setFormData] = useState<any>({
     mediaUrl: "",
     mediaFile: null,
@@ -69,7 +75,7 @@ export const ProfileEditPageLayout = ({
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(({ success, data }) => {
+    getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
       // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
@@ -77,7 +83,7 @@ export const ProfileEditPageLayout = ({
         router.push("/auth?session_expired=true");
       }
     });
-  }, [cookies]);
+  }, []);
 
   useEffect(() => {
     setFormData({
@@ -91,6 +97,32 @@ export const ProfileEditPageLayout = ({
           ? new Date(currentUser.date_of_birth)
           : null,
     });
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (currentUser && currentUser.country_code) {
+      getCities({
+        countryName: getCountryNameFromISO2(currentUser.country_code),
+      }).then(
+        ({ status, statusText, success, message, data, loading, error }) => {
+          if (success && data) {
+            console.log("Cities>>", data);
+            setCities(
+              (data &&
+                data.length > 0 &&
+                data.sort().map((city: string) => ({
+                  label: city,
+                  value: city,
+                }))) ||
+                []
+            );
+          } else {
+            // error
+            setCities([]);
+          }
+        }
+      );
+    }
   }, [currentUser]);
 
   const handleBack = () => {
@@ -113,7 +145,7 @@ export const ProfileEditPageLayout = ({
       city: formData.city,
       date_of_birth: formatDate(formData.dob),
       media_file: formData.mediaFile,
-      cookies,
+      cookies: clientCookies,
     });
     if (success) {
       toast.success("Successfully updated!");
@@ -239,12 +271,23 @@ export const ProfileEditPageLayout = ({
                   </SelectTrigger>
                   <SelectContent className="text-black">
                     <SelectGroup>
-                      <SelectItem value="yangon">ရန်ကုန်</SelectItem>
+                      {/* <SelectItem value="yangon">ရန်ကုန်</SelectItem>
                       <SelectItem value="mandalay">မန္တလေး</SelectItem>
 
                       <SelectItem value="naypyidaw">နေပြည်တော်</SelectItem>
                       <SelectItem value="bago">ပဲခူး</SelectItem>
-                      <SelectItem value="mawlamyine">မော်လမြိုင်</SelectItem>
+                      <SelectItem value="mawlamyine">မော်လမြိုင်</SelectItem> */}
+                      {(cities &&
+                        cities.length > 0 &&
+                        cities.map((city: any, index: number) => (
+                          <SelectItem key={index} value={city.value}>
+                            {city.label}
+                          </SelectItem>
+                        ))) || (
+                        <SelectItem value="no_option" disabled>
+                          No options
+                        </SelectItem>
+                      )}
                     </SelectGroup>
                   </SelectContent>
                 </Select>

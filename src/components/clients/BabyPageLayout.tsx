@@ -19,6 +19,7 @@ import { useTranslate } from "../hooks/use-translate";
 import { TabLayout } from "../layouts/TabLayout";
 import { SLTypo } from "../SLTypo";
 import { Button } from "../ui/button";
+import { parseCookies } from "nookies";
 
 interface BabyPageLayoutProps {
   cookies?: any;
@@ -31,6 +32,7 @@ export const BabyPageLayout = ({
   children,
   customClasses,
 }: BabyPageLayoutProps) => {
+  const clientCookies = parseCookies();
   const { lang } = useCommonStore();
   const { currentUser, setCurrentUser } = useAuthStore();
   const { currentBaby, setCurrentBaby } = useBabyStore();
@@ -41,7 +43,7 @@ export const BabyPageLayout = ({
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(({ success, data }) => {
+    getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
       // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
@@ -52,7 +54,7 @@ export const BabyPageLayout = ({
         router.push("/auth?session_expired=true");
       }
     });
-  }, [cookies]);
+  }, []);
 
   return (
     <>
@@ -68,7 +70,7 @@ export const BabyPageLayout = ({
                 className="text-[var(--semantic-color-text-default)]"
               />
 
-              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center overflow-hidden">
                 {(currentBaby && currentBaby.media_url && (
                   <img
                     src={currentBaby.media_url}

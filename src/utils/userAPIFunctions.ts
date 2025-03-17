@@ -3,21 +3,16 @@ import { Child } from "./onboardApiFunctions";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL;
 const authCookieName =
-  process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME || process.env.AUTH_COOKIE_NAME;
+  process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME ||
+  process.env.AUTH_COOKIE_NAME ||
+  "app_token";
 
 export const getUserProfile = async ({
   cookies,
 }: {
   cookies?: any;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
+  const app_token = cookies[authCookieName] || "";
 
   let config = {
     method: "GET",
@@ -25,7 +20,7 @@ export const getUserProfile = async ({
     url: `${baseURL}/user/profile`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
   };
   const res = await makeRequest(config);
@@ -48,14 +43,7 @@ export const updateProfile = async ({
   media_file: any;
   cookies?: any;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
+  const app_token = cookies[authCookieName] || "";
 
   let data = new FormData();
   data.append("name", name);
@@ -72,7 +60,7 @@ export const updateProfile = async ({
     url: `${baseURL}/user/profile?_method=PUT`,
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
     data: data,
   };
@@ -86,22 +74,14 @@ export const getUserBookmarks = async ({
 }: {
   cookies?: any;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
-
+  const app_token = cookies[authCookieName] || "";
   let config = {
     method: "GET",
     maxBodyLength: Infinity,
     url: `${baseURL}/user/lessons`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
   };
   const res = await makeRequest(config);
@@ -116,14 +96,7 @@ export const saveToBookmarks = async ({
   cookies?: any;
   lesson_id?: number;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
+  const app_token = cookies[authCookieName] || "";
 
   let config = {
     method: "POST",
@@ -131,7 +104,7 @@ export const saveToBookmarks = async ({
     url: `${baseURL}/user/lessons/${lesson_id}/save`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
   };
   const res = await makeRequest(config);
@@ -145,14 +118,7 @@ export const removeFromBookmarks = async ({
   cookies?: any;
   lesson_id?: number;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
+  const app_token = cookies[authCookieName] || "";
 
   let config = {
     method: "DELETE",
@@ -160,7 +126,28 @@ export const removeFromBookmarks = async ({
     url: `${baseURL}/user/lessons/${lesson_id}/remove`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
+    },
+  };
+  const res = await makeRequest(config);
+
+  return res;
+};
+
+export const getCities = async ({
+  countryName,
+}: {
+  countryName?: string;
+}): Promise<any> => {
+  let config = {
+    method: "POST",
+    maxBodyLength: Infinity,
+    url: `https://countriesnow.space/api/v0.1/countries/cities`,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: {
+      country: countryName,
     },
   };
   const res = await makeRequest(config);

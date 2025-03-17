@@ -2,7 +2,9 @@ import { makeRequest } from "./makeRequest";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL;
 const authCookieName =
-  process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME || process.env.AUTH_COOKIE_NAME;
+  process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME ||
+  process.env.AUTH_COOKIE_NAME ||
+  "app_token";
 
 export interface Child {
   name: string;
@@ -27,14 +29,7 @@ export const completeOnboard = async ({
   children: Child[];
   cookies?: any;
 }): Promise<any> => {
-  const authCookies =
-    cookies && cookies.filter((cookie: any) => cookie.name === authCookieName);
-  const authToken =
-    (authCookies &&
-      Array.isArray(authCookies) &&
-      authCookies.length > 0 &&
-      authCookies[0]?.value) ||
-    "";
+  const app_token = cookies[authCookieName] || "";
 
   const data = {
     name,
@@ -50,7 +45,7 @@ export const completeOnboard = async ({
     url: `${baseURL}/user/onboard`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${authToken}`,
+      Authorization: `Bearer ${app_token}`,
     },
     data: JSON.stringify(data),
   };

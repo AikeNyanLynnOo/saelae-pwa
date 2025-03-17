@@ -7,9 +7,14 @@ import { SLTypo } from "@/components/SLTypo";
 import { useAuthStore } from "@/store/auth-store";
 import { useLessonStore } from "@/store/lesson-store";
 import { getLesson } from "@/utils/lessonApiFunctions";
-import { getUserProfile, saveToBookmarks } from "@/utils/userAPIFunctions";
+import {
+  getUserProfile,
+  removeFromBookmarks,
+  saveToBookmarks,
+} from "@/utils/userAPIFunctions";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { parseCookies } from "nookies";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -20,6 +25,7 @@ interface LessonPageLayoutWrapperProps {
 export const LessonPageLayoutWrapper = ({
   cookies,
 }: LessonPageLayoutWrapperProps) => {
+  const clientCookies = parseCookies();
   const searchParams = useSearchParams();
   const module_id = searchParams.get("module_id");
 
@@ -34,7 +40,7 @@ export const LessonPageLayoutWrapper = ({
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(
+    getUserProfile({ cookies: clientCookies }).then(
       ({ status, statusText, success, message, data, loading, error }) => {
         // console.log("User >>", success);
         if (success && data) {
@@ -44,14 +50,14 @@ export const LessonPageLayoutWrapper = ({
         }
       }
     );
-  }, [cookies]);
+  }, []);
 
   useEffect(() => {
     // console.log("Module_id", module_id);
     // console.log("Lesson_id", params.lesson_id);
     if (module_id && params.lesson_id) {
       getLesson({
-        cookies,
+        cookies: clientCookies,
         module_id,
         lesson_id: params.lesson_id.toString(),
       }).then((res) => {
@@ -95,10 +101,22 @@ export const LessonPageLayoutWrapper = ({
   }, [params, router]);
 
   const handleFavoriteLesson = async () => {
+    if (lesson && lesson.is_saved) {
+      const { status, statusText, success, message, data } =
+        await removeFromBookmarks({
+          lesson_id: lesson?.id,
+          cookies: clientCookies,
+        });
+      if (success) {
+        toast.success("Removed from bookmarks!");
+        router.refresh();
+      }
+      return;
+    }
     const { status, statusText, success, message, data } =
       await saveToBookmarks({
         lesson_id: lesson?.id,
-        cookies,
+        cookies: clientCookies,
       });
     if (success) {
       toast.success("Added to bookmarks!");

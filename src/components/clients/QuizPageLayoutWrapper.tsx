@@ -7,6 +7,7 @@ import { QuizStepper } from "../atoms/forms/QuizStepper";
 import { PageHeader } from "../atoms/PageHeader";
 import { getUserProfile } from "@/utils/userAPIFunctions";
 import { useAuthStore } from "@/store/auth-store";
+import { parseCookies } from "nookies";
 
 export type QuizState =
   | "question"
@@ -22,6 +23,7 @@ interface QuizPageLayoutWrapperProps {
 export const QuizPageLayoutWrapper = ({
   cookies,
 }: QuizPageLayoutWrapperProps) => {
+  const clientCookies = parseCookies();
   const { setCurrentUser } = useAuthStore();
   const { messages, isLoading } = useTranslate();
   const { lessons } = messages;
@@ -35,7 +37,7 @@ export const QuizPageLayoutWrapper = ({
   // fetchUser
   // checkIsValid
   useEffect(() => {
-    getUserProfile({ cookies }).then(
+    getUserProfile({ cookies: clientCookies }).then(
       ({ status, statusText, success, message, data, loading, error }) => {
         // console.log("User >>", success);
         if (success && data) {
@@ -45,7 +47,7 @@ export const QuizPageLayoutWrapper = ({
         }
       }
     );
-  }, [cookies]);
+  }, []);
 
   const updateFormData = (data: any) => {
     // setFormData(data);
