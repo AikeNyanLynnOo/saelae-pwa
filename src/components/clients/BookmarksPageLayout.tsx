@@ -76,7 +76,9 @@ export const BookmarksPageLayout = ({
                   moduleId={module_id}
                   title={title}
                   description={description}
-                  state={is_completed ? "completed" : "half-completed"}
+                  // state={is_completed ? "completed" : "half-completed"}
+                  state="default"
+                  showCtaBtn={false}
                 />
               );
             })}

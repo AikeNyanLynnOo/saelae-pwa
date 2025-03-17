@@ -122,6 +122,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
                       totalLessons={module.progress_data.total_lessons || ""}
                       state={getStateBaseOnData(module.progress_data)}
                       onButtonClick={() => onButtonClick(module.id)}
+                      clickRoute={`/${module.id}`}
                     />
                   );
                 })) || (

@@ -129,7 +129,9 @@ export const LessonPageLayoutWrapper = ({
       {!isLoading && (
         <LessonPageLayout
           showHeartButton
-          showPrimaryButton
+          showPrimaryButton={
+            (lesson && lesson.quizzes && lesson.quizzes.length > 0) || false
+          }
           hideBottomCta={hideBottomCta}
           onPrimaryButtonClick={onPrimaryButtonClick}
           onHeartButtonClick={handleFavoriteLesson}
@@ -138,7 +140,9 @@ export const LessonPageLayoutWrapper = ({
           <ContentHeader
             hideCta={hideTopCta}
             showBackButton
-            showPrimaryButton
+            showPrimaryButton={
+              (lesson && lesson.quizzes && lesson.quizzes.length > 0) || false
+            }
             showHeartButton
             title={(lesson && lesson.title) || ""}
             description={(lesson && lesson.description) || ""}
