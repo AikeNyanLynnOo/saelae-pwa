@@ -3,11 +3,20 @@
 import { SLTypo } from "@/components/SLTypo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, CircleCheck, Timer, X, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  CheckCircle2,
+  CircleCheck,
+  Frown,
+  Timer,
+  X,
+  XCircle,
+} from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { LabelWithIcon } from "../LabelWithIcon";
 import { useTranslate } from "@/components/hooks/use-translate";
 import { useCommonStore } from "@/store/common-store";
+import { useQuizStore } from "@/store/quiz-store";
+import { ConfirmQuitModal } from "@/components/molecules/ConfirmQuitModal";
 
 interface StepProps {
   isActive: boolean;
@@ -50,25 +59,43 @@ function StepIndicator({
 export const QuizStepper = ({
   step,
   totalSteps,
-  updateFormData,
   quizState,
   setQuizState,
   isFinalExam = false,
 }: {
   step: number;
   totalSteps: number;
-  updateFormData: (data: any) => void;
   quizState: string | null;
   setQuizState: any;
   isFinalExam?: boolean;
 }) => {
   const { lang } = useCommonStore();
+  const {
+    quizzes,
+    setCanProceed,
+    selectedOption,
+    setSelectedOption,
+    explanation,
+    setExplanation,
+    score,
+    setScore,
+    timeLeft,
+    setTimeLeft,
+    timerActive,
+    setTimerActive,
+    submissions,
+    setSubmissions,
+    pass,
+    score_percentage,
+  } = useQuizStore();
   const { messages, isLoading } = useTranslate();
   const { lessons } = messages;
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [score, setScore] = useState({ correct: 0, total: 1 });
-  const [timeLeft, setTimeLeft] = useState(30);
-  const [timerActive, setTimerActive] = useState(true);
+
+  // const [selectedOption, setSelectedOption] = useState<any | null>(null);
+  // const [explanation, setExplanation] = useState(""); // Add this line to store the explanation
+  // const [score, setScore] = useState(0);
+  // const [timeLeft, setTimeLeft] = useState(30);
+  // const [timerActive, setTimerActive] = useState(true);
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
@@ -80,10 +107,18 @@ export const QuizStepper = ({
       quizState === "question"
     ) {
       timer = setTimeout(() => {
-        setTimeLeft((prev) => prev - 1);
+        setTimeLeft(timeLeft - 1);
       }, 1000);
     } else if (isFinalExam && timeLeft === 0 && quizState === "question") {
       setQuizState("timeout");
+      setSubmissions([
+        ...submissions,
+        {
+          quiz_id: currentQuiz.id,
+          answer_ids: [],
+        },
+      ]);
+      setCanProceed(true);
       setTimerActive(false);
     }
 
@@ -92,23 +127,44 @@ export const QuizStepper = ({
     };
   }, [timeLeft, timerActive, quizState, isFinalExam]);
 
-  const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
-    setTimerActive(false);
-    if (option === "option2") {
-      setQuizState("correct");
-      setScore((prev) => ({ ...prev, correct: prev.correct + 1 }));
-    } else {
-      setQuizState("incorrect");
-    }
-  };
+  const currentQuiz = useMemo(() => {
+    return quizzes[step];
+  }, [step, quizzes]);
 
-  const handleClose = () => {
-    setQuizState("question");
-    setSelectedOption(null);
-    setTimeLeft(20);
-    setTimerActive(true);
-  };
+  const handleOptionSelect = useCallback(
+    (option: any) => {
+      if (timeLeft === 0) return;
+      if (selectedOption) return;
+
+      setSubmissions([
+        ...submissions,
+        {
+          quiz_id: currentQuiz.id,
+          answer_ids: [option.id],
+        },
+      ]);
+      setCanProceed(true);
+      setSelectedOption(option);
+      setTimerActive(false);
+      if (option && option.is_correct) {
+        setQuizState("correct");
+        setExplanation(option.explanation);
+        setScore(score + 1);
+      } else {
+        setQuizState("incorrect");
+        setExplanation(option.explanation);
+      }
+    },
+    [
+      currentQuiz,
+      timeLeft,
+      selectedOption,
+      submissions,
+      setSubmissions,
+      score,
+      setScore,
+    ]
+  );
 
   return (
     <div className="w-full min-h-[80dvh] max-h-[80vh] overflow-y-scroll relative hide-scrollbar">
@@ -120,13 +176,11 @@ export const QuizStepper = ({
           <>
             {/* Header with progress and close button */}
             <div className="flex w-full items-center py-4 px-6 gap-x-[var(--core-spacing-sm)]">
-              <Button
-                variant="link"
-                onClick={handleClose}
-                className="w-fit p-0"
-              >
-                <X className="w-5 h-5 text-[var(--semantic-color-icon-default)]" />
-              </Button>
+              <ConfirmQuitModal>
+                <Button variant="link" className="w-fit p-0">
+                  <X className="w-5 h-5 text-[var(--semantic-color-icon-default)]" />
+                </Button>
+              </ConfirmQuitModal>
               <div className="h-2 flex-1 bg-[var(--semantic-color-bg-primary)] rounded-full">
                 <div
                   className="h-2 bg-yellow-400 rounded-full transition-all duration-300 ease-linear"
@@ -145,11 +199,11 @@ export const QuizStepper = ({
               )}
             </div>
 
-            <div className="space-y-[var(--core-spacing-lg)]">
+            <div className="space-y-[var(--core-spacing-lg)] w-full">
               {/* Question */}
               <SLTypo
                 as="h1"
-                text="ကလေးမွေးလာရင်မွေးဆံပင်နဲ့မထားနဲ့။ ဆံပင်မသန်ဘူး။ ဒါကြောင့်ကတုံးရိတ်ရမယ် ဆိုတာ မှန်ပါသလား။"
+                text={currentQuiz?.question_text}
                 variant="fontH4Semibold"
                 className={cn(
                   "text-[var(--semantic-color-text-default)]",
@@ -159,68 +213,158 @@ export const QuizStepper = ({
 
               {/* Options */}
               <div className="space-y-[var(--core-spacing-lg)] px-6">
-                <button
-                  onClick={() => handleOptionSelect("option1")}
-                  className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
-                    selectedOption === "option1" && quizState === "incorrect"
-                      ? "bg-[var(--semantic-color-bg-negative-subtlest)] border-[var(--semantic-color-outline-negative-default)]"
-                      : selectedOption === "option1"
-                        ? "bg-white border-[var(--semantic-color-outline-subtle)]"
-                        : "border-[var(--semantic-color-outline-subtle)]"
-                  }`}
-                >
-                  <div className="flex items-center">
-                    <div
-                      className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
-                        selectedOption === "option1" &&
-                        quizState === "incorrect"
-                          ? "border-[var(--semantic-color-icon-negative-default)]"
-                          : "border-[var(--semantic-color-icon-default)]"
-                      }`}
-                    >
-                      {selectedOption === "option1" && (
-                        <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-negative-default)]" />
-                      )}
+                {currentQuiz &&
+                  currentQuiz.answer_choices &&
+                  currentQuiz.answer_choices.length > 0 &&
+                  currentQuiz.answer_choices.map(
+                    (answer: any, index: number) => {
+                      // if (quizState === "incorrect") {
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => handleOptionSelect(answer)}
+                          className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
+                            selectedOption &&
+                            selectedOption.id === answer.id &&
+                            !answer.is_correct
+                              ? "bg-[var(--semantic-color-bg-negative-subtlest)] border-[var(--semantic-color-outline-negative-default)]"
+                              : selectedOption &&
+                                  selectedOption.id === answer.id
+                                ? " bg-[var(--semantic-color-bg-positive-subtlest)] border-[var(--semantic-color-outline-positive-default)]"
+                                : "bg-white border-[var(--semantic-color-outline-subtle)]"
+                          }`}
+                        >
+                          <div className="flex items-center">
+                            <div
+                              className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
+                                selectedOption &&
+                                selectedOption.id === answer.id &&
+                                !answer.is_correct
+                                  ? "border-[var(--semantic-color-icon-negative-default)]"
+                                  : "border-[var(--semantic-color-icon-default)]"
+                              }`}
+                            >
+                              {selectedOption &&
+                                selectedOption.id === answer.id && (
+                                  <div
+                                    className={`w-2 h-2 rounded-full ${!answer.is_correct ? "bg-[var(--semantic-color-icon-negative-default)]" : "bg-[var(--semantic-color-icon-positive-default)]"}`}
+                                  />
+                                )}
+                            </div>
+                            <SLTypo
+                              as="span"
+                              text={(answer && answer.answer_text) || ""}
+                              variant="fontBody2IntenseNormal"
+                              className={cn(
+                                "text-[var(--semantic-color-text-bold)]"
+                              )}
+                            />
+                          </div>
+                        </button>
+                      );
+                      // }
+                      // return (
+                      //   <button
+                      //     onClick={() => handleOptionSelect("option2")}
+                      //     className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
+                      //       selectedOption &&
+                      //       selectedOption.id === answer.id &&
+                      //       quizState === "correct"
+                      //         ? "bg-[var(--semantic-color-bg-positive-subtlest)] border-[var(--semantic-color-outline-positive-default)]"
+                      //         : selectedOption === "option2"
+                      //           ? "bg-white border-[var(--semantic-color-outline-subtle)]"
+                      //           : "border-[var(--semantic-color-outline-subtle)]"
+                      //     }`}
+                      //   >
+                      //     <div className="flex items-center">
+                      //       <div
+                      //         className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
+                      //           selectedOption &&
+                      //           selectedOption.id === answer.id &&
+                      //           quizState === "correct"
+                      //             ? "border-[var(--semantic-color-outline-positive-default)]"
+                      //             : "border-[var(--semantic-color-icon-default)]"
+                      //         }`}
+                      //       >
+                      //         {selectedOption === "option2" && (
+                      //           <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-positive-default)]" />
+                      //         )}
+                      //       </div>
+                      //       <SLTypo
+                      //         as="span"
+                      //         text={(answer && answer.answer_text) || ""}
+                      //         variant="fontBody2IntenseNormal"
+                      //         className={cn(
+                      //           "text-[var(--semantic-color-text-bold)]"
+                      //         )}
+                      //       />
+                      //     </div>
+                      //   </button>
+                      // );
+                    }
+                  )}
+                {/* <button
+                    onClick={() => handleOptionSelect("option1")}
+                    className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
+                      selectedOption === "option1" && quizState === "incorrect"
+                        ? "bg-[var(--semantic-color-bg-negative-subtlest)] border-[var(--semantic-color-outline-negative-default)]"
+                        : selectedOption === "option1"
+                          ? "bg-white border-[var(--semantic-color-outline-subtle)]"
+                          : "border-[var(--semantic-color-outline-subtle)]"
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <div
+                        className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
+                          selectedOption === "option1" &&
+                          quizState === "incorrect"
+                            ? "border-[var(--semantic-color-icon-negative-default)]"
+                            : "border-[var(--semantic-color-icon-default)]"
+                        }`}
+                      >
+                        {selectedOption === "option1" && (
+                          <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-negative-default)]" />
+                        )}
+                      </div>
+                      <SLTypo
+                        as="span"
+                        text="မှန်ပါတယ်၊ ကတုံးရိတ်သင့်ပါတယ်။"
+                        variant="fontBody2IntenseNormal"
+                        className={cn("text-[var(--semantic-color-text-bold)]")}
+                      />
                     </div>
-                    <SLTypo
-                      as="span"
-                      text="မှန်ပါတယ်၊ ကတုံးရိတ်သင့်ပါတယ်။"
-                      variant="fontBody2IntenseNormal"
-                      className={cn("text-[var(--semantic-color-text-bold)]")}
-                    />
-                  </div>
-                </button>
+                  </button> */}
 
-                <button
-                  onClick={() => handleOptionSelect("option2")}
-                  className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
-                    selectedOption === "option2" && quizState === "correct"
-                      ? "bg-[var(--semantic-color-bg-positive-subtlest)] border-[var(--semantic-color-outline-positive-default)]"
-                      : selectedOption === "option2"
-                        ? "bg-white border-[var(--semantic-color-outline-subtle)]"
-                        : "border-[var(--semantic-color-outline-subtle)]"
-                  }`}
-                >
-                  <div className="flex items-center">
-                    <div
-                      className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
-                        selectedOption === "option2" && quizState === "correct"
-                          ? "border-[var(--semantic-color-outline-positive-default)]"
-                          : "border-[var(--semantic-color-icon-default)]"
-                      }`}
-                    >
-                      {selectedOption === "option2" && (
-                        <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-positive-default)]" />
-                      )}
+                {/* <button
+                    onClick={() => handleOptionSelect("option2")}
+                    className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
+                      selectedOption === "option2" && quizState === "correct"
+                        ? "bg-[var(--semantic-color-bg-positive-subtlest)] border-[var(--semantic-color-outline-positive-default)]"
+                        : selectedOption === "option2"
+                          ? "bg-white border-[var(--semantic-color-outline-subtle)]"
+                          : "border-[var(--semantic-color-outline-subtle)]"
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <div
+                        className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
+                          selectedOption === "option2" && quizState === "correct"
+                            ? "border-[var(--semantic-color-outline-positive-default)]"
+                            : "border-[var(--semantic-color-icon-default)]"
+                        }`}
+                      >
+                        {selectedOption === "option2" && (
+                          <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-positive-default)]" />
+                        )}
+                      </div>
+                      <SLTypo
+                        as="span"
+                        text="မှားပါတယ်၊ ကတုံးမရိတ်သင့်ပါဘူး။"
+                        variant="fontBody2IntenseNormal"
+                        className={cn("text-[var(--semantic-color-text-bold)]")}
+                      />
                     </div>
-                    <SLTypo
-                      as="span"
-                      text="မှားပါတယ်၊ ကတုံးမရိတ်သင့်ပါဘူး။"
-                      variant="fontBody2IntenseNormal"
-                      className={cn("text-[var(--semantic-color-text-bold)]")}
-                    />
-                  </div>
-                </button>
+                  </button> */}
               </div>
 
               {/* Feedback for incorrect answer */}
@@ -230,7 +374,7 @@ export const QuizStepper = ({
                     <XCircle className="w-4 h-4 mr-2 mt-1 flex-shrink-0 text-[var(--semantic-color-icon-negative-default)]" />
                     <SLTypo
                       as="div"
-                      text="မှားပါတယ်၊  ဆံပင်သန်မှု၊မသန်မှုဟာ မျိုးဗီဇနဲ့ပိုဆိုင်ပါတယ်။ ဒါကြောင့် မွေးစကနေ ခြောက်လအထိကလေးကို လုံးဝကတုံးမရိတ်ပေးသင့်ပါဘူး။ ကတုံးရိတ်ရာကနေ မတော်တဆအနာဖြစ်နိုင်ပါတယ်။ မေးခိုင်ပိုးဝင်နိုင်ပါတယ်။ဆံပင်မရှိလို့ နှာစေးနိုင်ပါတယ်။ ငယ်ထိပ်မပိတ်တဲ့အချိန်အရေပြားပွန်းရာကနေ ပိုးဝင်ပြီး ဦးနှောက်အမြှေးပါးယောင်ပြီး မစွမ်းမသန်ဖြစ်နိုင်ပါတယ်။"
+                      text={explanation}
                       variant="fontBody2Normal"
                       className={cn(
                         "text-[var(--semantic-color-text-default)]"
@@ -247,7 +391,7 @@ export const QuizStepper = ({
                     <CheckCircle2 className="w-4 h-4 mr-2 flex-shrink-0 text-[var(--semantic-color-icon-positive-default)]" />
                     <SLTypo
                       as="div"
-                      text={lessons.correct_text}
+                      text={explanation}
                       variant="fontBody2Normal"
                       className={cn(
                         "text-[var(--semantic-color-text-default)]"
@@ -278,13 +422,17 @@ export const QuizStepper = ({
         ) : (
           // Complete screen
           <div className="flex flex-col items-center justify-center p-8 h-full gap-y-[var(--core-spacing-lg)]">
-            <CircleCheck className="h-20 w-20 text-white" fill="#28A745" />
+            {(pass && (
+              <CircleCheck className="h-20 w-20 text-white" fill="#28A745" />
+            )) || <Frown className="h-20 w-20" color="#FC2525" />}
             <SLTypo
               as="p"
               isDangerously
               text={
-                (isFinalExam && lessons.exam_complete_title) ||
-                lessons.lesson_complete_title
+                isFinalExam
+                  ? (pass && lessons.exam_complete_title) ||
+                    lessons.exam_fail_title
+                  : lessons.lesson_complete_title
               }
               variant="fontH4Semibold"
               className={cn(
@@ -301,7 +449,7 @@ export const QuizStepper = ({
             >
               <span>{lessons.question_count_text}</span>
               <span>
-                {score.correct} {lang === "mm" && "ခု"}
+                {totalSteps} {lang === "mm" && "ခု"}
               </span>
             </SLTypo>
             <SLTypo
@@ -312,7 +460,7 @@ export const QuizStepper = ({
               )}
             >
               <span>{lessons.correct_count_text}</span>
-              <span>{score.total} ခု</span>
+              <span>{score} ခု</span>
             </SLTypo>
           </div>
         )}

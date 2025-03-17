@@ -27,11 +27,10 @@ interface ModulePageLayoutProps {
 }
 
 export const ModulePageLayout = ({
-  cookies,
   module_id,
+  cookies,
 }: ModulePageLayoutProps) => {
   const router = useRouter();
-  console.log("id>>", module_id);
   const {
     categories,
     modules,
@@ -69,6 +68,7 @@ export const ModulePageLayout = ({
       })
         .then(({ success, data }) => {
           if (success && data) {
+            setCurrentModule(data);
             setIsModuleValid(true);
           } else {
             router.push("/");
@@ -178,7 +178,7 @@ export const ModulePageLayout = ({
       const foundModule = modules.find(
         (item) => `${item.id}` === `${module_id}`
       );
-      setCurrentModule(foundModule || null);
+      // setCurrentModule(foundModule || null);
 
       if (foundModule && foundModule.id) {
         getModuleLessons({
@@ -200,7 +200,6 @@ export const ModulePageLayout = ({
       }
     } else {
       const firstModule = (modules && modules.length > 0 && modules[0]) || null;
-      setCurrentModule(firstModule);
       if (firstModule && firstModule.id) {
         getModuleLessons({
           cookies: clientCookies,
@@ -208,6 +207,7 @@ export const ModulePageLayout = ({
         })
           .then(({ success, data }) => {
             if (success && data) {
+              setCurrentModule(data);
               setLessons(data.lessons || []);
             } else {
               setLessons([]);
@@ -221,25 +221,28 @@ export const ModulePageLayout = ({
       }
     }
   }, [isModuleValid, module_id, modules]);
+  console.log("Current Module>>", currentModule);
 
   return (
     <TabLayout>
       <PageHeader className="sticky top-0 bg-white z-10">
-        <ResponsiveModal>
-          <Button
-            variant="outline"
-            className={`w-fit max-w-full rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-primary)] border-none py-[var(--core-spacing-sm)] px-2 sm:px-[var(--core-spacing-lg)]`}
-            onClick={() => {}}
-          >
-            <SLTypo
-              as="span"
-              text={(currentModule && currentModule.title) || ""}
-              variant="fontBody2IntenseNormal"
-              className="text-[var(--semantic-color-text-bold)] flex-1 truncate"
-            />
-            <ChevronDown size={2} />
-          </Button>
-        </ResponsiveModal>
+        {currentModule && (
+          <ResponsiveModal>
+            <Button
+              variant="outline"
+              className={`w-fit max-w-full rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-primary)] border-none py-[var(--core-spacing-sm)] px-2 sm:px-[var(--core-spacing-lg)]`}
+              onClick={() => {}}
+            >
+              <SLTypo
+                as="span"
+                text={(currentModule && currentModule.title) || ""}
+                variant="fontBody2IntenseNormal"
+                className="text-[var(--semantic-color-text-bold)] flex-1 truncate"
+              />
+              <ChevronDown size={2} />
+            </Button>
+          </ResponsiveModal>
+        )}
       </PageHeader>
       <ContentHeader
         title={(currentModule && currentModule.title) || ""}
@@ -257,6 +260,7 @@ export const ModulePageLayout = ({
             title={lesson.title}
             description={lesson.description}
             state={lesson.is_completed ? "completed" : "half-completed"}
+            showCtaBtn={false}
           />
         ))}
         {currentModule && currentModule.has_quiz && (
@@ -268,7 +272,14 @@ export const ModulePageLayout = ({
                 ? "မေးခွန်းတစ်ခုကို ဖြေဆိုချိန် ၃၀ စက္ကန့်ရရှိပါတယ်နော်."
                 : "You get 30 seconds for a question."
             }
-            state={currentModule.quiz_completed ? "completed" : "locked"}
+            state={
+              currentModule.lessons.every((lesson: any) => lesson.is_completed)
+                ? (currentModule.quiz_completed && "completed") ||
+                  "half-completed"
+                : "locked"
+            }
+            showCtaBtn={false}
+            clickRoute={`/quiz?module_id=${currentModule.id}`}
           />
         )}
 
@@ -281,7 +292,7 @@ export const ModulePageLayout = ({
                 : "No modules found..."
             }
             variant="fontBody3Normal"
-            className="text-center text-[var(--semantic-color-text-default)] mb-4 px-4 lg:px-0 min-h-[50dvh] flex items-center justify-center"
+            className="text-center text-[var(--semantic-color-text-default)] mb-4 px-4 lg:px-0 min-h-[70dvh] flex items-center justify-center"
           />
         )}
       </div>
