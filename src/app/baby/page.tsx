@@ -1,9 +1,10 @@
-"use client";
 import { BabyPageLayout } from "@/components/clients/BabyPageLayout";
+import { cookies } from "next/headers";
 export default function BabyProfilePage() {
+  const cookieStore = cookies();
   return (
     <section>
-      <BabyPageLayout />
+      <BabyPageLayout cookies={cookieStore.getAll()} />
     </section>
   );
 }

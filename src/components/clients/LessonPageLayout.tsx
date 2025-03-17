@@ -3,6 +3,9 @@ import { Button } from "../ui/button";
 import { SLTypo } from "../SLTypo";
 import { Heart } from "lucide-react";
 import { useTranslate } from "../hooks/use-translate";
+import { useEffect } from "react";
+import { getUserProfile } from "@/utils/userAPIFunctions";
+import { useAuthStore } from "@/store/auth-store";
 
 interface LessonPageLayoutProps {
   children: React.ReactNode;

@@ -1,7 +1,8 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, MoveRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { InputGroup } from "../atoms/forms/InputGroup";
 import { CustomInput } from "../atoms/forms/OnboardingStepper";
 import { PageHeader } from "../atoms/PageHeader";
@@ -21,22 +22,45 @@ import {
 import { CommonLayout } from "../layouts/CommonLayout";
 import { useTranslate } from "../hooks/use-translate";
 import { useCommonStore } from "@/store/common-store";
+import { useAuthStore } from "@/store/auth-store";
+import { getUserProfile } from "@/utils/userAPIFunctions";
+import { formatDate } from "@/utils/helperFunction";
+import { addChild } from "@/utils/childApiFunctions";
+import toast, { Toaster } from "react-hot-toast";
+import { parseCookies } from "nookies";
 
 interface BabyPageNewLayoutProps {
+  cookies?: any;
   children?: React.ReactNode;
   customClasses?: string;
   customBackUrl?: string;
 }
 
 export const BabyPageNewLayout = ({
+  cookies,
   children,
   customClasses,
   customBackUrl,
 }: BabyPageNewLayoutProps) => {
+  const clientCookies = parseCookies();
   const { messages, isLoading } = useTranslate();
   const { baby } = messages;
 
   const { lang } = useCommonStore();
+  const { currentUser, setCurrentUser } = useAuthStore();
+
+  // fetchUser
+  // checkIsValid
+  useEffect(() => {
+    getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
+      // console.log("User >>", success);
+      if (success && data) {
+        setCurrentUser((data && data.profile) || null);
+      } else {
+        router.push("/auth?session_expired=true");
+      }
+    });
+  }, []);
 
   const relationships = useMemo(() => {
     if (lang === "mm") {
@@ -67,11 +91,12 @@ export const BabyPageNewLayout = ({
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
+    mediaFile: null,
     // step 1
     isBorn: null as boolean | null,
     // step 2
     saelaeName: "",
-    saelabDob: null,
+    saelaeDob: null,
     gender: "",
     relationship: "",
   });
@@ -85,7 +110,7 @@ export const BabyPageNewLayout = ({
       case 2:
         return (
           formData.saelaeName &&
-          formData.saelabDob &&
+          formData.saelaeDob &&
           formData.gender &&
           formData.relationship
         );
@@ -94,9 +119,21 @@ export const BabyPageNewLayout = ({
     }
   }, [step, formData]);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === totalSteps) {
-      router.push("/baby");
+      const { status, statusText, success, message, data } = await addChild({
+        name: formData.saelaeName,
+        is_born: formData.isBorn || false,
+        birth_date: formatDate(formData.saelaeDob),
+        gender: formData.gender,
+        guardian_role: formData.relationship,
+        media_file: formData.mediaFile,
+        cookies: clientCookies,
+      });
+      if (success) {
+        toast.success("Successfully added!");
+        router.push("/baby");
+      }
     }
     if (step < totalSteps) {
       setStep(step + 1);
@@ -204,16 +241,16 @@ export const BabyPageNewLayout = ({
                   <Calendar
                     mode="single"
                     className="rounded-md overflow-x-scroll"
-                    selected={formData.saelabDob || undefined}
+                    selected={formData.saelaeDob || undefined}
                     onSelect={(date: any) => {
                       if (date) {
                         console.log(date, typeof date, Object.keys(date));
-                        setFormData({ ...formData, saelabDob: date });
+                        setFormData({ ...formData, saelaeDob: date });
                       }
                     }}
                     customInput={
                       <CustomInput
-                        value={formData.saelabDob}
+                        value={formData.saelaeDob}
                         placeholder={baby.new.step2.saelae_dob_placeholder}
                       />
                     }
@@ -230,38 +267,38 @@ export const BabyPageNewLayout = ({
                     <Button
                       className={cn(
                         "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-info-subtlest)] hover:text-[var(--semantic-color-text-default)]",
-                        formData.gender === "ကျား"
+                        formData.gender === "male"
                           ? "bg-[var(--semantic-color-bg-info-secondary)] text-[var(--semantic-color-text-inverse)]"
                           : "bg-white text-[var(--semantic-color-text-default)]",
                         formData.gender === "" && "bg-transparent"
                       )}
                       onClick={() =>
-                        setFormData({ ...formData, gender: "ကျား" })
+                        setFormData({ ...formData, gender: "male" })
                       }
                     >
                       <SLTypo
                         as="span"
                         variant="fontLabelNormal"
                         text={baby.new.step2.saelae_gender_male}
-                        className="-mt-1"
                       />
                     </Button>
 
                     <Button
                       className={cn(
                         "rounded-full w-fit px-8 py-1.5 h-fit border hover:bg-[var(--semantic-color-bg-new-subtlest)] hover:text-[var(--semantic-color-text-default)]",
-                        formData.gender === "မ"
+                        formData.gender === "female"
                           ? "bg-[var(--semantic-color-bg-new-secondary)] text-[var(--semantic-color-text-inverse)]"
                           : "bg-white text-[var(--semantic-color-text-default)]",
                         formData.gender === "" && "bg-transparent"
                       )}
-                      onClick={() => setFormData({ ...formData, gender: "မ" })}
+                      onClick={() =>
+                        setFormData({ ...formData, gender: "female" })
+                      }
                     >
                       <SLTypo
                         as="span"
                         variant="fontLabelNormal"
                         text={baby.new.step2.saelae_gender_female}
-                        className="-mt-1"
                       />
                     </Button>
                   </div>
@@ -315,6 +352,7 @@ export const BabyPageNewLayout = ({
           <MoveRight className="!h-4 ml-1" />
         </Button>
       </div>
+      <Toaster position="top-center" reverseOrder={false} />
     </CommonLayout>
   );
 };

@@ -1,3 +1,4 @@
+"use client";
 import {
   Cake,
   ChevronRight,
@@ -18,20 +19,63 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTranslate } from "../hooks/use-translate";
+import { useEffect } from "react";
+import { getUserProfile } from "@/utils/userAPIFunctions";
+import { useAuthStore } from "@/store/auth-store";
+import {
+  deleteAppTokenCookie,
+  formatDateString,
+  getRelationshipLabel,
+} from "@/utils/helperFunction";
+import { useCommonStore } from "@/store/common-store";
+import { logout } from "@/utils/authApiFunctions";
+import toast, { Toaster } from "react-hot-toast";
+import { parseCookies } from "nookies";
 
 interface ProfilePageLayoutProps {
+  cookies?: any;
   children?: React.ReactNode;
   customClasses?: string;
 }
 
 export const ProfilePageLayout = ({
+  cookies,
   children,
   customClasses,
 }: ProfilePageLayoutProps) => {
+  const clientCookies = parseCookies();
+  const { lang } = useCommonStore();
+  const { currentUser, setCurrentUser } = useAuthStore();
   const { messages, isLoading } = useTranslate();
   const { profile } = messages;
 
+  // fetchUser
+  // checkIsValid
+  useEffect(() => {
+    getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
+      // console.log("User >>", success);
+      if (success && data) {
+        setCurrentUser((data && data.profile) || null);
+      } else {
+        router.push("/auth?session_expired=true");
+      }
+    });
+  }, []);
+
   const router = useRouter();
+
+  const handleLogout = async () => {
+    const { status, statusText, success, message, data, loading, error } =
+      await logout({
+        cookies: clientCookies,
+      });
+    if (success) {
+      setCurrentUser(null);
+      deleteAppTokenCookie();
+      toast.success("Successfully logout!");
+      router.push("/auth");
+    }
+  };
 
   return (
     <>
@@ -47,22 +91,40 @@ export const ProfilePageLayout = ({
                 className="text-[var(--semantic-color-text-default)]"
               />
 
-              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center">
-                <User className="text-[var(--semantic-color-icon-brand-subtle)]" />
+              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center overflow-hidden">
+                {(currentUser && currentUser.profile && (
+                  <img
+                    src={currentUser.profile}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                )) || (
+                  <User className="text-[var(--semantic-color-icon-brand-subtle)]" />
+                )}
               </div>
 
               <div className="flex flex-col gap-y-[var(--core-spacing-xs)] items-center">
                 <SLTypo
                   as="h2"
-                  text="အောင်အောင်"
+                  text={(currentUser && currentUser.name) || ""}
                   variant={"fontH4Semibold"}
                   className="text-[var(--semantic-color-text-default)]"
                 />
                 <SLTypo
                   as="span"
-                  text={`{baby's name} လေး {selectedRelation}`}
+                  isDangerously
+                  text={
+                    (currentUser &&
+                      currentUser.children &&
+                      currentUser.children.length > 0 &&
+                      getRelationshipLabel({
+                        children: currentUser.children,
+                        lang,
+                      })) ||
+                    ""
+                  }
                   variant={"fontBody2Normal"}
-                  className="text-[var(--semantic-color-text-subtle)] text-center"
+                  className="text-[var(--semantic-color-text-subtle)] text-center !leading-6"
                 />
               </div>
 
@@ -86,7 +148,11 @@ export const ProfilePageLayout = ({
 
             <div className="space-y-[var(--core-spacing-sm)]">
               <LabelWithIcon
-                label="30/06/1995"
+                label={
+                  (currentUser &&
+                    formatDateString(currentUser.date_of_birth)) ||
+                  ""
+                }
                 icon={Cake}
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-brand-default)]"
@@ -95,7 +161,7 @@ export const ProfilePageLayout = ({
                 labelFontFamily="var(--font-figtree)"
               />
               <LabelWithIcon
-                label="မရမ်းကုန်း"
+                label={(currentUser && currentUser.city) || ""}
                 icon={House}
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-update-default)]"
@@ -113,7 +179,11 @@ export const ProfilePageLayout = ({
                 className="text-[var(--semantic-color-text-default)] mb-[var(--core-spacing-sm)]"
               />
               <LabelWithIcon
-                label="၃ ရက်ဆက်တိုက် သင်ယူပြီး"
+                label={
+                  lang === "mm"
+                    ? `${(currentUser && currentUser.streak_count) || 0} ရက်ဆက်တိုက် သင်ယူပြီး`
+                    : `${(currentUser && currentUser.streak_count) || 0} learning streak`
+                }
                 icon={Flame}
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-negative-default)]"
@@ -121,7 +191,11 @@ export const ProfilePageLayout = ({
                 className="gap-x-[var(--core-spacing-md)] border w-full p-[var(--core-spacing-lg)] rounded-[var(--core-border-radius-sm)] shadow-sm"
               />
               <LabelWithIcon
-                label="သင်ခန်းစာ ၃ ခုပြီးမြှောက်ခဲ့"
+                label={
+                  lang === "mm"
+                    ? `သင်ခန်းစာ ${(currentUser && currentUser.completed_lesson_count) || 0} ခု ပြီးမြှောက်ခဲ့`
+                    : `${(currentUser && currentUser.completed_lesson_count) || 0} lessons completed`
+                }
                 icon={CircleCheck}
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-update-default)] text-white"
@@ -152,7 +226,7 @@ export const ProfilePageLayout = ({
             <Button
               variant="outline"
               className={`w-fit mt-[var(--core-spacing-lg)] block mx-auto rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-bold)] py-[var(--core-spacing-sm)]`}
-              onClick={() => {}}
+              onClick={handleLogout}
             >
               <LabelWithIcon
                 label={profile.cta_logout}
@@ -166,6 +240,7 @@ export const ProfilePageLayout = ({
           </div>
         </TabLayout>
       )}
+      <Toaster position="top-center" reverseOrder={false} />
     </>
   );
 };

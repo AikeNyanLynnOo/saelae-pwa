@@ -1,39 +1,60 @@
+"use client";
+import { useAuthStore } from "@/store/auth-store";
+import { useBabyStore } from "@/store/baby-store";
+import { useCommonStore } from "@/store/common-store";
 import {
-  Cake,
-  ChevronRight,
-  CircleCheck,
-  Flame,
-  Globe,
-  House,
-  LogOut,
-  Pencil,
-  Plus,
-  User,
-} from "lucide-react";
-import { Divider } from "../atoms/Divider";
+  calculateAge,
+  formatDateString,
+  getGenderLabel,
+} from "@/utils/helperFunction";
+import { getUserProfile } from "@/utils/userAPIFunctions";
+import { Cake, Pencil, Plus, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { BabyNameWithDropDown } from "../atoms/BabyNameWithDropDown";
+import { Female, Male } from "../atoms/CustomIcon";
 import { LabelWithIcon } from "../atoms/LabelWithIcon";
 import { PageHeader } from "../atoms/PageHeader";
+import { useTranslate } from "../hooks/use-translate";
 import { TabLayout } from "../layouts/TabLayout";
 import { SLTypo } from "../SLTypo";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { BabyNameWithDropDown } from "../atoms/BabyNameWithDropDown";
-import { Male } from "../atoms/CustomIcon";
-import { useTranslate } from "../hooks/use-translate";
+import { parseCookies } from "nookies";
 
 interface BabyPageLayoutProps {
+  cookies?: any;
   children?: React.ReactNode;
   customClasses?: string;
 }
 
 export const BabyPageLayout = ({
+  cookies,
   children,
   customClasses,
 }: BabyPageLayoutProps) => {
+  const clientCookies = parseCookies();
+  const { lang } = useCommonStore();
+  const { currentUser, setCurrentUser } = useAuthStore();
+  const { currentBaby, setCurrentBaby } = useBabyStore();
   const { messages, isLoading } = useTranslate();
   const { baby } = messages;
   const router = useRouter();
+
+  // fetchUser
+  // checkIsValid
+  useEffect(() => {
+    getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
+      // console.log("User >>", success);
+      if (success && data) {
+        setCurrentUser((data && data.profile) || null);
+        if (!currentBaby) {
+          setCurrentBaby((data && data.profile.children[0]) || null);
+        }
+      } else {
+        router.push("/auth?session_expired=true");
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -49,23 +70,40 @@ export const BabyPageLayout = ({
                 className="text-[var(--semantic-color-text-default)]"
               />
 
-              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center">
-                <User className="text-[var(--semantic-color-icon-brand-subtle)]" />
+              <div className="w-20 h-20 rounded-full bg-[var(--semantic-color-bg-brand-subtlest)] flex items-center justify-center overflow-hidden">
+                {(currentBaby && currentBaby.media_url && (
+                  <img
+                    src={currentBaby.media_url}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                )) || (
+                  <User className="text-[var(--semantic-color-icon-brand-subtle)]" />
+                )}
               </div>
 
               <BabyNameWithDropDown
-                babies={[
-                  {
-                    name: "Noah",
-                    gender: "male",
-                    age: "၁ နှစ်၊ ၂၃ ရက်",
-                  },
-                  {
-                    name: "Susan",
-                    gender: "female",
-                    age: "သန္ဓေသား အသက် ၆ လ",
-                  },
-                ]}
+                babies={
+                  currentUser &&
+                  currentUser.children &&
+                  currentUser.children.map((child: any) => ({
+                    ...child,
+                    age: calculateAge(child.birth_date),
+                  }))
+
+                  // [
+                  //   {
+                  //     name: "Noah",
+                  //     gender: "male",
+                  //     age: "၁ နှစ်၊ ၂၃ ရက်",
+                  //   },
+                  //   {
+                  //     name: "Susan",
+                  //     gender: "female",
+                  //     age: "သန္ဓေသား အသက် ၆ လ",
+                  //   },
+                  // ]
+                }
               />
 
               <div className="flex items-center gap-x-[var(--core-spacing-sm)]">
@@ -106,7 +144,10 @@ export const BabyPageLayout = ({
 
             <div className="space-y-[var(--core-spacing-sm)]">
               <LabelWithIcon
-                label="30/06/1995"
+                label={
+                  (currentBaby && formatDateString(currentBaby.birth_date)) ||
+                  ""
+                }
                 icon={Cake}
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-brand-default)]"
@@ -115,8 +156,16 @@ export const BabyPageLayout = ({
                 labelFontFamily="var(--font-figtree)"
               />
               <LabelWithIcon
-                label="ကျား"
-                customIcon={Male}
+                label={
+                  currentBaby &&
+                  getGenderLabel({
+                    gender: currentBaby.gender,
+                    lang,
+                  })
+                }
+                customIcon={
+                  currentBaby && currentBaby.gender === "male" ? Male : Female
+                }
                 variant="fontBody2Normal"
                 iconClassName="text-[var(--semantic-color-icon-update-default)]"
                 labelClassName="text-[var(--semantic-color-text-default)]"

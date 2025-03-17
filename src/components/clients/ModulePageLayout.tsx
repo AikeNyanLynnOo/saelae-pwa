@@ -1,0 +1,290 @@
+"use client";
+import { useCommonStore } from "@/store/common-store";
+import { useLessonStore } from "@/store/lesson-store";
+import { useModuleStore } from "@/store/module-store";
+import {
+  getModuleCategories,
+  getModuleLessons,
+  getModules,
+} from "@/utils/moduleApiFunctions";
+import { ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ContentHeader } from "../atoms/ContentHeader";
+import { LessonCard } from "../atoms/LessonCard";
+import { PageHeader } from "../atoms/PageHeader";
+import { TabLayout } from "../layouts/TabLayout";
+import { ResponsiveModal } from "../molecules/ResponsiveModal";
+import { SLTypo } from "../SLTypo";
+import { Button } from "../ui/button";
+import { getUserProfile } from "@/utils/userAPIFunctions";
+import { useAuthStore } from "@/store/auth-store";
+import { parseCookies } from "nookies";
+
+interface ModulePageLayoutProps {
+  module_id?: string;
+  cookies?: any;
+}
+
+export const ModulePageLayout = ({
+  cookies,
+  module_id,
+}: ModulePageLayoutProps) => {
+  const router = useRouter();
+  console.log("id>>", module_id);
+  const {
+    categories,
+    modules,
+    setCategories,
+    setModules,
+    currentModule,
+    setCurrentModule,
+  } = useModuleStore();
+  const clientCookies = parseCookies();
+  const { lang } = useCommonStore();
+  const { lessons, setLessons } = useLessonStore();
+  const { setCurrentUser } = useAuthStore();
+  const [isModuleValid, setIsModuleValid] = useState(false);
+
+  // fetchUser
+  // checkIsValid
+  useEffect(() => {
+    getUserProfile({ cookies: clientCookies }).then(
+      ({ status, statusText, success, message, data, loading, error }) => {
+        // console.log("User >>", success);
+        if (success && data) {
+          setCurrentUser((data && data.profile) || null);
+        } else {
+          router.push("/auth?session_expired=true");
+        }
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    if (module_id) {
+      getModuleLessons({
+        cookies: clientCookies,
+        module_id: module_id,
+      })
+        .then(({ success, data }) => {
+          if (success && data) {
+            setIsModuleValid(true);
+          } else {
+            router.push("/");
+          }
+        })
+        .catch((e) => {
+          //error
+        });
+    }
+  }, [module_id]);
+
+  useEffect(() => {
+    getModuleCategories({
+      cookies: clientCookies,
+    }).then((res) => {
+      if (
+        res &&
+        res.success &&
+        res.data &&
+        res.data.categories &&
+        res.data.categories.length > 0
+      ) {
+        setCategories(res.data.categories);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    getModules({
+      cookies: clientCookies,
+    }).then((res) => {
+      if (res && res.success && res.data && res.data.length > 0) {
+        setModules(res.data);
+      }
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   setLessonsLoading(true);
+  //   setLessons([]);
+  //   if (module_id) {
+  //     getModuleLessons({
+  //       cookies,
+  //       module_id: module_id,
+  //     })
+  //       .then(
+  //         ({ status, statusText, success, message, data, loading, error }) => {
+  //           // console.log("Success >>", success);
+
+  //           setLessonsLoading(false);
+  //           if (success && data) {
+  //             setLessons(data.lessons || []);
+  //             const foundModule = modules.find(
+  //               (item) => `${item.id}` === `${module_id}`
+  //             );
+  //             console.log("setting current module from array>>", module);
+  //             setCurrentModule(foundModule || null);
+  //           } else {
+  //             // router.push("/");
+  //             const firstModule =
+  //               (modules && modules.length > 0 && modules[0]) || null;
+  //             console.log("setting first module>>", firstModule);
+  //             setCurrentModule(firstModule);
+  //             if (firstModule && firstModule.id) {
+  //               getModuleLessons({
+  //                 cookies,
+  //                 module_id: firstModule.id,
+  //               })
+  //                 .then(
+  //                   ({
+  //                     status,
+  //                     statusText,
+  //                     success,
+  //                     message,
+  //                     data,
+  //                     loading,
+  //                     error,
+  //                   }) => {
+  //                     // console.log("Success >>", success);
+  //                     if (success && data) {
+  //                       setLessons(data.lessons || []);
+  //                       setLessonsLoading(false);
+  //                     } else {
+  //                       setLessons([]);
+  //                       setLessonsLoading(false);
+  //                     }
+  //                   }
+  //                 )
+  //                 .catch((e) => {
+  //                   //error
+  //                 });
+  //             } else {
+  //               setLessons([]);
+  //               setLessonsLoading(false);
+  //             }
+  //           }
+  //         }
+  //       )
+  //       .catch((e) => {
+  //         //error
+  //       });
+  //   }
+  // }, [module_id, modules]);
+
+  useEffect(() => {
+    if (isModuleValid) {
+      const foundModule = modules.find(
+        (item) => `${item.id}` === `${module_id}`
+      );
+      setCurrentModule(foundModule || null);
+
+      if (foundModule && foundModule.id) {
+        getModuleLessons({
+          cookies: clientCookies,
+          module_id: foundModule.id,
+        })
+          .then(({ success, data }) => {
+            if (success && data) {
+              setLessons(data.lessons || []);
+            } else {
+              setLessons([]);
+            }
+          })
+          .catch((e) => {
+            //error
+          });
+      } else {
+        setLessons([]);
+      }
+    } else {
+      const firstModule = (modules && modules.length > 0 && modules[0]) || null;
+      setCurrentModule(firstModule);
+      if (firstModule && firstModule.id) {
+        getModuleLessons({
+          cookies: clientCookies,
+          module_id: firstModule.id,
+        })
+          .then(({ success, data }) => {
+            if (success && data) {
+              setLessons(data.lessons || []);
+            } else {
+              setLessons([]);
+            }
+          })
+          .catch((e) => {
+            //error
+          });
+      } else {
+        setLessons([]);
+      }
+    }
+  }, [isModuleValid, module_id, modules]);
+
+  return (
+    <TabLayout>
+      <PageHeader className="sticky top-0 bg-white z-10">
+        <ResponsiveModal>
+          <Button
+            variant="outline"
+            className={`w-fit max-w-full rounded-[var(--core-border-radius-xs)] bg-[var(--semantic-color-bg-primary)] border-none py-[var(--core-spacing-sm)] px-2 sm:px-[var(--core-spacing-lg)]`}
+            onClick={() => {}}
+          >
+            <SLTypo
+              as="span"
+              text={(currentModule && currentModule.title) || ""}
+              variant="fontBody2IntenseNormal"
+              className="text-[var(--semantic-color-text-bold)] flex-1 truncate"
+            />
+            <ChevronDown size={2} />
+          </Button>
+        </ResponsiveModal>
+      </PageHeader>
+      <ContentHeader
+        title={(currentModule && currentModule.title) || ""}
+        titleVariant="fontH4Semibold"
+        titleClassName="text-[var(--semantic-color-text-default)]"
+        className="sticky top-[116px] bg-white z-10 gap-0"
+      />
+      <div className="px-6 space-y-[var(--core-spacing-md)] pb-20">
+        {lessons.map((lesson, index) => (
+          <LessonCard
+            key={index}
+            id={lesson.id}
+            imageUrl={lesson.media_url || ""}
+            moduleId={(currentModule && currentModule.id) || ""}
+            title={lesson.title}
+            description={lesson.description}
+            state={lesson.is_completed ? "completed" : "half-completed"}
+          />
+        ))}
+        {currentModule && currentModule.has_quiz && (
+          <LessonCard
+            imageUrl={currentModule.media_url || ""}
+            title={lang === "mm" ? "စာမေးပွဲ" : "Final Exam"}
+            description={
+              lang === "mm"
+                ? "မေးခွန်းတစ်ခုကို ဖြေဆိုချိန် ၃၀ စက္ကန့်ရရှိပါတယ်နော်."
+                : "You get 30 seconds for a question."
+            }
+            state={currentModule.quiz_completed ? "completed" : "locked"}
+          />
+        )}
+
+        {lessons.length === 0 && (
+          <SLTypo
+            as="p"
+            text={
+              lang === "mm"
+                ? "လေ့လာစရာ များ မရှိသေးပါ..."
+                : "No modules found..."
+            }
+            variant="fontBody3Normal"
+            className="text-center text-[var(--semantic-color-text-default)] mb-4 px-4 lg:px-0 min-h-[50dvh] flex items-center justify-center"
+          />
+        )}
+      </div>
+    </TabLayout>
+  );
+};

@@ -44,7 +44,7 @@ export const SLPhoneInput = ({
   const phoneInputValue = useMemo(() => {
     if (phoneInput.inputValue) {
       const { code, value } = splitInputValue(phoneInput.inputValue);
-      console.log("Code >>", code);
+      // console.log("Code >>", code);
       if (code === "+95" && value === "") {
         setShowBottomMm(true);
         return "+95 9";
@@ -61,7 +61,7 @@ export const SLPhoneInput = ({
         selectedCountry={phoneInput.country.iso2}
         onSelect={(country) => phoneInput.setCountry(country.iso2)}
         renderButtonWrapper={({ children, rootProps }) => {
-          console.log(children);
+          // console.log(children);
           return (
             <Button
               {...rootProps}

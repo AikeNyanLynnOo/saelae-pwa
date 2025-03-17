@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { Divider } from "./Divider";
 import { ImageWithPlaceholder } from "./ImageWithPlaceholder";
 import { LabelWithIcon } from "./LabelWithIcon";
-import { useMemo } from "react";
+import { use, useMemo } from "react";
+import { useAuthStore } from "@/store/auth-store";
 
 interface PageHeaderProps {
   title?: string;
@@ -30,6 +31,7 @@ export const PageHeader = ({
   ...props
 }: PageHeaderProps) => {
   const router = useRouter();
+  const { currentUser } = useAuthStore();
 
   const handleBack = () => {
     if (customBackUrl) {
@@ -54,9 +56,10 @@ export const PageHeader = ({
             src="/images/logo.png"
           />
           <LabelWithIcon
-            label="3"
+            label={(currentUser && currentUser.streak_count) || "0"}
             icon={Flame}
             variant="fontBody2IntenseSemibold"
+            iconClassName="-mt-1"
           />
         </div>
         <div>{props.children}</div>

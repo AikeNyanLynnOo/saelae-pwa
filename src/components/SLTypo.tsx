@@ -56,7 +56,7 @@ export const SLTypo = ({
       style: {
         ...typoStyle,
         fontFamily:
-          (lang === "en" && "var(--font-figtree)") ||
+          (/^[A-Za-z\s]*$/.test(text || '') && "var(--font-figtree)") ||
           fontFamily ||
           typoStyle.fontFamily,
       },

@@ -42,7 +42,7 @@ export default function LanguageSelection() {
     if (storedLang && storedLang !== lang) {
       setLanguage(storedLang);
     }
-  }, []);
+  }, [lang, setLanguage]);
 
   return (
     <div className="max-w-md mx-auto">
