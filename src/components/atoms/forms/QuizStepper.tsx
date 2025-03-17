@@ -221,6 +221,7 @@ export const QuizStepper = ({
                       // if (quizState === "incorrect") {
                       return (
                         <button
+                          key={index}
                           onClick={() => handleOptionSelect(answer)}
                           className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
                             selectedOption &&
