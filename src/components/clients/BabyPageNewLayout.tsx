@@ -57,7 +57,7 @@ export const BabyPageNewLayout = ({
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
       } else {
-        router.push("/auth?session_expired=true");
+        router.push("/welcome?session_expired=true");
       }
     });
   }, []);
@@ -168,7 +168,7 @@ export const BabyPageNewLayout = ({
             as="h1"
             text={baby.new.step1.text}
             variant={"fontH5Medium"}
-            className="text-[var(--semantic-color-text-default)]"
+            className="text-[var(--semantic-color-text-default)] mb-10"
           />
           <div
             className={`space-y-6 pb-28 flex flex-col items-center justify-center w-full min-h-[calc(100dvh-24rem)] ${step === 1 ? "justify-center" : ""}`}

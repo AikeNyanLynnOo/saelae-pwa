@@ -57,7 +57,7 @@ export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
         if (success && data) {
           setCurrentUser((data && data.profile) || null);
         } else {
-          router.push("/auth?session_expired=true");
+          router.push("/welcome?session_expired=true");
         }
       }
     );

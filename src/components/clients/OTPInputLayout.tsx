@@ -20,6 +20,8 @@ import { useCommonStore } from "@/store/common-store";
 import { useAuthStore } from "@/store/auth-store";
 import { requestOtp, verifyOtp } from "@/utils/authApiFunctions";
 import { extractMessage, setAppTokenCookie } from "@/utils/helperFunction";
+import logo from "../../../public/images/logo.png";
+import Image from "next/image";
 
 export const OTPInputLayout = () => {
   const { messages, isLoading } = useTranslate();
@@ -111,7 +113,7 @@ export const OTPInputLayout = () => {
     <CommonLayout isLoading={isLoading} customClasses="items-start relative">
       <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit text-center flex flex-col px-4 sm:px-0">
         {/* Image Placeholder */}
-        <ImageWithPlaceholder src="/images/logo.png" />
+        <Image src={logo} alt="logo" className="w-24 h-24 rounded-lg mx-auto mb-4" />
 
         {/* OTP Input */}
         <InputGroup
