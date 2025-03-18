@@ -6,16 +6,38 @@ import { SLTypo } from "@/components/SLTypo";
 import { Button } from "@/components/ui/button";
 import { LanguageDropDown } from "../atoms/LanguageDropDown";
 import { useTranslate } from "../hooks/use-translate";
+import Image from "next/image";
+import logo from "../../../public/images/logo.png";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { parseCookies } from "nookies";
+import toast, { Toaster } from "react-hot-toast";
 
 export const WelcomeLayout = () => {
+  const params = useSearchParams();
   const { messages, isLoading } = useTranslate();
   const { welcome } = messages;
+
+  useEffect(() => {
+    if (
+      params.get("session_expired") &&
+      params.get("session_expired") === "true"
+    ) {
+      toast("Please Login to continue", {
+        icon: "🔓",
+      });
+    }
+  }, [params]);
   return (
     <CommonLayout isLoading={isLoading}>
       <LanguageDropDown />
       <div className="w-full sm:w-fit px-4 sm:px-0">
         {/* Image placeholder */}
-        <ImageWithPlaceholder src="/images/logo.png" />
+        <Image
+          src={logo}
+          alt="logo"
+          className="w-24 h-24 rounded-lg mx-auto mb-4"
+        />
 
         <div className="mb-12">
           {/* Title */}
@@ -44,6 +66,7 @@ export const WelcomeLayout = () => {
           <Link href="/auth">{welcome.cta_text}</Link>
         </Button>
       </div>
+      <Toaster position="top-center" reverseOrder={false} />
     </CommonLayout>
   );
 };

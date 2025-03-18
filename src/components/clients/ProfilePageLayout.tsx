@@ -57,7 +57,7 @@ export const ProfilePageLayout = ({
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
       } else {
-        router.push("/auth?session_expired=true");
+        router.push("/welcome?session_expired=true");
       }
     });
   }, []);
@@ -72,8 +72,8 @@ export const ProfilePageLayout = ({
     if (success) {
       setCurrentUser(null);
       deleteAppTokenCookie();
-      toast.success("Successfully logout!");
-      router.push("/auth");
+      // toast.success("Successfully logout!");
+      router.push("/welcome");
     }
   };
 

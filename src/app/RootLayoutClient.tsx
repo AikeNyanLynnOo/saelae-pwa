@@ -71,9 +71,7 @@ export default function RootLayoutClient({
   return (
     <div className="flex flex-col">
       <div className="min-h-[100dvh] container mx-auto px-0 md:px-5 lg:px-12 xl:px-20 max-w-screen-lg">
-        {(pathName === "/auth" ||
-          pathName === "/welcome" ||
-          pathName === "/") &&
+        {(pathName === "/auth" || pathName === "/welcome") &&
           (isIOS ? (
             <FloatingBanner
               handleInstallClick={handleInstallClick}
