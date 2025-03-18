@@ -15,9 +15,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { requestOtp } from "@/utils/authApiFunctions";
 import { useAuthStore } from "@/store/auth-store";
 import { extractMessage } from "@/utils/helperFunction";
+import logo from "../../../public/images/logo.png";
+import Image from "next/image";
 
 export const PhoneInputLayout = ({ authCookies }: { authCookies?: any[] }) => {
-  const params = useSearchParams();
+
   const router = useRouter();
 
   const {
@@ -68,19 +70,6 @@ export const PhoneInputLayout = ({ authCookies }: { authCookies?: any[] }) => {
     }
   };
 
-  useEffect(() => {
-    if (
-      params.get("session_expired") &&
-      params.get("session_expired") === "true" &&
-      authCookies &&
-      authCookies.length === 0
-    ) {
-      toast("Please Login to continue", {
-        icon: "🔓",
-      });
-    }
-  }, [params, authCookies]);
-
   const phoneHelperText = useMemo(() => {
     return errMessage || (showBottomMm && auth.phone.helper_text) || "";
   }, [errMessage, showBottomMm]);
@@ -89,7 +78,7 @@ export const PhoneInputLayout = ({ authCookies }: { authCookies?: any[] }) => {
     <CommonLayout isLoading={isLoading} customClasses="items-start relative">
       <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit px-4 sm:px-0">
         {/* Image Placeholder */}
-        <ImageWithPlaceholder src="/images/logo.png" />
+        <Image src={logo} alt="logo" className="w-24 h-24 rounded-lg mx-auto mb-4" />
 
         {/* Label */}
         <InputGroup

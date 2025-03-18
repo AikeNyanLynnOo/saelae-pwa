@@ -51,7 +51,7 @@ export const BabyPageLayout = ({
           setCurrentBaby((data && data.profile.children[0]) || null);
         }
       } else {
-        router.push("/auth?session_expired=true");
+        router.push("/welcome?session_expired=true");
       }
     });
   }, []);
