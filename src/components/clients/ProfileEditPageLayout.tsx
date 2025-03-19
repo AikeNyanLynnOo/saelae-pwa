@@ -51,6 +51,7 @@ export const ProfileEditPageLayout = ({
   const { lang } = useCommonStore();
   const { currentUser, setCurrentUser } = useAuthStore();
   const { messages, isLoading } = useTranslate();
+  const { common } = messages;
   const { profile } = messages;
   const router = useRouter();
   const [cities, setCities] = useState<any>([]);
@@ -148,7 +149,7 @@ export const ProfileEditPageLayout = ({
       cookies: clientCookies,
     });
     if (success) {
-      toast.success("Successfully updated!");
+      toast.success(common && common.toast_success_update_user);
       router.refresh();
     }
   };

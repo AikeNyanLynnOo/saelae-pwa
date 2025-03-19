@@ -13,21 +13,44 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { SLTypo } from "../SLTypo";
 import { useRouter } from "next/navigation";
+import { useQuizStore } from "@/store/quiz-store";
 
 interface ConfirmQuitModalProps {
   children?: any;
-//   open?: boolean;
-//   setOpen?: any;
+  //   open?: boolean;
+  //   setOpen?: any;
 }
 
 export const ConfirmQuitModal = ({
   children,
-//   open,
-//   setOpen,
+  //   open,
+  //   setOpen,
 }: ConfirmQuitModalProps) => {
   const router = useRouter();
   const { lang } = useCommonStore();
+  const {
+    setStep,
+    setSelectedOption,
+    setExplanation,
+    setScore,
+    setTimeLeft,
+    setTimerActive,
+    setSubmissions,
+    setQuizState,
+  } = useQuizStore();
   const [open, setOpen] = useState(false);
+
+  const handleBack = () => {
+    setQuizState("question");
+    setSelectedOption(null);
+    setExplanation("");
+    setTimeLeft(30);
+    setTimerActive(true);
+    setScore(0);
+    setStep(0);
+    setSubmissions([]);
+    router.back();
+  };
 
   return (
     <>
@@ -67,7 +90,7 @@ export const ConfirmQuitModal = ({
               <Button
                 variant="outline"
                 className={`w-full flex-1 rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-brand-default)] py-[var(--core-spacing-sm)] text-[var(--semantic-color-text-brand-default)]`}
-                onClick={() => router.back()}
+                onClick={handleBack}
               >
                 {lang === "mm" ? "ထွက်မယ်" : "Quit Now"}
               </Button>

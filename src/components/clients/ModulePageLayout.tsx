@@ -43,7 +43,7 @@ export const ModulePageLayout = ({
   const { lang } = useCommonStore();
   const { lessons, setLessons } = useLessonStore();
   const { setCurrentUser } = useAuthStore();
-  const [isModuleValid, setIsModuleValid] = useState(false);
+  const [isModuleValid, setIsModuleValid] = useState(true);
 
   // fetchUser
   // checkIsValid
@@ -69,6 +69,7 @@ export const ModulePageLayout = ({
         .then(({ success, data }) => {
           if (success && data) {
             setCurrentModule(data);
+            setLessons(data.lessons || []);
             setIsModuleValid(true);
           } else {
             router.push("/");
@@ -76,9 +77,15 @@ export const ModulePageLayout = ({
         })
         .catch((e) => {
           //error
+          setIsModuleValid(false);
         });
+    } else {
+      setIsModuleValid(false);
     }
   }, [module_id]);
+  useEffect(() => {
+    console.log("Current Module>>", currentModule);
+  }, [currentModule]);
 
   useEffect(() => {
     getModuleCategories({
@@ -174,31 +181,7 @@ export const ModulePageLayout = ({
   // }, [module_id, modules]);
 
   useEffect(() => {
-    if (isModuleValid) {
-      const foundModule = modules.find(
-        (item) => `${item.id}` === `${module_id}`
-      );
-      // setCurrentModule(foundModule || null);
-
-      if (foundModule && foundModule.id) {
-        getModuleLessons({
-          cookies: clientCookies,
-          module_id: foundModule.id,
-        })
-          .then(({ success, data }) => {
-            if (success && data) {
-              setLessons(data.lessons || []);
-            } else {
-              setLessons([]);
-            }
-          })
-          .catch((e) => {
-            //error
-          });
-      } else {
-        setLessons([]);
-      }
-    } else {
+    if (!isModuleValid) {
       const firstModule = (modules && modules.length > 0 && modules[0]) || null;
       if (firstModule && firstModule.id) {
         getModuleLessons({
@@ -220,9 +203,8 @@ export const ModulePageLayout = ({
         setLessons([]);
       }
     }
-  }, [isModuleValid, module_id, modules]);
-  console.log("Current Module>>", currentModule);
-
+  }, [isModuleValid, modules]);
+  
   return (
     <TabLayout>
       <PageHeader className="sticky top-0 bg-white z-10">
