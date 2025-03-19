@@ -16,13 +16,6 @@ import {
 } from "@/utils/quizApiFunctions";
 import { useQuizStore } from "@/store/quiz-store";
 
-export type QuizState =
-  | "question"
-  | "incorrect"
-  | "correct"
-  | "complete"
-  | "timeout";
-
 interface QuizPageLayoutWrapperProps {
   cookies?: any;
 }
@@ -33,6 +26,8 @@ export const QuizPageLayoutWrapper = ({
   const clientCookies = parseCookies();
   const { setCurrentUser } = useAuthStore();
   const {
+    quizState,
+    setQuizState,
     setQuizzes,
     step,
     totalSteps,
@@ -44,18 +39,20 @@ export const QuizPageLayoutWrapper = ({
     setScore,
     setTimeLeft,
     setTimerActive,
+
+    // submission
+    submissions,
+    setSubmissions,
+    setPass,
+    setScorePercentage,
   } = useQuizStore();
 
   const { messages, isLoading } = useTranslate();
   const { lessons } = messages;
-  const { submissions, setSubmissions, setPass, setScorePercentage } =
-    useQuizStore();
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
   const module_id = searchParams.get("module_id") || "";
-  const [quizState, setQuizState] = useState<QuizState>("question");
-
   // fetchUser
   // checkIsValid
   useEffect(() => {
@@ -210,8 +207,6 @@ export const QuizPageLayoutWrapper = ({
             <QuizStepper
               step={step}
               totalSteps={totalSteps}
-              quizState={quizState}
-              setQuizState={setQuizState}
               isFinalExam={params && params.lesson_id ? false : true}
             />
           </div>

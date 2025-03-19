@@ -1,5 +1,12 @@
 import { create } from "zustand";
 
+export type QuizState =
+  | "question"
+  | "incorrect"
+  | "correct"
+  | "complete"
+  | "timeout";
+
 type Store = {
   step: number;
   totalSteps: number;
@@ -12,6 +19,7 @@ type Store = {
   score: number;
   timeLeft: number;
   timerActive: boolean;
+  quizState: QuizState;
 
   // submission
   submissions: any[];
@@ -33,6 +41,7 @@ type Store = {
   setScore: (score: number) => void;
   setTimeLeft: (timeLeft: number) => void;
   setTimerActive: (timerActive: boolean) => void;
+  setQuizState: (quizState: QuizState) => void;
 
   setSubmissions: (submissions: any[]) => void;
   setPass: (pass: boolean) => void;
@@ -51,6 +60,7 @@ export const useQuizStore = create<Store>()((set) => ({
   score: 0,
   timeLeft: 30,
   timerActive: true,
+  quizState: "question",
 
   submissions: [],
   pass: false,
@@ -116,6 +126,12 @@ export const useQuizStore = create<Store>()((set) => ({
     set((state) => ({
       ...state,
       timerActive,
+    }));
+  },
+  setQuizState: (quizState) => {
+    set((state) => ({
+      ...state,
+      quizState,
     }));
   },
   setSubmissions: (submissions) => {
