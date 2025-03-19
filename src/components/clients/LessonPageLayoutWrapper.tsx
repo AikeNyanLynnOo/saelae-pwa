@@ -12,6 +12,7 @@ import {
   removeFromBookmarks,
   saveToBookmarks,
 } from "@/utils/userAPIFunctions";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { parseCookies } from "nookies";
@@ -32,7 +33,8 @@ export const LessonPageLayoutWrapper = ({
   const { currentUser, setCurrentUser } = useAuthStore();
   const { lesson, setLesson } = useLessonStore();
   const { messages, isLoading } = useTranslate();
-  const { lessons } = messages;
+  const { common } = messages;
+  console.log(common);
   const router = useRouter();
   const params = useParams();
   const [scrollY, setScrollY] = useState(0);
@@ -97,8 +99,14 @@ export const LessonPageLayoutWrapper = ({
   }, [scrollY]);
 
   const onPrimaryButtonClick = useCallback(() => {
-    router.push(`/lessons/${params.lesson_id}/quiz?module_id=${module_id}`);
-  }, [params, router]);
+    if (lesson && lesson.quizzes && lesson.quizzes.length > 0) {
+      router.push(`/lessons/${params.lesson_id}/quiz?module_id=${module_id}`);
+    } else {
+      toast(common && common.toast_no_quiz, {
+        icon: <Search size={16} />,
+      });
+    }
+  }, [params, router, common]);
 
   const handleFavoriteLesson = async () => {
     if (lesson && lesson.is_saved) {
@@ -108,7 +116,7 @@ export const LessonPageLayoutWrapper = ({
           cookies: clientCookies,
         });
       if (success) {
-        toast.success("Removed from bookmarks!");
+        toast.success(common && common.toast_success_remove_bookmark);
         router.refresh();
       }
       return;
@@ -119,7 +127,7 @@ export const LessonPageLayoutWrapper = ({
         cookies: clientCookies,
       });
     if (success) {
-      toast.success("Added to bookmarks!");
+      toast.success(common && common.toast_success_add_bookmark);
       router.refresh();
     }
   };
@@ -129,9 +137,7 @@ export const LessonPageLayoutWrapper = ({
       {!isLoading && (
         <LessonPageLayout
           showHeartButton
-          showPrimaryButton={
-            (lesson && lesson.quizzes && lesson.quizzes.length > 0) || false
-          }
+          showPrimaryButton
           hideBottomCta={hideBottomCta}
           onPrimaryButtonClick={onPrimaryButtonClick}
           onHeartButtonClick={handleFavoriteLesson}
@@ -140,9 +146,7 @@ export const LessonPageLayoutWrapper = ({
           <ContentHeader
             hideCta={hideTopCta}
             showBackButton
-            showPrimaryButton={
-              (lesson && lesson.quizzes && lesson.quizzes.length > 0) || false
-            }
+            showPrimaryButton
             showHeartButton
             title={(lesson && lesson.title) || ""}
             description={(lesson && lesson.description) || ""}
@@ -152,15 +156,18 @@ export const LessonPageLayoutWrapper = ({
             onPrimaryButtonClick={onPrimaryButtonClick}
           />
           <div className="px-6 space-y-[var(--core-spacing-lg)] pb-20">
-            <Image
-              src={(lesson && lesson.media_url) || "/images/lesson1.png"}
-              alt="lesson-1"
-              width={390}
-              height={400}
-              className="mx-auto w-full h-auto rounded-[var(--core-radius-sm)]"
-              priority
-              loading="eager"
-            />
+            {lesson && lesson.media_url && (
+              <Image
+                src={lesson && lesson.media_url}
+                alt="lesson-1"
+                width={390}
+                height={400}
+                className="mx-auto w-full h-auto rounded-[var(--core-radius-sm)]"
+                priority
+                loading="eager"
+              />
+            )}
+
             <SLTypo
               as="p"
               isDangerously

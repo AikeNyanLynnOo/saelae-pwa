@@ -44,6 +44,7 @@ export const BabyPageNewLayout = ({
 }: BabyPageNewLayoutProps) => {
   const clientCookies = parseCookies();
   const { messages, isLoading } = useTranslate();
+  const { common } = messages;
   const { baby } = messages;
 
   const { lang } = useCommonStore();
@@ -131,7 +132,7 @@ export const BabyPageNewLayout = ({
         cookies: clientCookies,
       });
       if (success) {
-        toast.success("Successfully added!");
+        toast.success(common && common.toast_success_new_saelae);
         router.push("/baby");
       }
     }

@@ -12,10 +12,12 @@ import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { parseCookies } from "nookies";
 import toast, { Toaster } from "react-hot-toast";
+import { LockKeyholeOpen } from "lucide-react";
 
 export const WelcomeLayout = () => {
   const params = useSearchParams();
   const { messages, isLoading } = useTranslate();
+  const { common } = messages;
   const { welcome } = messages;
 
   useEffect(() => {
@@ -23,11 +25,11 @@ export const WelcomeLayout = () => {
       params.get("session_expired") &&
       params.get("session_expired") === "true"
     ) {
-      toast("Please Login to continue", {
-        icon: "🔓",
+      toast(common && common.toast_pls_login, {
+        icon: <LockKeyholeOpen size={16} />,
       });
     }
-  }, [params]);
+  }, [params, common]);
   return (
     <CommonLayout isLoading={isLoading}>
       <LanguageDropDown />

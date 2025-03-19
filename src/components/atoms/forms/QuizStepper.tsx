@@ -59,18 +59,16 @@ function StepIndicator({
 export const QuizStepper = ({
   step,
   totalSteps,
-  quizState,
-  setQuizState,
   isFinalExam = false,
 }: {
   step: number;
   totalSteps: number;
-  quizState: string | null;
-  setQuizState: any;
   isFinalExam?: boolean;
 }) => {
   const { lang } = useCommonStore();
   const {
+    quizState,
+    setQuizState,
     quizzes,
     setCanProceed,
     selectedOption,

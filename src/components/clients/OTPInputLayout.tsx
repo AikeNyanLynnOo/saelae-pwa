@@ -25,6 +25,7 @@ import Image from "next/image";
 
 export const OTPInputLayout = () => {
   const { messages, isLoading } = useTranslate();
+  const { common } = messages;
   const { phoneNumber, iso2Code } = useAuthStore();
   const { auth } = messages;
   const { lang } = useCommonStore();
@@ -65,7 +66,7 @@ export const OTPInputLayout = () => {
           } else {
             if (data && data && data.token) {
               setAppTokenCookie(data.token);
-              toast.success("Successfully verified!");
+              toast.success(common && common.toast_success_verify);
 
               router.push(data.is_new_user ? "/onboard" : "/");
             }
@@ -113,7 +114,11 @@ export const OTPInputLayout = () => {
     <CommonLayout isLoading={isLoading} customClasses="items-start relative">
       <div className="absolute top-1/3 -translate-y-1/2 w-full sm:w-fit text-center flex flex-col px-4 sm:px-0">
         {/* Image Placeholder */}
-        <Image src={logo} alt="logo" className="w-24 h-24 rounded-lg mx-auto mb-4" />
+        <Image
+          src={logo}
+          alt="logo"
+          className="w-24 h-24 rounded-lg mx-auto mb-4"
+        />
 
         {/* OTP Input */}
         <InputGroup

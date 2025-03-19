@@ -49,6 +49,7 @@ export const BabyPageEditLayout = ({
   const { currentUser, setCurrentUser } = useAuthStore();
   const { currentBaby, setCurrentBaby } = useBabyStore();
   const { messages, isLoading } = useTranslate();
+  const { common } = messages;
   const { baby } = messages;
   const router = useRouter();
 
@@ -121,7 +122,7 @@ export const BabyPageEditLayout = ({
       cookies: clientCookies,
     });
     if (success) {
-      toast.success("Successfully updated!");
+      toast.success(common && common.toast_success_update_saelae);
       router.refresh();
       const childRes = await getChild({
         id: currentBaby?.id,
