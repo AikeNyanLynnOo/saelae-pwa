@@ -152,8 +152,14 @@ export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
                     title={module.title}
                     imageUrl={module.media_url || ""}
                     description={module.description}
-                    totalLessons={module.progress_data.total_lessons || ""}
+                    totalLessons={module.progress_data.total_lessons || "0"}
                     state={getStateBaseOnData(module.progress_data)}
+                    completedLessons={
+                      module.progress_data.completed_lessons || "0"
+                    }
+                    progressValue={
+                      module.progress_data.completion_percentage || 0
+                    }
                     onButtonClick={() => onButtonClick(module.id)}
                     clickRoute={`/${module.id}`}
                   />
