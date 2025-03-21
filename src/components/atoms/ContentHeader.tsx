@@ -80,6 +80,7 @@ export const ContentHeader = ({
                 "text-[var(--semantic-color-text-default)]",
                 titleClassName
               )}
+              fontFamily="var(--font-figtree)"
             />
             {description && (
               <SLTypo
@@ -90,6 +91,7 @@ export const ContentHeader = ({
                   "text-[var(--semantic-color-text-subtle)]",
                   descriptionClassName
                 )}
+                fontFamily="var(--font-figtree)"
               />
             )}
           </div>
