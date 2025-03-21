@@ -150,7 +150,8 @@ export const LessonPageLayoutWrapper = ({
             showHeartButton
             title={(lesson && lesson.title) || ""}
             description={(lesson && lesson.description) || ""}
-            className="sticky top-[72px] bg-white z-10"
+            // className="sticky top-[72px] bg-white z-10"
+            className="bg-white z-10"
             //   isHeartActive
             onHeartButtonClick={handleFavoriteLesson}
             onPrimaryButtonClick={onPrimaryButtonClick}

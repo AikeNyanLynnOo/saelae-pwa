@@ -20,13 +20,7 @@ export const PersonalizationLayout = ({
   const router = useRouter();
   const { messages, isLoading } = useTranslate();
   const { personalize } = messages;
-  // const [apiLoading, setApiLoading] = useState(true);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setApiLoading(false);
-  //   }, 6000);
-  // }, []);
+  const [apiLoading, setApiLoading] = useState(true);
 
   const { status, statusText, success, message, data, loading, error } =
     useFetchData({
@@ -40,9 +34,18 @@ export const PersonalizationLayout = ({
         path: "/onboard?profile=incomplete",
       },
     });
+  useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        setApiLoading(false);
+      }, 4000);
+    } else {
+      setApiLoading(true);
+    }
+  }, [loading]);
 
   return (
-    <CommonLayout isLoading={isLoading || loading}>
+    <CommonLayout isLoading={isLoading || apiLoading}>
       <div className="space-y-[var(--core-spacing-xl)] pb-12 w-full md:w-4/6 lg:w-3/6 mx-auto min-h-[100dvh] max-h-[100vh] overflow-y-scroll relative hide-scrollbar">
         <div className="pt-10 px-4 lg:px-0">
           {/* Title */}

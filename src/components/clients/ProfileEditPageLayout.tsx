@@ -107,7 +107,6 @@ export const ProfileEditPageLayout = ({
       }).then(
         ({ status, statusText, success, message, data, loading, error }) => {
           if (success && data) {
-            console.log("Cities>>", data);
             setCities(
               (data &&
                 data.length > 0 &&
@@ -151,6 +150,8 @@ export const ProfileEditPageLayout = ({
     if (success) {
       toast.success(common && common.toast_success_update_user);
       router.refresh();
+    } else {
+      toast.error(message);
     }
   };
 
@@ -332,7 +333,9 @@ export const ProfileEditPageLayout = ({
                       placeholder={profile.edit.dob_placeholder}
                     />
                   }
-                  maxDate={new Date()}
+                  maxDate={
+                    new Date(new Date().setDate(new Date().getDate() - 1))
+                  }
                 />
               </InputGroup>
             </div>
