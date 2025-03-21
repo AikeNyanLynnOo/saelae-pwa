@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import * as React from "react";
 import { forwardRef } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 interface StepProps {
   isActive: boolean;
@@ -220,7 +221,6 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
   }, [step, formData]);
 
   const handleNext = async () => {
-
     if (step === totalSteps) {
       const child: any = {
         name: formData.saelaeName,
@@ -262,6 +262,8 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
             "We're choosing the perfect launchpad for you to begin your learning journey."
           );
         }
+      } else {
+        toast.error(message);
       }
     }
     if (step < totalSteps) {
@@ -626,6 +628,7 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
           </div>
         </div>
       )}
+      <Toaster position="top-center" reverseOrder={false} />
     </>
   );
 };

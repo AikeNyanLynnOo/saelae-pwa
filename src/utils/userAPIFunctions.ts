@@ -1,3 +1,4 @@
+import { mmCities } from "@/lib/mm_cities";
 import { makeRequest } from "./makeRequest";
 import { Child } from "./onboardApiFunctions";
 
@@ -139,6 +140,17 @@ export const getCities = async ({
 }: {
   countryName?: string;
 }): Promise<any> => {
+  console.log("Country>>", countryName);
+  if (countryName === "Myanmar") {
+    console.log("MM", mmCities.length);
+    return {
+      status: 200,
+      statusText: "OK",
+      success: true,
+      message: "Cities fetched successfully",
+      data: mmCities,
+    };
+  }
   let config = {
     method: "POST",
     maxBodyLength: Infinity,
