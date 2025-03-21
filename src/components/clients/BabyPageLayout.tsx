@@ -8,7 +8,7 @@ import {
   getGenderLabel,
 } from "@/utils/helperFunction";
 import { getUserProfile } from "@/utils/userAPIFunctions";
-import { Cake, Pencil, Plus, User } from "lucide-react";
+import { Cake, Pencil, Plus, Trash, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { BabyNameWithDropDown } from "../atoms/BabyNameWithDropDown";
@@ -20,6 +20,7 @@ import { TabLayout } from "../layouts/TabLayout";
 import { SLTypo } from "../SLTypo";
 import { Button } from "../ui/button";
 import { parseCookies } from "nookies";
+import { ConfirmDeleteBabyModal } from "../molecules/ConfirmDeleteBabyModal";
 
 interface BabyPageLayoutProps {
   cookies?: any;
@@ -107,22 +108,25 @@ export const BabyPageLayout = ({
               />
 
               <div className="flex items-center gap-x-[var(--core-spacing-sm)]">
-                <Button
-                  variant="outline"
-                  className={`w-fit rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-brand-default)] py-[var(--core-spacing-sm)]`}
-                  onClick={() => {
-                    router.push("/baby/edit");
-                  }}
-                >
-                  <LabelWithIcon
-                    label={baby.profile.cta_edit}
-                    icon={Pencil}
-                    variant="fontButtonMdSemibold"
-                    iconClassName="text-[var(--semantic-color-text-brand-default)]"
-                    labelClassName="text-[var(--semantic-color-text-brand-default)]"
-                    className="gap-x-2.5"
-                  />
-                </Button>
+                {currentBaby && (
+                  <Button
+                    variant="outline"
+                    className={`w-fit rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-brand-default)] py-[var(--core-spacing-sm)]`}
+                    onClick={() => {
+                      router.push("/baby/edit");
+                    }}
+                  >
+                    <LabelWithIcon
+                      label={baby.profile.cta_edit}
+                      icon={Pencil}
+                      variant="fontButtonMdSemibold"
+                      iconClassName="text-[var(--semantic-color-text-brand-default)]"
+                      labelClassName="text-[var(--semantic-color-text-brand-default)]"
+                      className="gap-x-2.5"
+                    />
+                  </Button>
+                )}
+
                 <Button
                   variant="outline"
                   className={`w-fit rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-brand-default)] py-[var(--core-spacing-sm)]`}
@@ -139,39 +143,54 @@ export const BabyPageLayout = ({
                     className="gap-x-2.5"
                   />
                 </Button>
+                {currentBaby && (
+                  <ConfirmDeleteBabyModal>
+                    <Button
+                      variant="outline"
+                      className={`w-fit rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-negative-default)] p-[var(--core-spacing-sm)]`}
+                    >
+                      <Trash
+                        size={16}
+                        className="text-[var(--semantic-color-icon-negative-default)]"
+                      />
+                    </Button>
+                  </ConfirmDeleteBabyModal>
+                )}
               </div>
             </div>
 
-            <div className="space-y-[var(--core-spacing-sm)]">
-              <LabelWithIcon
-                label={
-                  (currentBaby && formatDateString(currentBaby.birth_date)) ||
-                  ""
-                }
-                icon={Cake}
-                variant="fontBody2Normal"
-                iconClassName="text-[var(--semantic-color-icon-brand-default)]"
-                labelClassName="text-[var(--semantic-color-text-default)]"
-                className="gap-x-[var(--core-spacing-md)] border w-full p-[var(--core-spacing-lg)] rounded-[var(--core-border-radius-sm)] shadow-sm"
-                labelFontFamily="var(--font-figtree)"
-              />
-              <LabelWithIcon
-                label={
-                  currentBaby &&
-                  getGenderLabel({
-                    gender: currentBaby.gender,
-                    lang,
-                  })
-                }
-                customIcon={
-                  currentBaby && currentBaby.gender === "male" ? Male : Female
-                }
-                variant="fontBody2Normal"
-                iconClassName="text-[var(--semantic-color-icon-update-default)]"
-                labelClassName="text-[var(--semantic-color-text-default)]"
-                className="gap-x-[var(--core-spacing-md)] border w-full p-[var(--core-spacing-lg)] rounded-[var(--core-border-radius-sm)] shadow-sm"
-              />
-            </div>
+            {currentBaby && (
+              <div className="space-y-[var(--core-spacing-sm)]">
+                <LabelWithIcon
+                  label={
+                    (currentBaby && formatDateString(currentBaby.birth_date)) ||
+                    ""
+                  }
+                  icon={Cake}
+                  variant="fontBody2Normal"
+                  iconClassName="text-[var(--semantic-color-icon-brand-default)]"
+                  labelClassName="text-[var(--semantic-color-text-default)]"
+                  className="gap-x-[var(--core-spacing-md)] border w-full p-[var(--core-spacing-lg)] rounded-[var(--core-border-radius-sm)] shadow-sm"
+                  labelFontFamily="var(--font-figtree)"
+                />
+                <LabelWithIcon
+                  label={
+                    currentBaby &&
+                    getGenderLabel({
+                      gender: currentBaby.gender,
+                      lang,
+                    })
+                  }
+                  customIcon={
+                    currentBaby && currentBaby.gender === "male" ? Male : Female
+                  }
+                  variant="fontBody2Normal"
+                  iconClassName="text-[var(--semantic-color-icon-update-default)]"
+                  labelClassName="text-[var(--semantic-color-text-default)]"
+                  className="gap-x-[var(--core-spacing-md)] border w-full p-[var(--core-spacing-lg)] rounded-[var(--core-border-radius-sm)] shadow-sm"
+                />
+              </div>
+            )}
           </div>
         </TabLayout>
       )}

@@ -166,6 +166,7 @@
     "toast_pls_login": "Please login to continue",
     "toast_success_update_saelae": "SaeLae is updated",
     "toast_success_new_saelae": "New SaeLae is added",
+    "toast_success_delete_saelae": "Saelae is deleted",
     "toast_success_remove_bookmark": "Removed from bookmarks",
     "toast_success_add_bookmark": "Added to bookmarks",
     "toast_success_verify": "Verified successfully",

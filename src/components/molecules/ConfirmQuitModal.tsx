@@ -1,19 +1,9 @@
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { useCommonStore } from "@/store/common-store";
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { SLTypo } from "../SLTypo";
-import { useRouter } from "next/navigation";
 import { useQuizStore } from "@/store/quiz-store";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { SLTypo } from "../SLTypo";
+import { Button } from "../ui/button";
 
 interface ConfirmQuitModalProps {
   children?: any;
@@ -84,7 +74,7 @@ export const ConfirmQuitModal = ({
                   : "If you decide to quit now, you'll lose your current progress. But, you can always pick this up later!"
               }
               variant={"fontBody3Normal"}
-              className="text-[var(--semantic-color-text-subtle)] text-center mt-2"
+              className="text-[var(--semantic-color-text-subtle)] text-center mt-2 !leading-5"
             />
             <div className="flex justify-start items-center gap-x-3 mt-4">
               <Button
