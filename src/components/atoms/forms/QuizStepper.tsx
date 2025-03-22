@@ -458,7 +458,7 @@ export const QuizStepper = ({
               )}
             >
               <span>{lessons.correct_count_text}</span>
-              <span>{score} ခု</span>
+              <span>{score} {lang === "mm" && "ခု"}</span>
             </SLTypo>
           </div>
         )}
