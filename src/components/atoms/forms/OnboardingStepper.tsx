@@ -255,7 +255,7 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
         router.push("/onboard/personalize");
         if (lang === "mm") {
           setLoadingText(
-            `${formData.relationship} အတွက် အဆင်ပြေဆုံးဖြစ်မယ့် ဘာသာရပ်များကို ရွေးခြယ်ပေးနေပါတယ်...`
+            `${relationships.find((rs) => rs.value === formData.relationship)?.label} အတွက် အဆင်ပြေဆုံးဖြစ်မယ့် ဘာသာရပ်များကို ရွေးခြယ်ပေးနေပါတယ်...`
           );
         } else {
           setLoadingText(
