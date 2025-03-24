@@ -117,6 +117,17 @@ export const LessonPageLayoutWrapper = ({
         });
       if (success) {
         toast.success(common && common.toast_success_remove_bookmark);
+        if (module_id && params.lesson_id) {
+          getLesson({
+            cookies: clientCookies,
+            module_id,
+            lesson_id: params.lesson_id.toString(),
+          }).then((res) => {
+            if (res && res.success && res.data) {
+              setLesson(res.data);
+            }
+          });
+        }
         router.refresh();
       }
       return;
@@ -128,6 +139,17 @@ export const LessonPageLayoutWrapper = ({
       });
     if (success) {
       toast.success(common && common.toast_success_add_bookmark);
+      if (module_id && params.lesson_id) {
+        getLesson({
+          cookies: clientCookies,
+          module_id,
+          lesson_id: params.lesson_id.toString(),
+        }).then((res) => {
+          if (res && res.success && res.data) {
+            setLesson(res.data);
+          }
+        });
+      }
       router.refresh();
     }
   };
