@@ -117,6 +117,17 @@ export const LessonPageLayoutWrapper = ({
         });
       if (success) {
         toast.success(common && common.toast_success_remove_bookmark);
+        if (module_id && params.lesson_id) {
+          getLesson({
+            cookies: clientCookies,
+            module_id,
+            lesson_id: params.lesson_id.toString(),
+          }).then((res) => {
+            if (res && res.success && res.data) {
+              setLesson(res.data);
+            }
+          });
+        }
         router.refresh();
       }
       return;
@@ -128,6 +139,17 @@ export const LessonPageLayoutWrapper = ({
       });
     if (success) {
       toast.success(common && common.toast_success_add_bookmark);
+      if (module_id && params.lesson_id) {
+        getLesson({
+          cookies: clientCookies,
+          module_id,
+          lesson_id: params.lesson_id.toString(),
+        }).then((res) => {
+          if (res && res.success && res.data) {
+            setLesson(res.data);
+          }
+        });
+      }
       router.refresh();
     }
   };
@@ -141,6 +163,7 @@ export const LessonPageLayoutWrapper = ({
           hideBottomCta={hideBottomCta}
           onPrimaryButtonClick={onPrimaryButtonClick}
           onHeartButtonClick={handleFavoriteLesson}
+          isHeartActive={(lesson && lesson.is_saved && true) || false}
         >
           <PageHeader className="sticky top-0 bg-white z-20" />
           <ContentHeader
@@ -152,7 +175,7 @@ export const LessonPageLayoutWrapper = ({
             description={(lesson && lesson.description) || ""}
             // className="sticky top-[72px] bg-white z-10"
             className="bg-white z-10"
-            //   isHeartActive
+            isHeartActive={(lesson && lesson.is_saved && true) || false}
             onHeartButtonClick={handleFavoriteLesson}
             onPrimaryButtonClick={onPrimaryButtonClick}
           />
@@ -209,7 +232,13 @@ export const LessonPageLayoutWrapper = ({
           </div>
         </LessonPageLayout>
       )}
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 1000,
+        }}
+      />
     </section>
   );
 };

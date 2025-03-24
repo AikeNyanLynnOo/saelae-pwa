@@ -49,11 +49,20 @@ interface TabLayoutProps {
 export const TabLayout = ({ children, customClasses }: TabLayoutProps) => {
   const pathname = usePathname();
 
-  const isActiveRoute = (tabPath: string | string[]) => {
-    if (Array.isArray(tabPath)) {
-      return tabPath.some((path) => pathname === path);
+  const isActiveRoute = (tabPath: string) => {
+    const isEqual = pathname.split("/")[1] === tabPath.split("/")[1];
+    if (isEqual) {
+      return isEqual;
     }
-    return pathname === tabPath || pathname?.startsWith(tabPath + "/");
+    if (
+      tabPath.split("/")[1] === "" &&
+      !["modules", "baby", "bookmarks", "profile"].includes(
+        pathname.split("/")[1]
+      )
+    ) {
+      return true;
+    }
+    return false;
   };
 
   return (

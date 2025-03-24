@@ -204,7 +204,7 @@ export const ModulePageLayout = ({
       }
     }
   }, [isModuleValid, modules]);
-  
+
   return (
     <TabLayout>
       <PageHeader className="sticky top-0 bg-white z-10">
@@ -265,7 +265,7 @@ export const ModulePageLayout = ({
           />
         )}
 
-        {lessons.length === 0 && (
+        {lessons.length === 0 && currentModule && !currentModule.has_quiz && (
           <SLTypo
             as="p"
             text={

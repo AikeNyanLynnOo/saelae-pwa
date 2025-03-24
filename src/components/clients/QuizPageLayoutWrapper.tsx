@@ -133,6 +133,14 @@ export const QuizPageLayoutWrapper = ({
     setTimerActive(true);
 
     if (quizState === "complete") {
+      setQuizState("question");
+      setSelectedOption(null);
+      setExplanation("");
+      setTimeLeft(30);
+      setTimerActive(true);
+      setScore(0);
+      setStep(0);
+      setSubmissions([]);
       router.push("/");
       return;
     }
