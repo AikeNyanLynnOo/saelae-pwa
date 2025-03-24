@@ -98,7 +98,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
               className="w-full max-w-full overflow-x-hidden"
             />
           </div>
-          <div className="max-h-[80dvh] overflow-y-auto">
+          <div className="min-h-[60dvh] max-h-[60dvh] overflow-y-auto">
             {/* <div className="space-y-[var(--core-spacing-md)] pb-4">
               <LessonCard
                 title="ကိုယ်ဝန်ဆောင်ကျန်းမာရေး"
@@ -119,8 +119,14 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
                       key={index}
                       title={module.title}
                       description={module.description}
-                      totalLessons={module.progress_data.total_lessons || ""}
+                      totalLessons={module.progress_data.total_lessons || "0"}
                       state={getStateBaseOnData(module.progress_data)}
+                      completedLessons={
+                        module.progress_data.completed_lessons || "0"
+                      }
+                      progressValue={
+                        module.progress_data.completion_percentage || 0
+                      }
                       onButtonClick={() => onButtonClick(module.id)}
                       clickRoute={`/${module.id}`}
                     />
@@ -178,7 +184,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
             items={[
               {
                 label: lang === "mm" ? "အားလုံး" : "All",
-                value: "all",
+                value: "",
                 isActive: (!currentCategory && true) || false,
               },
               ...categories.map((category: any) => {
@@ -196,7 +202,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
             className="w-full max-w-full overflow-x-hidden"
           />
         </div>
-        <div className="max-h-[80dvh] overflow-y-auto">
+        <div className="min-h-[75dvh] max-h-[75dvh] overflow-y-auto">
           {/* <div className="space-y-[var(--core-spacing-md)] pb-4">
             <LessonCard
               title="ကိုယ်ဝန်ဆောင်ကျန်းမာရေး"
@@ -218,8 +224,14 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
                     imageUrl={module.media_url || ""}
                     title={module.title}
                     description={module.description}
-                    totalLessons={module.progress_data.total_lessons || ""}
+                    totalLessons={module.progress_data.total_lessons || "0"}
                     state={getStateBaseOnData(module.progress_data)}
+                    completedLessons={
+                      module.progress_data.completed_lessons || "0"
+                    }
+                    progressValue={
+                      module.progress_data.completion_percentage || 0
+                    }
                     onButtonClick={() => onButtonClick(module.id)}
                   />
                 );

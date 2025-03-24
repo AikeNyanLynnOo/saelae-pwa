@@ -143,19 +143,22 @@ export const BabyPageLayout = ({
                     className="gap-x-2.5"
                   />
                 </Button>
-                {currentBaby && (
-                  <ConfirmDeleteBabyModal>
-                    <Button
-                      variant="outline"
-                      className={`w-fit rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-negative-default)] p-[var(--core-spacing-sm)]`}
-                    >
-                      <Trash
-                        size={16}
-                        className="text-[var(--semantic-color-icon-negative-default)]"
-                      />
-                    </Button>
-                  </ConfirmDeleteBabyModal>
-                )}
+                {currentBaby &&
+                  currentUser &&
+                  currentUser.children &&
+                  currentUser.children.length > 1 && (
+                    <ConfirmDeleteBabyModal>
+                      <Button
+                        variant="outline"
+                        className={`w-fit rounded-[var(--core-border-radius-xs)] bg-transparent border border-[var(--semantic-color-outline-negative-default)] p-[var(--core-spacing-sm)]`}
+                      >
+                        <Trash
+                          size={16}
+                          className="text-[var(--semantic-color-icon-negative-default)]"
+                        />
+                      </Button>
+                    </ConfirmDeleteBabyModal>
+                  )}
               </div>
             </div>
 
