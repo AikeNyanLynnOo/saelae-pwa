@@ -83,8 +83,7 @@ export const CustomInput = forwardRef(
     ref: any
   ) => {
     const { lang } = useCommonStore();
-
-    console.log("Value>>", value);
+  
     return (
       <Button
         variant={"outline"}
@@ -155,7 +154,6 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
     getCities({ countryName }).then(
       ({ status, statusText, success, message, data, loading, error }) => {
         if (success && data) {
-          console.log("Cities>>", data);
           setCities(
             (data &&
               data.length > 0 &&
@@ -233,14 +231,6 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
       } else {
         child.due_date = formatDate(formData.saelaeDob);
       }
-      console.log("Data>>", {
-        name: formData.name,
-        address: formData.address,
-        city: formData.city,
-        date_of_birth: formatDate(formData.dob),
-        children: [child],
-        cookies: clientCookies,
-      });
 
       const { status, statusText, success, message, data } =
         await completeOnboard({
@@ -412,7 +402,6 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
                     selected={formData.dob || undefined}
                     onSelect={(date: any) => {
                       if (date) {
-                        console.log(date, typeof date, Object.keys(date));
                         setFormData({ ...formData, dob: date });
                       }
                     }}
@@ -500,7 +489,6 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
                       selected={formData.saelaeDob || undefined}
                       onSelect={(date: any) => {
                         if (date) {
-                          console.log(date, typeof date, Object.keys(date));
                           setFormData({ ...formData, saelaeDob: date });
                         }
                       }}
@@ -519,7 +507,6 @@ export const OnboardingStepper = ({ cookies }: OnboardingStepperProps) => {
                       selected={formData.saelaeDob || undefined}
                       onSelect={(date: any) => {
                         if (date) {
-                          console.log(date, typeof date, Object.keys(date));
                           setFormData({ ...formData, saelaeDob: date });
                         }
                       }}

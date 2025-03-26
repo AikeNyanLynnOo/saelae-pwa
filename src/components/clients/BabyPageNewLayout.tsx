@@ -54,7 +54,6 @@ export const BabyPageNewLayout = ({
   // checkIsValid
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
-      // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
       } else {
@@ -245,7 +244,6 @@ export const BabyPageNewLayout = ({
                     selected={formData.saelaeDob || undefined}
                     onSelect={(date: any) => {
                       if (date) {
-                        console.log(date, typeof date, Object.keys(date));
                         setFormData({ ...formData, saelaeDob: date });
                       }
                     }}

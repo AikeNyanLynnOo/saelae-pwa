@@ -31,7 +31,6 @@ export const BookmarksPageLayout = ({
   // checkIsValid
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
-      // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
       } else {
@@ -44,8 +43,6 @@ export const BookmarksPageLayout = ({
       }
     });
   }, []);
-
-  console.log("Bookmarks >>", bookmarkLessons);
 
   return (
     <>
@@ -67,7 +64,7 @@ export const BookmarksPageLayout = ({
                 title,
                 description,
                 is_completed,
-              } = lesson.lesson || {};
+              } = lesson || {};
               return (
                 <LessonCard
                   key={index}
@@ -76,7 +73,6 @@ export const BookmarksPageLayout = ({
                   moduleId={module_id}
                   title={title}
                   description={description}
-                  // state={is_completed ? "completed" : "half-completed"}
                   state="default"
                   showCtaBtn={false}
                 />

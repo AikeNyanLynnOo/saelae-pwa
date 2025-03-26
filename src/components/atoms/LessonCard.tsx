@@ -64,7 +64,6 @@ export function LessonCard({
           state !== "progress" &&
           showCtaBtn === false
         ) {
-          // router.push(`/${ctaRoute}/${title.toLowerCase().replace(/ /g, "-")}`);
           router.push(clickRoute || `/${ctaRoute}/${id}?module_id=${moduleId}`);
         }
       }}
@@ -82,7 +81,6 @@ export function LessonCard({
       )}
       <CardContent className="flex gap-4 p-4 relative">
         <div
-          // className={`flex flex-col ${state === "completed" &&  ? "justify-center" : "justify-start"}`}
           className={`flex flex-col justify-start`}
         >
           {(imageUrl && (

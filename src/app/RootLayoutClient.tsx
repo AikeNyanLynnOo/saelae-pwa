@@ -30,19 +30,19 @@ export default function RootLayoutClient({
       navigator.serviceWorker
         .register("./service-worker.js")
         .then((registration) => {
-          console.log(
-            "Service Worker registered with scope:",
-            registration.scope
-          );
+          // console.log(
+          //   "Service Worker registered with scope:",
+          //   registration.scope
+          // );
         })
         .catch((error) => {
-          console.error("Service Worker registration failed:", error);
+          // console.error("Service Worker registration failed:", error);
         });
     }
 
     // Listen for the beforeinstallprompt event
     window.addEventListener("beforeinstallprompt", (e) => {
-      console.log("beforeinstallprompt", e);
+      // console.log("beforeinstallprompt", e);
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       // Stash the event so it can be triggered later
@@ -61,7 +61,7 @@ export default function RootLayoutClient({
 
     // Wait for the user to respond to the prompt
     const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User response to the install prompt: ${outcome}`);
+    // console.log(`User response to the install prompt: ${outcome}`);
 
     // Clear the deferredPrompt since it can't be used again
     setDeferredPrompt(null);

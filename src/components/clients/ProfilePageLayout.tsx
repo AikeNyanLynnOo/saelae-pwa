@@ -53,7 +53,6 @@ export const ProfilePageLayout = ({
   // checkIsValid
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
-      // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
       } else {
@@ -72,7 +71,6 @@ export const ProfilePageLayout = ({
     if (success) {
       setCurrentUser(null);
       deleteAppTokenCookie();
-      // toast.success("Successfully logout!");
       router.push("/welcome");
     }
   };

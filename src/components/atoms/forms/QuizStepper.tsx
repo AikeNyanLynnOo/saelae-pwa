@@ -89,12 +89,6 @@ export const QuizStepper = ({
   const { messages, isLoading } = useTranslate();
   const { lessons } = messages;
 
-  // const [selectedOption, setSelectedOption] = useState<any | null>(null);
-  // const [explanation, setExplanation] = useState(""); // Add this line to store the explanation
-  // const [score, setScore] = useState(0);
-  // const [timeLeft, setTimeLeft] = useState(30);
-  // const [timerActive, setTimerActive] = useState(true);
-
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
@@ -216,7 +210,6 @@ export const QuizStepper = ({
                   currentQuiz.answer_choices.length > 0 &&
                   currentQuiz.answer_choices.map(
                     (answer: any, index: number) => {
-                      // if (quizState === "incorrect") {
                       return (
                         <button
                           key={index}
@@ -260,109 +253,8 @@ export const QuizStepper = ({
                           </div>
                         </button>
                       );
-                      // }
-                      // return (
-                      //   <button
-                      //     onClick={() => handleOptionSelect("option2")}
-                      //     className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
-                      //       selectedOption &&
-                      //       selectedOption.id === answer.id &&
-                      //       quizState === "correct"
-                      //         ? "bg-[var(--semantic-color-bg-positive-subtlest)] border-[var(--semantic-color-outline-positive-default)]"
-                      //         : selectedOption === "option2"
-                      //           ? "bg-white border-[var(--semantic-color-outline-subtle)]"
-                      //           : "border-[var(--semantic-color-outline-subtle)]"
-                      //     }`}
-                      //   >
-                      //     <div className="flex items-center">
-                      //       <div
-                      //         className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
-                      //           selectedOption &&
-                      //           selectedOption.id === answer.id &&
-                      //           quizState === "correct"
-                      //             ? "border-[var(--semantic-color-outline-positive-default)]"
-                      //             : "border-[var(--semantic-color-icon-default)]"
-                      //         }`}
-                      //       >
-                      //         {selectedOption === "option2" && (
-                      //           <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-positive-default)]" />
-                      //         )}
-                      //       </div>
-                      //       <SLTypo
-                      //         as="span"
-                      //         text={(answer && answer.answer_text) || ""}
-                      //         variant="fontBody2IntenseNormal"
-                      //         className={cn(
-                      //           "text-[var(--semantic-color-text-bold)]"
-                      //         )}
-                      //       />
-                      //     </div>
-                      //   </button>
-                      // );
                     }
                   )}
-                {/* <button
-                    onClick={() => handleOptionSelect("option1")}
-                    className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
-                      selectedOption === "option1" && quizState === "incorrect"
-                        ? "bg-[var(--semantic-color-bg-negative-subtlest)] border-[var(--semantic-color-outline-negative-default)]"
-                        : selectedOption === "option1"
-                          ? "bg-white border-[var(--semantic-color-outline-subtle)]"
-                          : "border-[var(--semantic-color-outline-subtle)]"
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <div
-                        className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
-                          selectedOption === "option1" &&
-                          quizState === "incorrect"
-                            ? "border-[var(--semantic-color-icon-negative-default)]"
-                            : "border-[var(--semantic-color-icon-default)]"
-                        }`}
-                      >
-                        {selectedOption === "option1" && (
-                          <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-negative-default)]" />
-                        )}
-                      </div>
-                      <SLTypo
-                        as="span"
-                        text="မှန်ပါတယ်၊ ကတုံးရိတ်သင့်ပါတယ်။"
-                        variant="fontBody2IntenseNormal"
-                        className={cn("text-[var(--semantic-color-text-bold)]")}
-                      />
-                    </div>
-                  </button> */}
-
-                {/* <button
-                    onClick={() => handleOptionSelect("option2")}
-                    className={`w-full px-[var(--core-spacing-lg)] py-[var(--core-spacing-lg)] rounded-full border text-left ${
-                      selectedOption === "option2" && quizState === "correct"
-                        ? "bg-[var(--semantic-color-bg-positive-subtlest)] border-[var(--semantic-color-outline-positive-default)]"
-                        : selectedOption === "option2"
-                          ? "bg-white border-[var(--semantic-color-outline-subtle)]"
-                          : "border-[var(--semantic-color-outline-subtle)]"
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <div
-                        className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${
-                          selectedOption === "option2" && quizState === "correct"
-                            ? "border-[var(--semantic-color-outline-positive-default)]"
-                            : "border-[var(--semantic-color-icon-default)]"
-                        }`}
-                      >
-                        {selectedOption === "option2" && (
-                          <div className="w-2 h-2 rounded-full bg-[var(--semantic-color-icon-positive-default)]" />
-                        )}
-                      </div>
-                      <SLTypo
-                        as="span"
-                        text="မှားပါတယ်၊ ကတုံးမရိတ်သင့်ပါဘူး။"
-                        variant="fontBody2IntenseNormal"
-                        className={cn("text-[var(--semantic-color-text-bold)]")}
-                      />
-                    </div>
-                  </button> */}
               </div>
 
               {/* Feedback for incorrect answer */}
@@ -458,7 +350,9 @@ export const QuizStepper = ({
               )}
             >
               <span>{lessons.correct_count_text}</span>
-              <span>{score} {lang === "mm" && "ခု"}</span>
+              <span>
+                {score} {lang === "mm" && "ခု"}
+              </span>
             </SLTypo>
           </div>
         )}

@@ -44,22 +44,11 @@ export const OTPInputLayout = () => {
 
   useEffect(() => {
     if (otp.length === 6) {
-      // toast.success("Successfully verified!");
-      // setTimeout(() => {
-      //   router.push("/onboard");
-      // }, 1000);
       verifyOtp({
         phone_number: phoneNumber,
         otp,
       })
         .then(({ status, statusText, success, message, data }) => {
-          console.log({
-            status,
-            statusText,
-            success,
-            message,
-            data,
-          });
           const extractedMsg = extractMessage(message);
           if (!success) {
             setErrMessage(extractedMsg);
@@ -96,8 +85,7 @@ export const OTPInputLayout = () => {
   const handleResendOTP = async () => {
     setTimeLeft(60); // Reset the timer
     setIsResendDisabled(true); // Disable the resend button again
-    // Add your OTP resend logic here
-    // console.log("Resending OTP...");
+    // OTP resend logic here
     const { status, statusText, success, message, data } = await requestOtp({
       phone_number: phoneNumber,
       country_code: iso2Code,

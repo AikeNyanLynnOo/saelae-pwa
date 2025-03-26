@@ -17,15 +17,6 @@ import { useAuthStore } from "@/store/auth-store";
 import { SLTypo } from "../SLTypo";
 import { parseCookies } from "nookies";
 
-// const items = [
-//   { label: "အားလုံး", value: "all", isActive: true },
-//   { label: "ကိုယ်ဝန်ဆောင်ကျန်းမာရေး", value: "pregnancy" },
-//   { label: "မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး", value: "newborn" },
-//   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
-//   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
-//   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
-// ];
-
 interface ModulesPageLayoutProps {
   cookies?: any;
 }
@@ -53,7 +44,6 @@ export const ModulesPageLayout = ({ cookies }: ModulesPageLayoutProps) => {
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(
       ({ status, statusText, success, message, data, loading, error }) => {
-        // console.log("User >>", success);
         if (success && data) {
           setCurrentUser((data && data.profile) || null);
         } else {

@@ -35,8 +35,6 @@ export const LabelWithContentScroll = ({
   const checkScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      console.log("Scroll left:", scrollLeft);
-      console.log("Scroll width:", scrollWidth - clientWidth);
       setShowLeftArrow(scrollLeft > 0);
       setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 5);
     }

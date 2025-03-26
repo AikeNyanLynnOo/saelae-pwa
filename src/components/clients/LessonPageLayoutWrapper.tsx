@@ -34,7 +34,6 @@ export const LessonPageLayoutWrapper = ({
   const { lesson, setLesson } = useLessonStore();
   const { messages, isLoading } = useTranslate();
   const { common } = messages;
-  console.log(common);
   const router = useRouter();
   const params = useParams();
   const [scrollY, setScrollY] = useState(0);
@@ -44,7 +43,6 @@ export const LessonPageLayoutWrapper = ({
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(
       ({ status, statusText, success, message, data, loading, error }) => {
-        // console.log("User >>", success);
         if (success && data) {
           setCurrentUser((data && data.profile) || null);
         } else {
@@ -55,8 +53,6 @@ export const LessonPageLayoutWrapper = ({
   }, []);
 
   useEffect(() => {
-    // console.log("Module_id", module_id);
-    // console.log("Lesson_id", params.lesson_id);
     if (module_id && params.lesson_id) {
       getLesson({
         cookies: clientCookies,
@@ -173,7 +169,6 @@ export const LessonPageLayoutWrapper = ({
             showHeartButton
             title={(lesson && lesson.title) || ""}
             description={(lesson && lesson.description) || ""}
-            // className="sticky top-[72px] bg-white z-10"
             className="bg-white z-10"
             isHeartActive={(lesson && lesson.is_saved && true) || false}
             onHeartButtonClick={handleFavoriteLesson}

@@ -58,7 +58,6 @@ export const QuizPageLayoutWrapper = ({
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(
       ({ status, statusText, success, message, data, loading, error }) => {
-        // console.log("User >>", success);
         if (success && data) {
           setCurrentUser((data && data.profile) || null);
         } else {
@@ -78,13 +77,11 @@ export const QuizPageLayoutWrapper = ({
         lesson_id: params.lesson_id as string,
       }).then(
         ({ status, statusText, success, message, data, loading, error }) => {
-          // console.log("User >>", success);
           if (success && data) {
             setQuizzes((data && data.length > 0 && data) || []);
             setStep(0);
             setTotalSteps(data.length);
           } else {
-            //
             setQuizzes([]);
             setStep(0);
             setTotalSteps(1);
@@ -97,13 +94,11 @@ export const QuizPageLayoutWrapper = ({
         module_id,
       }).then(
         ({ status, statusText, success, message, data, loading, error }) => {
-          // console.log("User >>", success);
           if (success && data) {
             setQuizzes((data && data.length > 0 && data) || []);
             setStep(0);
             setTotalSteps(data.length);
           } else {
-            //
             setQuizzes([]);
             setStep(0);
             setTotalSteps(1);
@@ -120,13 +115,6 @@ export const QuizPageLayoutWrapper = ({
   );
 
   const handleNext = () => {
-    // console.log("handleNext", step, totalSteps);
-    // setSelectedOption,
-    // setExplanation,
-    // setScore,
-    // setTimeLeft,
-    // setTimerActive,
-
     setSelectedOption(null);
     setExplanation("");
 
@@ -145,8 +133,6 @@ export const QuizPageLayoutWrapper = ({
       return;
     }
     if (step === totalSteps - 1) {
-      // console.log("Submission>>", submissions);
-
       if (params && params.lesson_id) {
         submitLessonQuiz({
           cookies: clientCookies,

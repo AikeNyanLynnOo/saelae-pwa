@@ -26,7 +26,6 @@ export const SLPhoneInput = ({
     defaultCountry: "mm",
     value,
     onChange: (data: any) => {
-      console.log(data);
       onChange(data.phone, {
         country: data.country,
         inputValue: data.inputValue,
@@ -34,17 +33,9 @@ export const SLPhoneInput = ({
     },
   });
 
-  // const phoneInputWithoutCode = useMemo(() => {
-  //   if (phoneInput.inputValue) {
-  //     return splitInputValue(phoneInput.inputValue).value;
-  //   }
-  //   return "";
-  // }, [phoneInput.inputValue]);
-
   const phoneInputValue = useMemo(() => {
     if (phoneInput.inputValue) {
       const { code, value } = splitInputValue(phoneInput.inputValue);
-      // console.log("Code >>", code);
       if (code === "+95" && value === "") {
         setShowBottomMm(true);
         return "+95 9";
@@ -61,7 +52,6 @@ export const SLPhoneInput = ({
         selectedCountry={phoneInput.country.iso2}
         onSelect={(country) => phoneInput.setCountry(country.iso2)}
         renderButtonWrapper={({ children, rootProps }) => {
-          // console.log(children);
           return (
             <Button
               {...rootProps}

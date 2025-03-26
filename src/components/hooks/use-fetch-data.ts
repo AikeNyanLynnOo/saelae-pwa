@@ -32,11 +32,11 @@ export const useFetchData = ({
         });
 
         if (!success && status === 401) {
-          //401
+          // 401
           return router.push("/welcome?session_expired=true");
         }
         if (!success && redirect && redirect.status === status) {
-          //custom status check & redirect
+          // custom status check & redirect
           return router.push(redirect.path);
         }
 

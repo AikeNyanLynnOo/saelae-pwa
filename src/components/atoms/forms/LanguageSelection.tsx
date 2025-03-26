@@ -21,19 +21,6 @@ export default function LanguageSelection() {
     localStorage.setItem("lang", newLanguage);
 
     router.refresh();
-
-    // Get current path and update it with new language
-    // const currentPath = window.location.pathname;
-    // const pathParts = currentPath.split('/');
-
-    // if (pathParts[1] === "en" || pathParts[1] === "mm") {
-    //   pathParts[1] = newLanguage;
-    // } else {
-    //   pathParts.splice(1, 0, newLanguage);
-    // }
-
-    // const newPath = pathParts.join('/');
-    // router.push(newPath);
   };
 
   // Sync with localStorage on mount
