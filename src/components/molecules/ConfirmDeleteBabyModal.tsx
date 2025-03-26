@@ -14,14 +14,10 @@ import { useAuthStore } from "@/store/auth-store";
 
 interface ConfirmDeleteBabyModalProps {
   children?: any;
-  //   open?: boolean;
-  //   setOpen?: any;
 }
 
 export const ConfirmDeleteBabyModal = ({
   children,
-  //   open,
-  //   setOpen,
 }: ConfirmDeleteBabyModalProps) => {
   const clientCookies = parseCookies();
   const router = useRouter();
@@ -34,7 +30,6 @@ export const ConfirmDeleteBabyModal = ({
   const [open, setOpen] = useState(false);
 
   const handleDeleteBaby = async () => {
-    // console.log("Current baby", currentBaby);
     const { status, statusText, success, message, data } = await deleteChild({
       id: currentBaby?.id,
       cookies: clientCookies,
@@ -43,7 +38,6 @@ export const ConfirmDeleteBabyModal = ({
       toast.success(common && common.toast_success_delete_saelae);
       setOpen(false);
       getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
-        // console.log("User >>", success);
         if (success && data) {
           setCurrentUser((data && data.profile) || null);
           setCurrentBaby((data && data.profile.children[0]) || null);

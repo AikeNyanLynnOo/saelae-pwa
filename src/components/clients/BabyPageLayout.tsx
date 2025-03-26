@@ -45,7 +45,6 @@ export const BabyPageLayout = ({
   // checkIsValid
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
-      // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
         if (!currentBaby) {
@@ -91,19 +90,6 @@ export const BabyPageLayout = ({
                     ...child,
                     age: calculateAge(child.birth_date),
                   }))
-
-                  // [
-                  //   {
-                  //     name: "Noah",
-                  //     gender: "male",
-                  //     age: "၁ နှစ်၊ ၂၃ ရက်",
-                  //   },
-                  //   {
-                  //     name: "Susan",
-                  //     gender: "female",
-                  //     age: "သန္ဓေသား အသက် ၆ လ",
-                  //   },
-                  // ]
                 }
               />
 

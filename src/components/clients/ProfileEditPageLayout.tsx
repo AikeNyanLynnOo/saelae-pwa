@@ -64,20 +64,10 @@ export const ProfileEditPageLayout = ({
     dob: null,
   });
 
-  // useEffect(() => {
-  //   setFormData({
-  //     ...formData,
-  //     mediaUrl: formData.mediaFile
-  //       ? URL.createObjectURL(formData.mediaFile)
-  //       : "",
-  //   });
-  // }, [formData.mediaFile]);
-
   // fetchUser
   // checkIsValid
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
-      // console.log("User >>", success);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
       } else {
@@ -138,7 +128,6 @@ export const ProfileEditPageLayout = ({
   }, [formData]);
 
   const handleSave = async () => {
-    // console.log(formData);
     const { status, statusText, success, message, data } = await updateProfile({
       name: formData.name,
       address: formData.address,
@@ -323,7 +312,6 @@ export const ProfileEditPageLayout = ({
                   selected={formData.dob || undefined}
                   onSelect={(date: any) => {
                     if (date) {
-                      console.log(date, typeof date, Object.keys(date));
                       setFormData({ ...formData, dob: date });
                     }
                   }}

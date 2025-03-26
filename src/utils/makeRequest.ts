@@ -4,7 +4,7 @@ export const makeRequest = async (config: any): Promise<any> => {
   try {
     const response = await axios(config);
 
-    console.log("API response>>", response);
+    // console.log("API response>>", response);
     return {
       status: response.status,
       statusText: response.statusText,
@@ -13,7 +13,7 @@ export const makeRequest = async (config: any): Promise<any> => {
       data: response.data.data || null,
     };
   } catch (error: any) {
-    console.log("API response errro>>", error);
+    // console.log("API response errro>>", error);
     const { status, statusText, data } = error?.response;
 
     return {

@@ -24,9 +24,6 @@ type Store = {
   // submission
   submissions: any[];
 
-  // response from api
-  //   correct_answers: number;
-  //   total_quizzes: number;
   pass: boolean;
   score_percentage: number;
 

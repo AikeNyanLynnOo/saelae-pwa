@@ -7,14 +7,10 @@ import { Button } from "../ui/button";
 
 interface ConfirmQuitModalProps {
   children?: any;
-  //   open?: boolean;
-  //   setOpen?: any;
 }
 
 export const ConfirmQuitModal = ({
   children,
-  //   open,
-  //   setOpen,
 }: ConfirmQuitModalProps) => {
   const router = useRouter();
   const { lang } = useCommonStore();

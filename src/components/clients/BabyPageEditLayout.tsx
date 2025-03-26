@@ -57,7 +57,6 @@ export const BabyPageEditLayout = ({
   // checkIsValid
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(({ success, data }) => {
-      // console.log("User >>", success, data);
       if (success && data) {
         setCurrentUser((data && data.profile) || null);
       } else {
@@ -76,15 +75,6 @@ export const BabyPageEditLayout = ({
     gender: "",
     relationship: "",
   });
-
-  // useEffect(() => {
-  //   setFormData({
-  //     ...formData,
-  //     mediaUrl: formData.mediaFile
-  //       ? URL.createObjectURL(formData.mediaFile)
-  //       : "",
-  //   });
-  // }, [formData.mediaFile]);
 
   useEffect(() => {
     setFormData({
@@ -110,7 +100,6 @@ export const BabyPageEditLayout = ({
   };
 
   const handleSave = async () => {
-    console.log(formData);
     const { status, statusText, success, message, data } = await updateChild({
       id: currentBaby?.id,
       name: formData.saelaeName,
@@ -248,7 +237,6 @@ export const BabyPageEditLayout = ({
                     selected={formData.saelaeDob || undefined}
                     onSelect={(date: any) => {
                       if (date) {
-                        console.log(date, typeof date, Object.keys(date));
                         setFormData({ ...formData, saelaeDob: date });
                       }
                     }}
@@ -267,7 +255,6 @@ export const BabyPageEditLayout = ({
                     selected={formData.saelaeDob || undefined}
                     onSelect={(date: any) => {
                       if (date) {
-                        console.log(date, typeof date, Object.keys(date));
                         setFormData({ ...formData, saelaeDob: date });
                       }
                     }}

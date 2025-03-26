@@ -50,7 +50,6 @@ export const ModulePageLayout = ({
   useEffect(() => {
     getUserProfile({ cookies: clientCookies }).then(
       ({ status, statusText, success, message, data, loading, error }) => {
-        // console.log("User >>", success);
         if (success && data) {
           setCurrentUser((data && data.profile) || null);
         } else {
@@ -83,9 +82,6 @@ export const ModulePageLayout = ({
       setIsModuleValid(false);
     }
   }, [module_id]);
-  useEffect(() => {
-    console.log("Current Module>>", currentModule);
-  }, [currentModule]);
 
   useEffect(() => {
     getModuleCategories({
@@ -112,73 +108,6 @@ export const ModulePageLayout = ({
       }
     });
   }, []);
-
-  // useEffect(() => {
-  //   setLessonsLoading(true);
-  //   setLessons([]);
-  //   if (module_id) {
-  //     getModuleLessons({
-  //       cookies,
-  //       module_id: module_id,
-  //     })
-  //       .then(
-  //         ({ status, statusText, success, message, data, loading, error }) => {
-  //           // console.log("Success >>", success);
-
-  //           setLessonsLoading(false);
-  //           if (success && data) {
-  //             setLessons(data.lessons || []);
-  //             const foundModule = modules.find(
-  //               (item) => `${item.id}` === `${module_id}`
-  //             );
-  //             console.log("setting current module from array>>", module);
-  //             setCurrentModule(foundModule || null);
-  //           } else {
-  //             // router.push("/");
-  //             const firstModule =
-  //               (modules && modules.length > 0 && modules[0]) || null;
-  //             console.log("setting first module>>", firstModule);
-  //             setCurrentModule(firstModule);
-  //             if (firstModule && firstModule.id) {
-  //               getModuleLessons({
-  //                 cookies,
-  //                 module_id: firstModule.id,
-  //               })
-  //                 .then(
-  //                   ({
-  //                     status,
-  //                     statusText,
-  //                     success,
-  //                     message,
-  //                     data,
-  //                     loading,
-  //                     error,
-  //                   }) => {
-  //                     // console.log("Success >>", success);
-  //                     if (success && data) {
-  //                       setLessons(data.lessons || []);
-  //                       setLessonsLoading(false);
-  //                     } else {
-  //                       setLessons([]);
-  //                       setLessonsLoading(false);
-  //                     }
-  //                   }
-  //                 )
-  //                 .catch((e) => {
-  //                   //error
-  //                 });
-  //             } else {
-  //               setLessons([]);
-  //               setLessonsLoading(false);
-  //             }
-  //           }
-  //         }
-  //       )
-  //       .catch((e) => {
-  //         //error
-  //       });
-  //   }
-  // }, [module_id, modules]);
 
   useEffect(() => {
     if (!isModuleValid) {

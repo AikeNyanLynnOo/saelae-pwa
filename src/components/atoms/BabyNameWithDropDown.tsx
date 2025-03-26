@@ -34,8 +34,6 @@ export const BabyNameWithDropDown = ({
   babies,
 }: BabyNameWithDropDownProps) => {
   const { currentBaby, setCurrentBaby } = useBabyStore();
-
-  console.log("Babies>>", babies);
   return (
     <div className="flex flex-col gap-y-[var(--core-spacing-base)] items-center">
       {(babies && babies.length > 1 && (

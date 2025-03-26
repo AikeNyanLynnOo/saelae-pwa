@@ -20,15 +20,6 @@ import { useTranslate } from "../hooks/use-translate";
 import { SLTypo } from "../SLTypo";
 import { LabelWithContentScroll } from "./LabelWithContentScroll";
 import { parseCookies } from "nookies";
-
-// const items = [
-//   { label: "အားလုံး", value: "all", isActive: true },
-//   { label: "ကိုယ်ဝန်ဆောင်ကျန်းမာရေး", value: "pregnancy" },
-//   { label: "မွေးကင်းစကလေးနှင့် သန့်ရှင်းရေး", value: "newborn" },
-//   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
-//   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
-//   { label: "မိခင်နို့တိုက်ကျွေးခြင်း", value: "breastfeeding" },
-// ];
 interface ResponsiveModalProps {
   cookies?: any;
   children?: any;
@@ -50,13 +41,11 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
 
   const router = useRouter();
   const onButtonClick = (module_id: string) => {
-    // console.log("Clicked:", module_id);
     router.push(`/${module_id}`);
     setOpen(false);
   };
 
   const onChipClick = (value: any) => {
-    console.log("Clicked:", value);
     setCurrentCategory(value);
     getModules({
       cookies: clientCookies,

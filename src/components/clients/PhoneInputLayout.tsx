@@ -45,8 +45,6 @@ export const PhoneInputLayout = ({ authCookies }: { authCookies?: any[] }) => {
     phone: string,
     meta: { country: ParsedCountry; inputValue: string }
   ) => {
-    // console.log("country", meta && meta.country && meta.country.iso2);
-    // console.log("phone", phone);
     setErrMessage("");
     setPhoneNumber(phone || "");
     setIso2Code((meta && meta.country && meta.country.iso2) || "");

@@ -3,7 +3,6 @@ import { destroyCookie, setCookie } from "nookies";
 export const setAppTokenCookie = (token: string): void => {
   const maxAge = 24 * 60 * 60; // 24 hours in seconds
 
-  // Decode the token before setting it in the cookie to prevent URL encoding
   setCookie(null, "app_token", token, {
     maxAge: maxAge,
     path: "/",

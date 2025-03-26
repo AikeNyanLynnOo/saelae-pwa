@@ -1,6 +1,5 @@
 import { mmCities } from "@/lib/mm_cities";
 import { makeRequest } from "./makeRequest";
-import { Child } from "./onboardApiFunctions";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL || process.env.BASE_URL;
 const authCookieName =
@@ -140,9 +139,7 @@ export const getCities = async ({
 }: {
   countryName?: string;
 }): Promise<any> => {
-  console.log("Country>>", countryName);
   if (countryName === "Myanmar") {
-    console.log("MM", mmCities.length);
     return {
       status: 200,
       statusText: "OK",
