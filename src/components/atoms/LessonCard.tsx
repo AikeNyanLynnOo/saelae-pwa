@@ -89,9 +89,9 @@ export function LessonCard({
             <Image
               src={imageUrl || "/placeholder.svg"}
               alt=""
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-sm object-cover"
+              width={500}
+              height={500}
+              className="h-10 w-10 rounded-sm object-cover"
             />
           )) || (
             <ImageWithPlaceholder
