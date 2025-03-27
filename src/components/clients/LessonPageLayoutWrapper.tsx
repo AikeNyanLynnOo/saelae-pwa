@@ -178,7 +178,7 @@ export const LessonPageLayoutWrapper = ({
             {lesson && lesson.media_url && (
               <Image
                 src={lesson && lesson.media_url}
-                alt="lesson-1"
+                alt="lesson-img"
                 width={390}
                 height={400}
                 className="mx-auto w-full h-auto rounded-[var(--core-radius-sm)]"

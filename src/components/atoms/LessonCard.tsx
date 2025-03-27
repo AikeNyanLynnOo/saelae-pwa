@@ -84,11 +84,9 @@ export function LessonCard({
           className={`flex flex-col justify-start`}
         >
           {(imageUrl && (
-            <Image
-              src={imageUrl || "/placeholder.svg"}
-              alt=""
-              width={500}
-              height={500}
+            <img
+              src={imageUrl}
+              alt="lesson-img"
               className="h-10 w-10 rounded-sm object-cover"
             />
           )) || (
