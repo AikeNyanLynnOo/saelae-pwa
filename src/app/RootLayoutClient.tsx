@@ -1,10 +1,9 @@
 "use client";
 
-import React, { Suspense } from "react";
 import "@/app/globals.css";
 import { FloatingBanner } from "@/components/atoms/FloatingBanner";
-import { useCommonStore } from "@/store/common-store";
 import { usePathname } from "next/navigation";
+import React from "react";
 
 export default function RootLayoutClient({
   children,

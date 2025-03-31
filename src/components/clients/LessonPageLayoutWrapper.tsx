@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { ContentHeader } from "@/components/atoms/ContentHeader";
 import { PageHeader } from "@/components/atoms/PageHeader";
@@ -176,14 +177,10 @@ export const LessonPageLayoutWrapper = ({
           />
           <div className="px-6 space-y-[var(--core-spacing-lg)] pb-20">
             {lesson && lesson.media_url && (
-              <Image
-                src={lesson && lesson.media_url}
+              <img
                 alt="lesson-img"
-                width={390}
-                height={400}
-                className="mx-auto w-full h-auto rounded-[var(--core-radius-sm)]"
-                priority
-                loading="eager"
+                className="mx-auto w-full h-[400px] rounded-[var(--core-radius-sm)] object-contain"
+                src={lesson && lesson.media_url}
               />
             )}
 
