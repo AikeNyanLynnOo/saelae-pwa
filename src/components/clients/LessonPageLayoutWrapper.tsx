@@ -191,7 +191,7 @@ export const LessonPageLayoutWrapper = ({
               as="p"
               isDangerously
               variant="fontBody2Normal"
-              className="text-[var(--semantic-color-text-default)] !leading-6"
+              className="text-[var(--semantic-color-text-default)] !leading-6 saelae-description"
             >
               {(lesson && lesson.content) || ""}
             </SLTypo>
