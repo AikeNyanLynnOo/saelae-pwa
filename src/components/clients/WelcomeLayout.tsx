@@ -25,6 +25,7 @@ export const WelcomeLayout = () => {
       params.get("session_expired") &&
       params.get("session_expired") === "true"
     ) {
+      toast.dismiss();
       toast(common && common.toast_pls_login, {
         icon: <LockKeyholeOpen size={16} />,
       });

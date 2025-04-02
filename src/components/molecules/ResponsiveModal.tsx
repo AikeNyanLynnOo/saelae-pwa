@@ -107,6 +107,7 @@ export function ResponsiveModal({ cookies, children }: ResponsiveModalProps) {
                     <LessonCard
                       key={index}
                       title={module.title}
+                      imageUrl={module.media_url || ""}
                       description={module.description}
                       totalLessons={module.progress_data.total_lessons || "0"}
                       state={getStateBaseOnData(module.progress_data)}
