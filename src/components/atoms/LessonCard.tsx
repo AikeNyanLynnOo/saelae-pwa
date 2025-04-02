@@ -80,7 +80,7 @@ export function LessonCard({
         </div>
       )}
       <CardContent className="flex gap-4 p-4 relative">
-        <div
+        {/* <div
           className={`flex flex-col justify-start`}
         >
           {(imageUrl && (
@@ -95,8 +95,16 @@ export function LessonCard({
               containerClassName="mb-0"
             />
           )}
-        </div>
-
+        </div> */}
+        {imageUrl && (
+          <div className={`flex flex-col justify-start`}>
+            <img
+              src={imageUrl}
+              alt="lesson-img"
+              className="h-10 w-10 rounded-sm object-cover"
+            />
+          </div>
+        )}
         <div className="flex-1">
           <div className="space-y-1">
             <SLTypo
@@ -109,7 +117,7 @@ export function LessonCard({
               <SLTypo
                 as="p"
                 variant="fontBody3Normal"
-                className={`text-[var(--semantic-color-text-subtle)] !leading-6 mb-2 w-11/12 ${
+                className={`text-[var(--semantic-color-text-subtle)] !leading-6 mb-2 w-[96%] ${
                   showFullDescription ? "" : "line-clamp-3"
                 }`}
               >
