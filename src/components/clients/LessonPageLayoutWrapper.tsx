@@ -103,7 +103,7 @@ export const LessonPageLayoutWrapper = ({
         icon: <Search size={16} />,
       });
     }
-  }, [params, router, common]);
+  }, [params, router, common, lesson]);
 
   const handleFavoriteLesson = async () => {
     if (lesson && lesson.is_saved) {

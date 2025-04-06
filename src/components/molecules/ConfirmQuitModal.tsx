@@ -16,6 +16,7 @@ export const ConfirmQuitModal = ({
   const { lang } = useCommonStore();
   const {
     setStep,
+    setCanProceed,
     setSelectedOption,
     setExplanation,
     setScore,
@@ -35,6 +36,7 @@ export const ConfirmQuitModal = ({
     setScore(0);
     setStep(0);
     setSubmissions([]);
+    setCanProceed(false);
     router.back();
   };
 

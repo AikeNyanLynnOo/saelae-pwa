@@ -1,7 +1,8 @@
 import { CommonLayout } from "@/components/layouts/CommonLayout";
-import { Button } from "../ui/button";
+import { MoveRight } from "lucide-react";
+import { useTranslate } from "../hooks/use-translate";
 import { SLTypo } from "../SLTypo";
-import { Heart, MoveRight } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface QuizPageLayoutProps {
   children: React.ReactNode;
@@ -34,6 +35,8 @@ export const QuizPageLayout = ({
   isCompleted,
   canProceed,
 }: QuizPageLayoutProps) => {
+  const { messages, isLoading } = useTranslate();
+  const { common } = messages;
   return (
     <CommonLayout
       isLoading={false}
@@ -82,7 +85,11 @@ export const QuizPageLayout = ({
               >
                 <SLTypo
                   as="span"
-                  text={isCompleted ? "ဆက်လေ့လာမယ်" : primaryButtonText}
+                  text={
+                    isCompleted
+                      ? common.cta_continue_learning
+                      : primaryButtonText
+                  }
                   variant="fontButtonMdSemibold"
                   className={
                     (isCompleted && "text-white") ||
