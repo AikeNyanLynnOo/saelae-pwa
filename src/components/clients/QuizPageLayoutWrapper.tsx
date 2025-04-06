@@ -39,6 +39,7 @@ export const QuizPageLayoutWrapper = ({
     setScore,
     setTimeLeft,
     setTimerActive,
+    setCanProceed,
 
     // submission
     submissions,
@@ -48,7 +49,7 @@ export const QuizPageLayoutWrapper = ({
   } = useQuizStore();
 
   const { messages, isLoading } = useTranslate();
-  const { lessons } = messages;
+  const { common } = messages;
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
@@ -129,6 +130,7 @@ export const QuizPageLayoutWrapper = ({
       setScore(0);
       setStep(0);
       setSubmissions([]);
+      setCanProceed(false);
       router.push("/");
       return;
     }
@@ -182,6 +184,7 @@ export const QuizPageLayoutWrapper = ({
     setScore(0);
     setStep(0);
     setSubmissions([]);
+    setCanProceed(false);
     router.refresh();
   };
 
@@ -194,6 +197,8 @@ export const QuizPageLayoutWrapper = ({
           onSecondaryButtonClick={handleRetry}
           showSecondaryButton={showSecondaryButton}
           isCompleted={quizState === "complete"}
+          primaryButtonText={common.cta_next}
+          secondaryButtonText={common.cta_try_again}
         >
           <PageHeader className="sticky top-0 bg-white z-20" />
 
