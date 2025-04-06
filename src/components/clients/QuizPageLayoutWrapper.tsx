@@ -131,7 +131,11 @@ export const QuizPageLayoutWrapper = ({
       setStep(0);
       setSubmissions([]);
       setCanProceed(false);
-      router.push("/");
+      if (module_id) {
+        router.push(`/${module_id}`);
+      } else {
+        router.push("/");
+      }
       return;
     }
     if (step === totalSteps - 1) {
