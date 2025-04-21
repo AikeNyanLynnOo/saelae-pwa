@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,34 +12,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { Divider } from "../atoms/Divider";
-
-const tabs = [
-  {
-    icon: <GraduationCap />,
-    label: "Home",
-    path: "/",
-  },
-  {
-    icon: <BookMarked />,
-    label: "Modules",
-    path: "/modules",
-  },
-  {
-    icon: <Baby />,
-    label: "Baby Profile",
-    path: "/baby",
-  },
-  {
-    icon: <BookmarkCheck />,
-    label: "Bookmarks",
-    path: "/bookmarks",
-  },
-  {
-    icon: <CircleUserRound />,
-    label: "Profile",
-    path: "/profile",
-  },
-];
+import { useModuleStore } from "@/store/module-store";
 
 interface TabLayoutProps {
   children: React.ReactNode;
@@ -48,6 +21,37 @@ interface TabLayoutProps {
 
 export const TabLayout = ({ children, customClasses }: TabLayoutProps) => {
   const pathname = usePathname();
+  const { currentModule } = useModuleStore();
+
+  const tabs = useMemo(() => {
+    return [
+      {
+        icon: <GraduationCap />,
+        label: "Home",
+        path: `/${(currentModule && currentModule.id) || ""}`,
+      },
+      {
+        icon: <BookMarked />,
+        label: "Modules",
+        path: "/modules",
+      },
+      {
+        icon: <Baby />,
+        label: "Baby Profile",
+        path: "/baby",
+      },
+      {
+        icon: <BookmarkCheck />,
+        label: "Bookmarks",
+        path: "/bookmarks",
+      },
+      {
+        icon: <CircleUserRound />,
+        label: "Profile",
+        path: "/profile",
+      },
+    ];
+  }, [currentModule]);
 
   const isActiveRoute = (tabPath: string) => {
     const isEqual = pathname.split("/")[1] === tabPath.split("/")[1];
