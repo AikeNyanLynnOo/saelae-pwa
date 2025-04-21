@@ -69,6 +69,7 @@ export const ModulePageLayout = ({
           if (success && data) {
             setCurrentModule(data);
             setLessons(data.lessons || []);
+            // condition for module valid
             setIsModuleValid(true);
           } else {
             router.push("/");
@@ -110,6 +111,7 @@ export const ModulePageLayout = ({
   }, []);
 
   useEffect(() => {
+    // condition for module not valid
     if (!isModuleValid) {
       const firstModule = (modules && modules.length > 0 && modules[0]) || null;
       if (firstModule && firstModule.id) {
